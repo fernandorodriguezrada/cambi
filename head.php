@@ -1305,14 +1305,20 @@
         width: 100%;
         max-width: 440px;
         border-radius: 32px 32px 0 0;
-        padding: 14px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+        padding: 12px 22px calc(20px + env(safe-area-inset-bottom, 0px));
         box-shadow: 0 -8px 36px rgba(0, 0, 0, 0.22);
         transform: translateY(100%);
         transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
-        max-height: 90vh;
+        max-height: 96vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         box-sizing: border-box;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .pm-modal-sheet::-webkit-scrollbar {
+        display: none;
     }
 
     .pm-modal-overlay.active .pm-modal-sheet {
@@ -1325,14 +1331,14 @@
         border-radius: 2px;
         background-color: var(--md-sys-color-outline);
         opacity: 0.35;
-        margin: 0 auto 14px;
+        margin: 0 auto 10px;
     }
 
     .pm-modal-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: 8px;
     }
 
     .pm-modal-header h3 {
@@ -1368,21 +1374,21 @@
     .pm-modal-subtext {
         font-size: 0.88rem;
         color: var(--md-sys-color-outline);
-        margin: -8px 0 16px;
-        line-height: 1.45;
+        margin: 0 0 12px;
+        line-height: 1.4;
     }
 
     .pm-form-group {
         display: flex;
         flex-direction: column;
-        gap: 6px;
-        margin-bottom: 15px;
+        gap: 5px;
+        margin-bottom: 12px;
     }
 
     .pm-form-row {
         display: flex;
         gap: 12px;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
 
     .pm-form-group label {
@@ -1621,13 +1627,13 @@
     .pm-modal-actions {
         display: flex;
         gap: 12px;
-        margin-top: 22px;
+        margin-top: 16px;
     }
 
     .pm-modal-actions button {
         flex: 1;
-        padding: 15px 16px;
-        border-radius: 20px;
+        padding: 13px 16px;
+        border-radius: 18px;
     }
 
     /* Visor QR */
