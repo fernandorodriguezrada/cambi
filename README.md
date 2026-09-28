@@ -10,11 +10,17 @@
   </p>
 
   <p align="center">
-    <img src="https://img.shields.io/badge/Status-Estable-A3F1CB?style=for-the-badge&labelColor=20252B&logoColor=20252B" alt="Status">
+    <a href="https://cambibak.rf.gd/" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/🌐_App_en_Vivo-cambibak.rf.gd-A3F1CB?style=for-the-badge&labelColor=20252B&logoColor=20252B" alt="App en Vivo">
+    </a>
     <img src="https://img.shields.io/badge/PWA-Ready-B1D3FE?style=for-the-badge&labelColor=20252B&logoColor=20252B" alt="PWA Ready">
     <img src="https://img.shields.io/badge/PHP-8.4-DFB8FF?style=for-the-badge&labelColor=20252B&logoColor=20252B" alt="PHP 8.4">
     <img src="https://img.shields.io/badge/Design-Material_You-FFB7D3?style=for-the-badge&labelColor=20252B&logoColor=20252B" alt="Material You">
     <img src="https://img.shields.io/badge/License-MIT-617285?style=for-the-badge&labelColor=20252B&logoColor=white" alt="License">
+  </p>
+
+  <p align="center">
+    🔗 <b>Sitio Web Público:</b> <a href="https://cambibak.rf.gd/" target="_blank"><b>https://cambibak.rf.gd/</b></a>
   </p>
 
 </div>
@@ -90,7 +96,14 @@ cambi/
 
 ## 🚀 Instalación y Puesta en Marcha
 
-### Con DDEV (Recomendado)
+### Acceso Directo (Demo en Producción)
+
+Puedes usar la versión pública directamente sin instalar nada:
+👉 **[https://cambibak.rf.gd/](https://cambibak.rf.gd/)**
+
+---
+
+### Con DDEV (Recomendado para Desarrollo Local)
 
 1. Clona el repositorio:
    ```bash
