@@ -869,6 +869,7 @@
         pmModalMode = mode;
         const modal = document.getElementById("pm-modal-profile");
         const title = document.getElementById("pm-modal-title");
+        const subtitle = document.getElementById("pm-modal-subtitle");
         const bankGroup = document.getElementById("pm-bank-select-group");
         const bankSelect = document.getElementById("pm-input-bank");
         const inputHolder = document.getElementById("pm-input-holder");
@@ -883,6 +884,7 @@
 
         if (mode === "edit" && profile) {
             if (title) title.innerText = "Editar Datos Personales";
+            if (subtitle) subtitle.innerText = "Modifica los datos asociados a todos tus pagos móviles.";
             if (bankGroup) bankGroup.style.display = "none";
             if (bankSelect) bankSelect.removeAttribute("required");
             if (inputHolder) inputHolder.value = profile.holder || "";
@@ -891,7 +893,8 @@
             if (inputPhonePrefix) inputPhonePrefix.value = profile.phonePrefix || "0412";
             if (inputPhoneNum) inputPhoneNum.value = profile.phoneNum || "";
         } else {
-            if (title) title.innerText = "Configurar Pago Móvil";
+            if (title) title.innerText = "Configurar mi primer Pago Móvil";
+            if (subtitle) subtitle.innerText = "Configura tus datos base una sola vez y añade tu primer banco para comenzar.";
             if (bankGroup) bankGroup.style.display = "flex";
             if (bankSelect) {
                 bankSelect.setAttribute("required", "required");

@@ -42,7 +42,7 @@
                 <!-- Botón principal para iniciar -->
                 <button id="pm-btn-start" class="pm-btn-primary" onclick="openPmModal('create')">
                     <span class="material-symbols-rounded">add_circle</span>
-                    Configurar mi Pago Móvil
+                    Configurar mi primer Pago Móvil
                 </button>
             </div>
         </div>

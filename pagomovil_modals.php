@@ -3,11 +3,12 @@
     <div class="pm-modal-sheet">
         <div class="pm-modal-handle"></div>
         <div class="pm-modal-header">
-            <h3 id="pm-modal-title">Configurar Pago Móvil</h3>
+            <h3 id="pm-modal-title">Configurar mi primer Pago Móvil</h3>
             <button type="button" class="pm-modal-close" onclick="closePmModal()">
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
+        <p id="pm-modal-subtitle" class="pm-modal-subtext">Configura tus datos base una sola vez y añade tu primer banco para comenzar.</p>
         <form id="pm-form-profile" onsubmit="savePmProfile(event)">
             <div class="pm-form-group">
                 <label for="pm-input-holder">Titular o Nombre del Negocio</label>
