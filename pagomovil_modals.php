@@ -15,7 +15,7 @@
             </div>
 
             <div class="pm-form-row">
-                <div class="pm-form-group" style="flex: 0 0 85px;">
+                <div class="pm-form-group" style="flex: 0 0 100px;">
                     <label for="pm-input-doc-type">Tipo</label>
                     <select id="pm-input-doc-type">
                         <option value="V">V</option>
@@ -31,7 +31,7 @@
             </div>
 
             <div class="pm-form-row">
-                <div class="pm-form-group" style="flex: 0 0 105px;">
+                <div class="pm-form-group" style="flex: 0 0 100px;">
                     <label for="pm-input-phone-prefix">Prefijo</label>
                     <select id="pm-input-phone-prefix">
                         <option value="0412">0412</option>

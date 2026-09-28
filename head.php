@@ -1393,7 +1393,10 @@
     }
 
     .pm-form-group input, .pm-form-group select {
-        padding: 13px 14px;
+        width: 100%;
+        height: 52px;
+        line-height: normal;
+        padding: 0 16px;
         border-radius: 16px;
         border: 1.5px solid transparent;
         background-color: var(--md-sys-color-surface-container);
@@ -1410,7 +1413,8 @@
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='20' viewBox='0 -960 960 960' width='20' fill='%23617285'%3E%3Cpath d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 12px center;
-        padding-right: 34px;
+        padding-right: 36px;
+        padding-left: 14px;
         -webkit-appearance: none;
         appearance: none;
         cursor: pointer;
