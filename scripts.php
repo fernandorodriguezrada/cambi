@@ -495,6 +495,7 @@
             content.classList.toggle('active', content.id === `${tabId}-tab-content`);
         });
         if (tabId === 'calculator' && inputTop) convert(inputTop);
+        if (tabId === 'pagomovil') renderPmView();
     };
 
     window.switchTab = switchTab;
@@ -524,6 +525,439 @@
             }
         };
     }
+
+    
+    /* =========================================
+       LÓGICA PAGO MÓVIL (LOCAL-FIRST)
+       ========================================= */
+    const PM_STORAGE_KEY = "cambi_pagomovil_profile";
+
+    const BANK_NAMES = {
+        "0102": "Banco de Venezuela",
+        "0104": "Venezolano de Crédito",
+        "0105": "Mercantil Banco",
+        "0108": "BBVA Banco Provincial",
+        "0114": "Bancaribe",
+        "0115": "Banco Exterior",
+        "0128": "Banco Caroní",
+        "0134": "Banesco Banco Universal",
+        "0137": "Banco Sofitasa",
+        "0138": "Banco Plaza",
+        "0146": "Bangente",
+        "0151": "BFC Banco Fondo Común",
+        "0156": "100% Banco",
+        "0157": "DelSur Banco Universal",
+        "0163": "Banco del Tesoro",
+        "0166": "Banco Agrícola de Venezuela",
+        "0168": "Bancrecer",
+        "0169": "Mi Banco",
+        "0171": "Banco Activo",
+        "0172": "Bancamiga Banco Universal",
+        "0174": "Banplus Banco Universal",
+        "0175": "Banco Bicentenario",
+        "0177": "BANFANB",
+        "0191": "Banco Nacional de Crédito (BNC)"
+    };
+
+    const BANK_SHORT = {
+        "0102": "Venezuela",
+        "0104": "Ven. Crédito",
+        "0105": "Mercantil",
+        "0108": "Provincial",
+        "0114": "Bancaribe",
+        "0115": "Exterior",
+        "0128": "Caroní",
+        "0134": "Banesco",
+        "0137": "Sofitasa",
+        "0138": "Plaza",
+        "0146": "Bangente",
+        "0151": "BFC",
+        "0156": "100% Banco",
+        "0157": "DelSur",
+        "0163": "Tesoro",
+        "0166": "Agrícola",
+        "0168": "Bancrecer",
+        "0169": "Mi Banco",
+        "0171": "Activo",
+        "0172": "Bancamiga",
+        "0174": "Banplus",
+        "0175": "Bicentenario",
+        "0177": "BANFANB",
+        "0191": "BNC"
+    };
+
+    let currentPmSlide = 0;
+    let pmModalMode = "create";
+
+    const getPmProfile = () => {
+        try {
+            const raw = localStorage.getItem(PM_STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    const setPmProfile = (profile) => {
+        localStorage.setItem(PM_STORAGE_KEY, JSON.stringify(profile));
+    };
+
+    const goToPmSlide = (index) => {
+        currentPmSlide = index;
+        const carousel = document.getElementById("pm-carousel");
+        const dots = document.querySelectorAll(".pm-dot");
+        if (carousel) {
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+        }
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle("active", idx === index);
+        });
+    };
+    window.goToPmSlide = goToPmSlide;
+
+    const showToast = (message) => {
+        const toast = document.getElementById("pm-toast");
+        const toastMsg = document.getElementById("pm-toast-msg");
+        if (!toast) return;
+        if (toastMsg) toastMsg.innerText = message;
+        toast.classList.add("active");
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => {
+            toast.classList.remove("active");
+        }, 2600);
+    };
+    window.showToast = showToast;
+
+    const renderPmView = () => {
+        const profile = getPmProfile();
+        const onboardingView = document.getElementById("pm-onboarding-view");
+        const activeView = document.getElementById("pm-active-view");
+        if (!onboardingView || !activeView) return;
+
+        if (!profile || !profile.banks || profile.banks.length === 0) {
+            onboardingView.style.display = "flex";
+            activeView.style.display = "none";
+            goToPmSlide(0);
+            return;
+        }
+
+        onboardingView.style.display = "none";
+        activeView.style.display = "flex";
+
+        // Render profile info
+        const displayHolder = document.getElementById("pm-display-holder");
+        const displayDoc = document.getElementById("pm-display-doc");
+        if (displayHolder) displayHolder.innerText = profile.holder;
+        if (displayDoc) displayDoc.innerText = `${profile.docType}-${profile.docNum}`;
+
+        // Ensure selectedBank is valid
+        if (!profile.selectedBank || !profile.banks.includes(profile.selectedBank)) {
+            profile.selectedBank = profile.banks[0];
+            setPmProfile(profile);
+        }
+
+        // Render chips
+        const chipsContainer = document.getElementById("pm-chips-list");
+        if (chipsContainer) {
+            chipsContainer.innerHTML = "";
+            profile.banks.forEach(bankCode => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `pm-chip ${bankCode === profile.selectedBank ? "active" : ""}`;
+                btn.onclick = () => selectPmBank(bankCode);
+                
+                const shortName = BANK_SHORT[bankCode] || bankCode;
+                btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px;">account_balance</span> ${shortName} <small style="opacity:0.75;">(${bankCode})</small>`;
+                chipsContainer.appendChild(btn);
+            });
+        }
+
+        // Render current selected card
+        const currentBankCode = profile.selectedBank;
+        const currentBankName = BANK_NAMES[currentBankCode] || `Banco (${currentBankCode})`;
+
+        const cardBankName = document.getElementById("pm-card-bank-name");
+        const cardBankCode = document.getElementById("pm-card-bank-code");
+        const cardPhone = document.getElementById("pm-card-phone");
+        const cardDoc = document.getElementById("pm-card-doc");
+        const cardHolder = document.getElementById("pm-card-holder");
+
+        if (cardBankName) cardBankName.innerText = currentBankName;
+        if (cardBankCode) cardBankCode.innerText = currentBankCode;
+        if (cardPhone) cardPhone.innerText = `${profile.phonePrefix}-${profile.phoneNum}`;
+        if (cardDoc) cardDoc.innerText = `${profile.docType}-${profile.docNum}`;
+        if (cardHolder) cardHolder.innerText = profile.holder;
+    };
+    window.renderPmView = renderPmView;
+
+    const selectPmBank = (bankCode) => {
+        const profile = getPmProfile();
+        if (!profile) return;
+        profile.selectedBank = bankCode;
+        setPmProfile(profile);
+        renderPmView();
+    };
+    window.selectPmBank = selectPmBank;
+
+    const openPmModal = (mode) => {
+        pmModalMode = mode;
+        const modal = document.getElementById("pm-modal-profile");
+        const title = document.getElementById("pm-modal-title");
+        const bankGroup = document.getElementById("pm-bank-select-group");
+        const bankSelect = document.getElementById("pm-input-bank");
+        const inputHolder = document.getElementById("pm-input-holder");
+        const inputDocType = document.getElementById("pm-input-doc-type");
+        const inputDocNum = document.getElementById("pm-input-doc-num");
+        const inputPhonePrefix = document.getElementById("pm-input-phone-prefix");
+        const inputPhoneNum = document.getElementById("pm-input-phone-num");
+
+        if (!modal) return;
+
+        const profile = getPmProfile();
+
+        if (mode === "edit" && profile) {
+            if (title) title.innerText = "Editar Datos Personales";
+            if (bankGroup) bankGroup.style.display = "none";
+            if (bankSelect) bankSelect.removeAttribute("required");
+            if (inputHolder) inputHolder.value = profile.holder || "";
+            if (inputDocType) inputDocType.value = profile.docType || "V";
+            if (inputDocNum) inputDocNum.value = profile.docNum || "";
+            if (inputPhonePrefix) inputPhonePrefix.value = profile.phonePrefix || "0412";
+            if (inputPhoneNum) inputPhoneNum.value = profile.phoneNum || "";
+        } else {
+            if (title) title.innerText = "Configurar Pago Móvil";
+            if (bankGroup) bankGroup.style.display = "flex";
+            if (bankSelect) {
+                bankSelect.setAttribute("required", "required");
+                bankSelect.value = "";
+            }
+            if (inputHolder) inputHolder.value = "";
+            if (inputDocType) inputDocType.value = "V";
+            if (inputDocNum) inputDocNum.value = "";
+            if (inputPhonePrefix) inputPhonePrefix.value = "0412";
+            if (inputPhoneNum) inputPhoneNum.value = "";
+        }
+
+        modal.classList.add("active");
+    };
+    window.openPmModal = openPmModal;
+
+    const closePmModal = () => {
+        const modal = document.getElementById("pm-modal-profile");
+        if (modal) modal.classList.remove("active");
+    };
+    window.closePmModal = closePmModal;
+
+    const savePmProfile = (e) => {
+        e.preventDefault();
+        const inputHolder = document.getElementById("pm-input-holder").value.trim();
+        const inputDocType = document.getElementById("pm-input-doc-type").value;
+        const inputDocNum = document.getElementById("pm-input-doc-num").value.trim().replace(/\D/g, "");
+        const inputPhonePrefix = document.getElementById("pm-input-phone-prefix").value;
+        const inputPhoneNum = document.getElementById("pm-input-phone-num").value.trim().replace(/\D/g, "");
+        const bankSelect = document.getElementById("pm-input-bank");
+        const selectedBank = bankSelect ? bankSelect.value : "";
+
+        if (!inputHolder || !inputDocNum || !inputPhoneNum) {
+            alert("Por favor completa todos los campos requeridos.");
+            return;
+        }
+
+        let profile = getPmProfile() || { banks: [] };
+        profile.holder = inputHolder;
+        profile.docType = inputDocType;
+        profile.docNum = inputDocNum;
+        profile.phonePrefix = inputPhonePrefix;
+        profile.phoneNum = inputPhoneNum;
+
+        if (pmModalMode === "create") {
+            if (!selectedBank) {
+                alert("Por favor selecciona tu banco principal.");
+                return;
+            }
+            if (!profile.banks.includes(selectedBank)) {
+                profile.banks.push(selectedBank);
+            }
+            profile.selectedBank = selectedBank;
+        }
+
+        setPmProfile(profile);
+        closePmModal();
+        renderPmView();
+        showToast("¡Datos guardados con éxito!");
+    };
+    window.savePmProfile = savePmProfile;
+
+    const openAddBankModal = () => {
+        const modal = document.getElementById("pm-modal-add-bank");
+        const select = document.getElementById("pm-new-bank-select");
+        if (select) select.value = "";
+        if (modal) modal.classList.add("active");
+    };
+    window.openAddBankModal = openAddBankModal;
+
+    const closeAddBankModal = () => {
+        const modal = document.getElementById("pm-modal-add-bank");
+        if (modal) modal.classList.remove("active");
+    };
+    window.closeAddBankModal = closeAddBankModal;
+
+    const saveNewBank = (e) => {
+        e.preventDefault();
+        const select = document.getElementById("pm-new-bank-select");
+        const newBank = select ? select.value : "";
+        if (!newBank) return;
+
+        const profile = getPmProfile();
+        if (!profile) return;
+
+        if (profile.banks.includes(newBank)) {
+            alert("Este banco ya se encuentra en tu lista.");
+            profile.selectedBank = newBank;
+            setPmProfile(profile);
+            closeAddBankModal();
+            renderPmView();
+            return;
+        }
+
+        profile.banks.push(newBank);
+        profile.selectedBank = newBank;
+        setPmProfile(profile);
+        closeAddBankModal();
+        renderPmView();
+        showToast("¡Nuevo banco añadido!");
+    };
+    window.saveNewBank = saveNewBank;
+
+    const deleteCurrentBank = () => {
+        const profile = getPmProfile();
+        if (!profile || !profile.selectedBank) return;
+
+        const bankName = BANK_NAMES[profile.selectedBank] || profile.selectedBank;
+        if (!confirm(`¿Eliminar ${bankName} de tus pagos móviles?`)) return;
+
+        profile.banks = profile.banks.filter(b => b !== profile.selectedBank);
+        if (profile.banks.length > 0) {
+            profile.selectedBank = profile.banks[0];
+            setPmProfile(profile);
+            renderPmView();
+            showToast("Banco eliminado.");
+        } else {
+            localStorage.removeItem(PM_STORAGE_KEY);
+            renderPmView();
+            showToast("Perfil de Pago Móvil reiniciado.");
+        }
+    };
+    window.deleteCurrentBank = deleteCurrentBank;
+
+    const copyPmData = () => {
+        const profile = getPmProfile();
+        if (!profile || !profile.selectedBank) return;
+
+        const bankCode = profile.selectedBank;
+        const bankName = BANK_NAMES[bankCode] || "Banco";
+        const phoneFormatted = `${profile.phonePrefix}-${profile.phoneNum}`;
+        const doc = `${profile.docType}-${profile.docNum}`;
+        const holder = profile.holder;
+
+        const textToCopy = `Pago Móvil:\nBanco: ${bankName} (${bankCode})\nTeléfono: ${phoneFormatted}\nCédula: ${doc}\nTitular: ${holder}`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("¡Datos copiados al portapapeles!");
+            }).catch(() => {
+                fallbackCopy(textToCopy);
+            });
+        } else {
+            fallbackCopy(textToCopy);
+        }
+    };
+    window.copyPmData = copyPmData;
+
+    const fallbackCopy = (text) => {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.top = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand("copy");
+            showToast("¡Datos copiados al portapapeles!");
+        } catch (err) {
+            prompt("Copia tus datos aquí:", text);
+        }
+        document.body.removeChild(textArea);
+    };
+
+    const showPmQR = () => {
+        const profile = getPmProfile();
+        if (!profile || !profile.selectedBank) return;
+
+        const bankCode = profile.selectedBank;
+        const bankName = BANK_NAMES[bankCode] || "Banco";
+        const phone = `${profile.phonePrefix}${profile.phoneNum}`;
+        const doc = `${profile.docType}${profile.docNum}`;
+        const holder = profile.holder;
+
+        const qrTitle = document.getElementById("pm-qr-bank-title");
+        const qrSubtitle = document.getElementById("pm-qr-holder-subtitle");
+        const qrInfoText = document.getElementById("pm-qr-info-text");
+        const qrContainer = document.getElementById("pm-qrcode-container");
+        const modal = document.getElementById("pm-modal-qr");
+
+        if (qrTitle) qrTitle.innerText = `${bankName} (${bankCode})`;
+        if (qrSubtitle) qrSubtitle.innerText = holder;
+        if (qrInfoText) qrInfoText.innerText = `${profile.phonePrefix}-${profile.phoneNum} • ${profile.docType}-${profile.docNum}`;
+
+        if (qrContainer) {
+            qrContainer.innerHTML = "";
+            const qrPayload = `PAGO MOVIL\nBanco: ${bankCode}\nCI: ${doc}\nTel: ${phone}\nTitular: ${holder}`;
+            
+            if (typeof QRCode !== "undefined") {
+                new QRCode(qrContainer, {
+                    text: qrPayload,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#1e252b",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            } else {
+                qrContainer.innerHTML = '<p style="color:var(--md-sys-color-outline); font-size:0.85rem;">Generador QR no disponible offline todavía.</p>';
+            }
+        }
+
+        if (modal) modal.classList.add("active");
+    };
+    window.showPmQR = showPmQR;
+
+    const closePmQR = () => {
+        const modal = document.getElementById("pm-modal-qr");
+        if (modal) modal.classList.remove("active");
+    };
+    window.closePmQR = closePmQR;
+
+    // Inicializar carrusel touch swipe
+    const carouselEl = document.getElementById("pm-carousel");
+    if (carouselEl) {
+        let touchStartX = 0;
+        let touchEndX = 0;
+        carouselEl.addEventListener("touchstart", (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        carouselEl.addEventListener("touchend", (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 45 && currentPmSlide < 2) {
+                goToPmSlide(currentPmSlide + 1);
+            } else if (touchEndX - touchStartX > 45 && currentPmSlide > 0) {
+                goToPmSlide(currentPmSlide - 1);
+            }
+        }, { passive: true });
+    }
+
+    renderPmView();
 
     navItems.forEach(item => {
         item.addEventListener('click', () => {

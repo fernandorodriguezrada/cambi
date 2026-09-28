@@ -6,6 +6,13 @@
         </div>
         <span class="nav-label">Tasas</span>
     </button>
+    <button class="nav-item" data-tab="pagomovil">
+        <div class="nav-icon-container">
+            <div class="nav-indicator"></div>
+            <span class="material-symbols-rounded">qr_code_2</span>
+        </div>
+        <span class="nav-label">Pago Móvil</span>
+    </button>
     <button class="nav-item" data-tab="calculator">
         <div class="nav-icon-container">
             <div class="nav-indicator"></div>

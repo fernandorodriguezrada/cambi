@@ -778,4 +778,636 @@
         color: var(--md-sys-color-outline);
         border-bottom: 2px solid var(--md-sys-color-surface-container);
     }
+
+    /* =========================================
+       ESTILOS PESTAÑA PAGO MÓVIL
+       ========================================= */
+    .pm-container {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding-top: 4px;
+        padding-bottom: 24px;
+    }
+
+    .pm-view {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* Onboarding / Tour Card */
+    .pm-tour-card {
+        background-color: var(--md-sys-color-surface-container);
+        border-radius: 28px;
+        padding: 28px 20px 24px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    }
+
+    .pm-carousel-wrapper {
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .pm-carousel {
+        display: flex;
+        transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+        width: 100%;
+    }
+
+    .pm-slide {
+        min-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 4px 8px;
+        box-sizing: border-box;
+    }
+
+    .pm-slide-icon-wrap {
+        width: 76px;
+        height: 76px;
+        border-radius: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+    }
+
+    .pm-slide-icon-wrap .material-symbols-rounded {
+        font-size: 40px;
+    }
+
+    .pm-slide-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .pm-slide-desc {
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--md-sys-color-on-surface-variant);
+        margin: 0;
+        max-width: 290px;
+    }
+
+    .pm-indicators {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0 22px;
+    }
+
+    .pm-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        background-color: var(--md-sys-color-outline);
+        opacity: 0.35;
+        transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+        cursor: pointer;
+    }
+
+    .pm-dot.active {
+        width: 26px;
+        background-color: var(--cambi-magic-mint-on-surface);
+        opacity: 1;
+    }
+
+    body.dark-mode .pm-dot.active {
+        background-color: var(--cambi-magic-mint);
+    }
+
+    /* Botón Principal */
+    .pm-btn-primary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 14px 20px;
+        border-radius: 20px;
+        border: none;
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
+        font-family: var(--font-google-sans);
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.15s, filter 0.15s;
+    }
+
+    .pm-btn-primary:active {
+        transform: scale(0.98);
+        filter: brightness(0.96);
+    }
+
+    .pm-btn-secondary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 20px;
+        border-radius: 20px;
+        border: none;
+        background-color: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-on-surface);
+        font-family: var(--font-google-sans);
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: filter 0.15s;
+    }
+
+    /* Header del perfil activo */
+    .pm-profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--md-sys-color-surface-container);
+        border-radius: 24px;
+        padding: 16px 20px;
+        margin-bottom: 14px;
+        width: 100%;
+    }
+
+    .pm-user-meta {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pm-user-tag {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--md-sys-color-outline);
+    }
+
+    .pm-user-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+        margin: 2px 0 0 0;
+    }
+
+    .pm-user-doc {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--md-sys-color-outline);
+    }
+
+    .pm-icon-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0, 0, 0, 0.04);
+        color: var(--md-sys-color-on-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.15s;
+    }
+
+    body.dark-mode .pm-icon-btn {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .pm-icon-btn:active {
+        transform: scale(0.92);
+    }
+
+    /* Sección de chips de bancos */
+    .pm-banks-section {
+        width: 100%;
+        margin-bottom: 14px;
+    }
+
+    .pm-section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--md-sys-color-outline);
+        margin-bottom: 8px;
+        display: block;
+        padding-left: 4px;
+    }
+
+    .pm-chips-scroll {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .pm-chips-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .pm-chips-list {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .pm-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 16px;
+        background-color: var(--md-sys-color-surface-container);
+        border: 1.5px solid transparent;
+        color: var(--md-sys-color-on-surface-variant);
+        font-family: var(--font-google-sans);
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .pm-chip.active {
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(163, 241, 203, 0.35);
+    }
+
+    .pm-chip-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 12px;
+        border-radius: 16px;
+        background-color: transparent;
+        border: 1.5px dashed var(--md-sys-color-outline);
+        color: var(--md-sys-color-outline);
+        font-family: var(--font-google-sans);
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: border-color 0.2s, color 0.2s;
+    }
+
+    .pm-chip-add:hover, .pm-chip-add:active {
+        border-color: var(--cambi-magic-mint-on-surface);
+        color: var(--cambi-magic-mint-on-surface);
+    }
+
+    /* Tarjeta Principal del Pago Móvil */
+    .pm-card {
+        background-color: var(--md-sys-color-surface-container);
+        border-radius: 28px;
+        padding: 22px 20px 18px;
+        width: 100%;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .pm-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 14px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    body.dark-mode .pm-card-top {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pm-card-bank-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .pm-card-bank-badge .material-symbols-rounded {
+        color: var(--cambi-baby-blue-on-surface);
+    }
+
+    body.dark-mode .pm-card-bank-badge .material-symbols-rounded {
+        color: var(--cambi-baby-blue);
+    }
+
+    .pm-bank-code-pill {
+        padding: 4px 10px;
+        border-radius: 12px;
+        background-color: rgba(177, 211, 254, 0.35);
+        color: #1a6ec0;
+        font-family: monospace;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    body.dark-mode .pm-bank-code-pill {
+        background-color: rgba(177, 211, 254, 0.15);
+        color: var(--cambi-baby-blue);
+    }
+
+    .pm-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .pm-field-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        font-size: 0.95rem;
+    }
+
+    .pm-field-label {
+        color: var(--md-sys-color-outline);
+        font-weight: 500;
+    }
+
+    .pm-field-value {
+        color: var(--md-sys-color-on-surface);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    .pm-card-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .pm-action-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 13px 12px;
+        border-radius: 18px;
+        border: none;
+        font-family: var(--font-google-sans);
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.15s, filter 0.15s;
+    }
+
+    .pm-action-btn:active {
+        transform: scale(0.97);
+        filter: brightness(0.96);
+    }
+
+    .pm-action-copy {
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
+    }
+
+    .pm-action-qr {
+        background-color: var(--cambi-baby-blue);
+        color: #0c4384;
+    }
+
+    body.dark-mode .pm-action-qr {
+        color: #052449;
+    }
+
+    .pm-card-footer {
+        display: flex;
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    .pm-delete-bank-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: none;
+        border: none;
+        color: #e53935;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        opacity: 0.75;
+        padding: 4px 8px;
+        border-radius: 8px;
+        transition: opacity 0.2s;
+    }
+
+    .pm-delete-bank-btn:hover, .pm-delete-bank-btn:active {
+        opacity: 1;
+    }
+
+    /* Modales Bottom Sheet M3 */
+    .pm-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 250;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .pm-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .pm-modal-sheet {
+        background-color: var(--md-sys-color-surface);
+        width: 100%;
+        max-width: 440px;
+        border-radius: 28px 28px 0 0;
+        padding: 24px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18);
+        transform: translateY(100%);
+        transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
+        max-height: 88vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-sizing: border-box;
+    }
+
+    .pm-modal-overlay.active .pm-modal-sheet {
+        transform: translateY(0);
+    }
+
+    .pm-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .pm-modal-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .pm-modal-close {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--md-sys-color-on-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    body.dark-mode .pm-modal-close {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .pm-modal-subtext {
+        font-size: 0.88rem;
+        color: var(--md-sys-color-outline);
+        margin: -8px 0 16px;
+        line-height: 1.4;
+    }
+
+    .pm-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 14px;
+    }
+
+    .pm-form-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .pm-form-group label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--md-sys-color-outline);
+    }
+
+    .pm-form-group input, .pm-form-group select {
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1.5px solid var(--md-sys-color-surface-container);
+        background-color: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-on-surface);
+        font-family: var(--font-google-sans);
+        font-size: 0.95rem;
+        font-weight: 500;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .pm-form-group input:focus, .pm-form-group select:focus {
+        border-color: var(--cambi-magic-mint-on-surface);
+    }
+
+    .pm-modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .pm-modal-actions button {
+        flex: 1;
+    }
+
+    /* Visor QR */
+    .pm-qr-canvas-wrapper {
+        display: flex;
+        justify-content: center;
+        margin: 12px 0;
+    }
+
+    #pm-qrcode-container {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    #pm-qrcode-container canvas, #pm-qrcode-container img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .pm-qr-info-box {
+        background-color: var(--md-sys-color-surface-container);
+        border-radius: 16px;
+        padding: 10px 14px;
+        margin-top: 12px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--md-sys-color-on-surface-variant);
+        line-height: 1.4;
+    }
+
+    /* Toast */
+    .pm-toast {
+        position: fixed;
+        bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+        left: 50%;
+        transform: translateX(-50%) translateY(30px);
+        background-color: #1e293b;
+        color: #ffffff;
+        padding: 12px 20px;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        z-index: 350;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .pm-toast.active {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .pm-toast .material-symbols-rounded {
+        color: var(--cambi-magic-mint);
+        font-size: 20px;
+    }
 </style>

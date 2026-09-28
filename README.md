@@ -3,10 +3,10 @@
   <img src="public/512.png" alt="Cambi Logo" width="120" style="border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-bottom: 16px;">
 
   # **CAMBI**
-  ### Tasa Oficial BCV & Conversor Inteligente
+  ### Tasa Oficial BCV, Calculadora & Gestor de Pago Móvil
 
   <p align="center">
-    Una Progressive Web App (PWA) moderna, fluida y minimalista diseñada con estética <b>Material You (M3)</b> para consultar la tasa oficial de cambio en Venezuela (USD y EUR) y realizar conversiones con calculadora aritmética integrada en tiempo real.
+    Una Progressive Web App (PWA) moderna, fluida y minimalista diseñada con estética <b>Material You (M3)</b> para consultar la tasa oficial de cambio en Venezuela (USD y EUR), realizar conversiones con calculadora aritmética integrada en tiempo real y gestionar cobros con <b>Pago Móvil y código QR sin conexión</b>.
   </p>
 
   <p align="center">
@@ -50,6 +50,12 @@ Cambi utiliza una paleta cromática pastel contemporánea inspirada en las espec
   - Permite ingresar fórmulas completas como `50 + 20 - 5 * 2`.
   - Desglose y previsualización de subtotal en tiempo real encima del input.
   - Conversión automática e instantánea al valor equivalente en Bolívares o Dólares.
+- 💳 **Gestor de Pago Móvil (Local-First):**
+  - **Tour Interactivo:** Carrusel de bienvenida para nuevos usuarios explicando las ventajas del módulo.
+  - **Arquitectura Local-First:** Tus datos bancarios se guardan exclusivamente en tu dispositivo (`localStorage`), garantizando máxima privacidad, cero consumo de servidor y funcionamiento 100% offline.
+  - **Soporte Multibanco:** Cédula y teléfono unificados; salta entre múltiples bancos (Banesco, Venezuela, Mercantil, Bancamiga, etc.) con un solo toque.
+  - **Copia Inmediata:** Copia los datos al portapapeles con formato limpio listo para enviar por WhatsApp.
+  - **Generador de QR Offline:** Genera al instante el código QR para que cualquier cliente lo escanee sin necesidad de conexión.
 - 🔀 **Conversión Bidireccional:** Alterna el sentido del cambio (USD &rarr; VES o VES &rarr; USD) con un solo toque y rotación fluida de 180°.
 - 👆 **Control Táctil de Precisión:**
   - Cursor interactivo flotante (*custom pulsing caret*) calibrado milimétricamente.
@@ -83,13 +89,14 @@ cambi/
 ├── head.php             # Metadatos, fuentes tipográficas y hoja de estilos global
 ├── header.php           # Barra superior con branding y acceso a ajustes
 ├── rates_tab.php        # Pestaña de cotizaciones oficiales USD / EUR
+├── pagomovil_tab.php    # Pestaña de gestión de Pago Móvil, selector bancario y QR
 ├── calculator_tab.php   # Pestaña de calculadora interactiva y teclado numérico
 ├── history_tab.php      # Pestaña de historial cambiario
 ├── bottom_nav.php       # Barra de navegación inferior estilo M3
-├── scripts.php          # Lógica frontend: cálculos, cursor, temas y eventos
+├── scripts.php          # Lógica frontend: cálculos, cursor, Pago Móvil, temas y eventos
 ├── sw.js                # Service Worker para capacidades PWA y offline
 ├── manifest.json        # Configuración PWA para instalación móvil
-└── public/              # Favicons, iconos PWA e imágenes del branding
+└── public/              # Favicons, iconos PWA, qrcode.min.js e imágenes del branding
 ```
 
 ---

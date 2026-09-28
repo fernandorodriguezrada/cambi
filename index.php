@@ -5,6 +5,7 @@ $componentsDir = __DIR__ . '/';
 <html lang="en">
 <head>
     <?php include_once $componentsDir . 'head.php'; ?>
+    <script src="public/qrcode.min.js"></script>
 </head>
 <body>
     <!-- Pantalla de Carga (Splash Screen) -->
@@ -22,6 +23,7 @@ $componentsDir = __DIR__ . '/';
     ?>
     <main id="main-content" class="main-content">
         <?php include_once $componentsDir . 'rates_tab.php'; ?>
+        <?php include_once $componentsDir . 'pagomovil_tab.php'; ?>
         <?php include_once $componentsDir . 'calculator_tab.php'; ?>
         <?php include_once $componentsDir . 'history_tab.php'; ?>
     </main>
