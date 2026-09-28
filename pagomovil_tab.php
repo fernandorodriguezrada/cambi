@@ -7,7 +7,7 @@
                     <div id="pm-carousel" class="pm-carousel">
                         <!-- Slide 1 -->
                         <div class="pm-slide active" data-slide="0">
-                            <div class="pm-slide-icon-wrap" style="background-color: rgba(163, 241, 203, 0.25); color: #00875a;">
+                            <div class="pm-slide-icon-wrap icon-mint">
                                 <span class="material-symbols-rounded">payments</span>
                             </div>
                             <h3 class="pm-slide-title">Cobra en un toque</h3>
@@ -15,7 +15,7 @@
                         </div>
                         <!-- Slide 2 -->
                         <div class="pm-slide" data-slide="1">
-                            <div class="pm-slide-icon-wrap" style="background-color: rgba(177, 211, 254, 0.3); color: #1f84e8;">
+                            <div class="pm-slide-icon-wrap icon-blue">
                                 <span class="material-symbols-rounded">account_balance</span>
                             </div>
                             <h3 class="pm-slide-title">Múltiples bancos</h3>
@@ -23,7 +23,7 @@
                         </div>
                         <!-- Slide 3 -->
                         <div class="pm-slide" data-slide="2">
-                            <div class="pm-slide-icon-wrap" style="background-color: rgba(223, 184, 255, 0.35); color: #9e2abe;">
+                            <div class="pm-slide-icon-wrap icon-mauve">
                                 <span class="material-symbols-rounded">qr_code_2</span>
                             </div>
                             <h3 class="pm-slide-title">Código QR instantáneo</h3>

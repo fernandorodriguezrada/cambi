@@ -814,11 +814,11 @@
         box-sizing: border-box;
     }
 
-    /* Onboarding / Tour Card que abarca toda la pantalla disponible */
+    /* Onboarding / Tour Card que abarca toda la pantalla disponible (sin fondo) */
     .pm-tour-card {
-        background-color: var(--md-sys-color-surface-container);
-        border-radius: 32px;
-        padding: 32px 24px 24px;
+        background-color: transparent;
+        border-radius: 0;
+        padding: 16px 4px 8px;
         width: 100%;
         height: 100%;
         flex: 1;
@@ -826,7 +826,8 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        box-shadow: none;
+        border: none;
         box-sizing: border-box;
     }
 
@@ -855,22 +856,53 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 8px 10px;
+        padding: 8px 12px;
         box-sizing: border-box;
     }
 
     .pm-slide-icon-wrap {
-        width: 84px;
-        height: 84px;
-        border-radius: 28px;
+        width: 88px;
+        height: 88px;
+        border-radius: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .pm-slide-icon-wrap.icon-mint {
+        background-color: rgba(163, 241, 203, 0.45);
+        color: #005a36;
+    }
+
+    .pm-slide-icon-wrap.icon-blue {
+        background-color: rgba(177, 211, 254, 0.45);
+        color: #0b57d0;
+    }
+
+    .pm-slide-icon-wrap.icon-mauve {
+        background-color: rgba(223, 184, 255, 0.5);
+        color: #6b21a8;
+    }
+
+    body.dark-mode .pm-slide-icon-wrap.icon-mint {
+        background-color: rgba(163, 241, 203, 0.16);
+        color: #A3F1CB;
+    }
+
+    body.dark-mode .pm-slide-icon-wrap.icon-blue {
+        background-color: rgba(177, 211, 254, 0.16);
+        color: #B1D3FE;
+    }
+
+    body.dark-mode .pm-slide-icon-wrap.icon-mauve {
+        background-color: rgba(223, 184, 255, 0.18);
+        color: #DFB8FF;
     }
 
     .pm-slide-icon-wrap .material-symbols-rounded {
-        font-size: 44px;
+        font-size: 46px;
     }
 
     .pm-slide-title {
