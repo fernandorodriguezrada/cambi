@@ -708,6 +708,163 @@
     };
     window.selectPmBank = selectPmBank;
 
+    // =========================================
+    // MOTOR DE SELECTORES PERSONALIZADOS M3 (PAGO MÓVIL)
+    // =========================================
+    const initCustomSelects = () => {
+        const selects = document.querySelectorAll("select.pm-styled-select");
+        selects.forEach(select => {
+            if (select.dataset.customized === "true") return;
+            select.dataset.customized = "true";
+
+            const parentGroup = select.closest(".pm-form-group");
+            if (!parentGroup) return;
+
+            const wrap = document.createElement("div");
+            wrap.className = "pm-custom-select-wrap";
+            wrap.id = `wrap-${select.id}`;
+
+            const trigger = document.createElement("button");
+            trigger.type = "button";
+            trigger.className = "pm-custom-select-trigger";
+            trigger.id = `trigger-${select.id}`;
+            trigger.setAttribute("aria-haspopup", "listbox");
+            trigger.setAttribute("aria-expanded", "false");
+
+            const textSpan = document.createElement("span");
+            textSpan.className = "pm-custom-select-text";
+
+            const arrowSpan = document.createElement("span");
+            arrowSpan.className = "material-symbols-rounded pm-custom-select-arrow";
+            arrowSpan.textContent = "keyboard_arrow_down";
+
+            trigger.appendChild(textSpan);
+            trigger.appendChild(arrowSpan);
+
+            const dropdown = document.createElement("div");
+            dropdown.className = "pm-custom-select-dropdown";
+            dropdown.setAttribute("role", "listbox");
+
+            Array.from(select.options).forEach(opt => {
+                const item = document.createElement("div");
+                item.className = "pm-custom-select-item";
+                item.dataset.value = opt.value;
+
+                const label = document.createElement("span");
+                label.textContent = opt.text;
+                item.appendChild(label);
+
+                const check = document.createElement("span");
+                check.className = "material-symbols-rounded pm-item-check";
+                check.textContent = "check";
+                item.appendChild(check);
+
+                if (opt.value === select.value) {
+                    item.classList.add("selected");
+                    textSpan.textContent = opt.text;
+                    if (!opt.value) textSpan.classList.add("placeholder");
+                }
+
+                item.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    select.value = opt.value;
+                    select.dispatchEvent(new Event("change"));
+                    syncCustomSelect(select.id);
+                    closeAllCustomSelects();
+                });
+
+                dropdown.appendChild(item);
+            });
+
+            if (!textSpan.textContent) {
+                const cur = select.options[select.selectedIndex];
+                textSpan.textContent = cur ? cur.text : "Selecciona una opción";
+                if (!select.value) textSpan.classList.add("placeholder");
+            }
+
+            trigger.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const wasOpen = wrap.classList.contains("open");
+                closeAllCustomSelects();
+                if (!wasOpen) {
+                    const rect = trigger.getBoundingClientRect();
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    if (spaceBelow < 230 && rect.top > 230) {
+                        wrap.classList.add("dropup");
+                    } else {
+                        wrap.classList.remove("dropup");
+                    }
+                    wrap.classList.add("open");
+                    trigger.setAttribute("aria-expanded", "true");
+
+                    const selItem = dropdown.querySelector(".pm-custom-select-item.selected");
+                    if (selItem) {
+                        setTimeout(() => selItem.scrollIntoView({ block: "nearest", behavior: "smooth" }), 60);
+                    }
+                }
+            });
+
+            wrap.appendChild(trigger);
+            wrap.appendChild(dropdown);
+            parentGroup.appendChild(wrap);
+        });
+    };
+
+    const closeAllCustomSelects = () => {
+        document.querySelectorAll(".pm-custom-select-wrap.open").forEach(w => {
+            w.classList.remove("open");
+            const trg = w.querySelector(".pm-custom-select-trigger");
+            if (trg) trg.setAttribute("aria-expanded", "false");
+        });
+    };
+
+    const syncCustomSelect = (selectId) => {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        const wrap = document.getElementById(`wrap-${selectId}`);
+        if (!wrap) return;
+
+        const textSpan = wrap.querySelector(".pm-custom-select-text");
+        const items = wrap.querySelectorAll(".pm-custom-select-item");
+
+        let matched = false;
+        items.forEach(item => {
+            if (item.dataset.value === select.value) {
+                item.classList.add("selected");
+                if (textSpan) {
+                    textSpan.textContent = item.querySelector("span").textContent;
+                    if (!select.value) {
+                        textSpan.classList.add("placeholder");
+                    } else {
+                        textSpan.classList.remove("placeholder");
+                    }
+                }
+                matched = true;
+            } else {
+                item.classList.remove("selected");
+            }
+        });
+
+        if (!matched && textSpan) {
+            const cur = select.options[select.selectedIndex];
+            textSpan.textContent = cur ? cur.text : "Selecciona una opción";
+            if (!select.value) textSpan.classList.add("placeholder");
+            else textSpan.classList.remove("placeholder");
+        }
+    };
+
+    const syncAllCustomSelects = () => {
+        document.querySelectorAll("select.pm-styled-select").forEach(sel => {
+            syncCustomSelect(sel.id);
+        });
+    };
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".pm-custom-select-wrap")) {
+            closeAllCustomSelects();
+        }
+    });
+
     const openPmModal = (mode) => {
         pmModalMode = mode;
         const modal = document.getElementById("pm-modal-profile");
@@ -747,11 +904,14 @@
             if (inputPhoneNum) inputPhoneNum.value = "";
         }
 
+        syncAllCustomSelects();
+        closeAllCustomSelects();
         modal.classList.add("active");
     };
     window.openPmModal = openPmModal;
 
     const closePmModal = () => {
+        closeAllCustomSelects();
         const modal = document.getElementById("pm-modal-profile");
         if (modal) modal.classList.remove("active");
     };
@@ -801,11 +961,14 @@
         const modal = document.getElementById("pm-modal-add-bank");
         const select = document.getElementById("pm-new-bank-select");
         if (select) select.value = "";
+        syncAllCustomSelects();
+        closeAllCustomSelects();
         if (modal) modal.classList.add("active");
     };
     window.openAddBankModal = openAddBankModal;
 
     const closeAddBankModal = () => {
+        closeAllCustomSelects();
         const modal = document.getElementById("pm-modal-add-bank");
         if (modal) modal.classList.remove("active");
     };
@@ -966,6 +1129,8 @@
         }, { passive: true });
     }
 
+    initCustomSelects();
+    syncAllCustomSelects();
     renderPmView();
 
     navItems.forEach(item => {

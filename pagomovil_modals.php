@@ -17,7 +17,7 @@
             <div class="pm-form-row">
                 <div class="pm-form-group" style="flex: 0 0 100px;">
                     <label for="pm-input-doc-type">Tipo</label>
-                    <select id="pm-input-doc-type">
+                    <select id="pm-input-doc-type" class="pm-styled-select">
                         <option value="V">V</option>
                         <option value="E">E</option>
                         <option value="J">J</option>
@@ -33,7 +33,7 @@
             <div class="pm-form-row">
                 <div class="pm-form-group" style="flex: 0 0 100px;">
                     <label for="pm-input-phone-prefix">Prefijo</label>
-                    <select id="pm-input-phone-prefix">
+                    <select id="pm-input-phone-prefix" class="pm-styled-select">
                         <option value="0412">0412</option>
                         <option value="0414">0414</option>
                         <option value="0424">0424</option>
@@ -50,7 +50,7 @@
             <!-- Selección de Banco inicial (visible solo al crear perfil) -->
             <div id="pm-bank-select-group" class="pm-form-group">
                 <label for="pm-input-bank">Banco Principal</label>
-                <select id="pm-input-bank" required>
+                <select id="pm-input-bank" class="pm-styled-select" required>
                     <option value="">Selecciona tu banco</option>
                     <option value="0102">0102 - Banco de Venezuela</option>
                     <option value="0105">0105 - Banco Mercantil</option>
@@ -101,7 +101,7 @@
         <form id="pm-form-add-bank" onsubmit="saveNewBank(event)">
             <div class="pm-form-group">
                 <label for="pm-new-bank-select">Banco a Añadir</label>
-                <select id="pm-new-bank-select" required>
+                <select id="pm-new-bank-select" class="pm-styled-select" required>
                     <option value="">Selecciona un banco</option>
                     <option value="0102">0102 - Banco de Venezuela</option>
                     <option value="0105">0105 - Banco Mercantil</option>
