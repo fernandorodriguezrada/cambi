@@ -1,0 +1,15 @@
+# Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# Editores y entornos
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# DDEV archivos generados
+.ddev/db_snapshots/
+.ddev/.dbimageBuild
+.ddev/.webimageBuild
+.ddev/.homeadditions
