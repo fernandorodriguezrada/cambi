@@ -573,6 +573,14 @@
         padding-top: 0;
     }
 
+    /* Pestaña Pago Móvil: aprovecha toda la altura disponible y previene scrolls fantasma */
+    #pagomovil-tab-content.active {
+        height: 100%;
+        padding-top: 8px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
     /* Bottom Navigation Bar */
     .bottom-navigation {
         position: fixed;
@@ -788,32 +796,45 @@
         width: 90%;
         max-width: 400px;
         margin: 0 auto;
-        padding-top: 4px;
-        padding-bottom: 24px;
+        height: 100%;
+        flex: 1;
+        padding-top: 0;
+        padding-bottom: 6px;
+        box-sizing: border-box;
     }
 
     .pm-view {
         width: 100%;
+        height: 100%;
+        flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1);
+        box-sizing: border-box;
     }
 
-    /* Onboarding / Tour Card */
+    /* Onboarding / Tour Card que abarca toda la pantalla disponible */
     .pm-tour-card {
         background-color: var(--md-sys-color-surface-container);
-        border-radius: 28px;
-        padding: 28px 20px 24px;
+        border-radius: 32px;
+        padding: 32px 24px 24px;
         width: 100%;
+        height: 100%;
+        flex: 1;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         align-items: center;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
     }
 
     .pm-carousel-wrapper {
         width: 100%;
+        flex: 1;
+        display: flex;
+        align-items: center;
         overflow: hidden;
         position: relative;
     }
@@ -822,53 +843,58 @@
         display: flex;
         transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
         width: 100%;
+        height: 100%;
+        align-items: center;
     }
 
     .pm-slide {
         min-width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         text-align: center;
-        padding: 4px 8px;
+        padding: 8px 10px;
         box-sizing: border-box;
     }
 
     .pm-slide-icon-wrap {
-        width: 76px;
-        height: 76px;
-        border-radius: 26px;
+        width: 84px;
+        height: 84px;
+        border-radius: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
     }
 
     .pm-slide-icon-wrap .material-symbols-rounded {
-        font-size: 40px;
+        font-size: 44px;
     }
 
     .pm-slide-title {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
         font-weight: 700;
-        margin: 0 0 8px 0;
+        letter-spacing: -0.01em;
+        margin: 0 0 10px 0;
         color: var(--md-sys-color-on-surface);
     }
 
     .pm-slide-desc {
-        font-size: 0.92rem;
-        line-height: 1.45;
+        font-size: 1rem;
+        line-height: 1.5;
         color: var(--md-sys-color-on-surface-variant);
         margin: 0;
-        max-width: 290px;
+        max-width: 300px;
     }
 
     .pm-indicators {
         display: flex;
-        gap: 8px;
+        gap: 10px;
         justify-content: center;
         align-items: center;
-        margin: 20px 0 22px;
+        margin: 16px 0 20px;
     }
 
     .pm-dot {
@@ -882,7 +908,7 @@
     }
 
     .pm-dot.active {
-        width: 26px;
+        width: 30px;
         background-color: var(--cambi-magic-mint-on-surface);
         opacity: 1;
     }
@@ -898,13 +924,13 @@
         justify-content: center;
         gap: 8px;
         width: 100%;
-        padding: 14px 20px;
-        border-radius: 20px;
+        padding: 16px 20px;
+        border-radius: 22px;
         border: none;
         background-color: var(--cambi-magic-mint);
         color: #004d34;
         font-family: var(--font-google-sans);
-        font-size: 1rem;
+        font-size: 1.02rem;
         font-weight: 700;
         cursor: pointer;
         transition: transform 0.15s, filter 0.15s;
@@ -1225,9 +1251,9 @@
     .pm-modal-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
         z-index: 250;
         display: flex;
         align-items: flex-end;
@@ -1246,12 +1272,12 @@
         background-color: var(--md-sys-color-surface);
         width: 100%;
         max-width: 440px;
-        border-radius: 28px 28px 0 0;
-        padding: 24px 22px calc(24px + env(safe-area-inset-bottom, 0px));
-        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18);
+        border-radius: 32px 32px 0 0;
+        padding: 14px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+        box-shadow: 0 -8px 36px rgba(0, 0, 0, 0.22);
         transform: translateY(100%);
         transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
-        max-height: 88vh;
+        max-height: 90vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         box-sizing: border-box;
@@ -1259,6 +1285,15 @@
 
     .pm-modal-overlay.active .pm-modal-sheet {
         transform: translateY(0);
+    }
+
+    .pm-modal-handle {
+        width: 36px;
+        height: 4px;
+        border-radius: 2px;
+        background-color: var(--md-sys-color-outline);
+        opacity: 0.35;
+        margin: 0 auto 14px;
     }
 
     .pm-modal-header {
@@ -1270,14 +1305,15 @@
 
     .pm-modal-header h3 {
         margin: 0;
-        font-size: 1.25rem;
+        font-size: 1.3rem;
         font-weight: 700;
+        letter-spacing: -0.01em;
         color: var(--md-sys-color-on-surface);
     }
 
     .pm-modal-close {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         border: none;
         background: rgba(0, 0, 0, 0.05);
@@ -1286,63 +1322,93 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        transition: background-color 0.2s, transform 0.15s;
     }
 
     body.dark-mode .pm-modal-close {
         background: rgba(255, 255, 255, 0.1);
     }
 
+    .pm-modal-close:active {
+        transform: scale(0.92);
+    }
+
     .pm-modal-subtext {
         font-size: 0.88rem;
         color: var(--md-sys-color-outline);
         margin: -8px 0 16px;
-        line-height: 1.4;
+        line-height: 1.45;
     }
 
     .pm-form-group {
         display: flex;
         flex-direction: column;
         gap: 6px;
-        margin-bottom: 14px;
+        margin-bottom: 15px;
     }
 
     .pm-form-row {
         display: flex;
-        gap: 10px;
-        margin-bottom: 14px;
+        gap: 12px;
+        margin-bottom: 15px;
     }
 
     .pm-form-group label {
-        font-size: 0.8rem;
+        font-size: 0.82rem;
         font-weight: 600;
         color: var(--md-sys-color-outline);
+        letter-spacing: 0.01em;
     }
 
     .pm-form-group input, .pm-form-group select {
-        padding: 12px 14px;
-        border-radius: 14px;
-        border: 1.5px solid var(--md-sys-color-surface-container);
+        padding: 13px 14px;
+        border-radius: 16px;
+        border: 1.5px solid transparent;
         background-color: var(--md-sys-color-surface-container);
         color: var(--md-sys-color-on-surface);
         font-family: var(--font-google-sans);
-        font-size: 0.95rem;
+        font-size: 0.98rem;
         font-weight: 500;
         outline: none;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+
+    .pm-form-group select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='20' viewBox='0 -960 960 960' width='20' fill='%23617285'%3E%3Cpath d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 34px;
+        -webkit-appearance: none;
+        appearance: none;
+        cursor: pointer;
+    }
+
+    .pm-form-group select option {
+        background-color: var(--md-sys-color-surface);
+        color: var(--md-sys-color-on-surface);
     }
 
     .pm-form-group input:focus, .pm-form-group select:focus {
         border-color: var(--cambi-magic-mint-on-surface);
+        box-shadow: 0 0 0 3px rgba(163, 241, 203, 0.22);
+    }
+
+    body.dark-mode .pm-form-group input:focus, body.dark-mode .pm-form-group select:focus {
+        border-color: var(--cambi-magic-mint);
+        box-shadow: 0 0 0 3px rgba(163, 241, 203, 0.15);
     }
 
     .pm-modal-actions {
         display: flex;
-        gap: 10px;
-        margin-top: 20px;
+        gap: 12px;
+        margin-top: 22px;
     }
 
     .pm-modal-actions button {
         flex: 1;
+        padding: 15px 16px;
+        border-radius: 20px;
     }
 
     /* Visor QR */

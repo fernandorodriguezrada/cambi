@@ -28,6 +28,7 @@ $componentsDir = __DIR__ . '/';
         <?php include_once $componentsDir . 'history_tab.php'; ?>
     </main>
     <?php
+    include_once $componentsDir . 'pagomovil_modals.php';
     include_once $componentsDir . 'bottom_nav.php';
     include_once $componentsDir . 'scripts.php';
     ?>

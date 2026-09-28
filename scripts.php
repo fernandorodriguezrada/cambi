@@ -495,7 +495,16 @@
             content.classList.toggle('active', content.id === `${tabId}-tab-content`);
         });
         if (tabId === 'calculator' && inputTop) convert(inputTop);
-        if (tabId === 'pagomovil') renderPmView();
+        if (tabId === 'pagomovil')     // Cerrar modales al tocar el fondo oscuro (backdrop)
+    document.querySelectorAll(".pm-modal-overlay").forEach(overlay => {
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove("active");
+            }
+        });
+    });
+
+    renderPmView();
     };
 
     window.switchTab = switchTab;
