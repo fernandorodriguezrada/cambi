@@ -1664,20 +1664,20 @@
     /* Botón flotante persistente (FAB) para añadir pago móvil */
     .pm-fab-add-bank {
         position: fixed;
-        bottom: calc(84px + env(safe-area-inset-bottom, 0px));
-        right: max(14px, calc(50% - 220px + 14px));
-        width: 48px;
-        height: 48px;
-        border-radius: 16px;
+        bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+        right: max(18px, calc(50% - 200px + 18px));
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
         background-color: var(--cambi-magic-mint);
         color: #004d34;
         border: none !important;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 95;
+        z-index: 105;
         transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.24s cubic-bezier(0.2, 0, 0, 1);
     }
 
@@ -1690,7 +1690,7 @@
     }
 
     .pm-fab-add-bank .material-symbols-rounded {
-        font-size: 26px;
+        font-size: 32px;
         font-weight: 600;
     }
 

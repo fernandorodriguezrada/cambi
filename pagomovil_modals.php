@@ -261,3 +261,8 @@
     <span class="material-symbols-rounded">check_circle</span>
     <span id="pm-toast-msg">¡Datos copiados al portapapeles!</span>
 </div>
+
+<!-- BOTÓN FLOTANTE PARA AÑADIR PAGO MÓVIL (FAB) -->
+<button id="pm-btn-add-bank-fab" class="pm-fab-add-bank" style="display: none;" title="Añadir Pago Móvil" onclick="openAddBankModal()">
+    <span class="material-symbols-rounded">add</span>
+</button>

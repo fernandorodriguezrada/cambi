@@ -78,10 +78,7 @@
                 </div>
             </div>
 
-            <!-- Botón flotante para añadir nuevo pago móvil (FAB) -->
-            <button id="pm-btn-add-bank-fab" class="pm-fab-add-bank" title="Añadir Pago Móvil" onclick="openAddBankModal()">
-                <span class="material-symbols-rounded">add</span>
-            </button>
+
         </div>
     </div>
 </div>
