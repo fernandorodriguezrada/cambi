@@ -676,7 +676,7 @@
             grid.innerHTML = "";
             profile.banks.forEach(bankCode => {
                 const block = document.createElement("div");
-                block.className = `pm-bank-block pm-bank-theme-${bankCode}`;
+                block.className = "pm-bank-block";
                 block.setAttribute("role", "button");
                 block.setAttribute("tabindex", "0");
                 block.onclick = () => openPmDetailModal(bankCode);
@@ -687,7 +687,9 @@
                 block.innerHTML = `
                     <div class="pm-block-top">
                         <div class="pm-block-badge">
-                            <span class="material-symbols-rounded">account_balance</span>
+                            <div class="pm-block-icon-wrap">
+                                <span class="material-symbols-rounded">account_balance</span>
+                            </div>
                             <span class="pm-block-code">${bankCode}</span>
                         </div>
                         <span class="material-symbols-rounded pm-block-chevron">chevron_right</span>
@@ -720,9 +722,7 @@
 
         const fullName = BANK_NAMES[bankCode] || `Banco (${bankCode})`;
 
-        if (badgeWrap) {
-            badgeWrap.className = `pm-detail-bank-badge pm-bank-theme-${bankCode}`;
-        }
+
         if (bankNameEl) bankNameEl.innerText = fullName;
         if (bankCodeEl) bankCodeEl.innerText = bankCode;
         if (phoneEl) phoneEl.innerText = `${profile.phonePrefix}-${profile.phoneNum}`;
