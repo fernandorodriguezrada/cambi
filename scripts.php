@@ -1226,14 +1226,16 @@
 
         if (qrContainer) {
             qrContainer.innerHTML = "";
-            const qrPayload = `PAGO MOVIL\nBanco: ${bankCode}\nCI: ${doc}\nTel: ${phone}\nTitular: ${holder}`;
+            // Formato interbancario interoperable de Pago Móvil en Venezuela (Banco|Cédula/RIF|Teléfono)
+            // Compatible con apps bancarias (BDVApp, Banesco, BNC, Bancamiga, etc.) y lectores QR estándar
+            const qrPayload = `${bankCode}|${doc}|${phone}`;
             
             if (typeof QRCode !== "undefined") {
                 new QRCode(qrContainer, {
                     text: qrPayload,
                     width: 200,
                     height: 200,
-                    colorDark: "#1e252b",
+                    colorDark: "#000000",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.M
                 });
