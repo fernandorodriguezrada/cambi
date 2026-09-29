@@ -1343,77 +1343,28 @@
         return payloadNoCrc + crc;
     };
 
-    let currentPmQrTab = "cambi";
-
-    const switchPmQrTab = (tab) => {
-        currentPmQrTab = tab;
-        const tabCambi = document.getElementById("pm-qr-tab-cambi");
-        const tabSuiche = document.getElementById("pm-qr-tab-suiche");
-        const panelCambi = document.getElementById("pm-qr-panel-cambi");
-        const panelSuiche = document.getElementById("pm-qr-panel-suiche");
-
-        if (tab === "cambi") {
-            if (tabCambi) tabCambi.classList.add("active");
-            if (tabSuiche) tabSuiche.classList.remove("active");
-            if (panelCambi) panelCambi.style.display = "block";
-            if (panelSuiche) panelSuiche.style.display = "none";
-        } else {
-            if (tabSuiche) tabSuiche.classList.add("active");
-            if (tabCambi) tabCambi.classList.remove("active");
-            if (panelSuiche) panelSuiche.style.display = "block";
-            if (panelCambi) panelCambi.style.display = "none";
-        }
-    };
-    window.switchPmQrTab = switchPmQrTab;
-
-    const showPmQR = (initialTab = "cambi") => {
+    const showPmQR = () => {
         const profile = getPmProfile();
         if (!profile || !profile.selectedBank) return;
 
         const bankCode = profile.selectedBank;
         const bankName = BANK_NAMES[bankCode] || "Banco";
         const phone = `${profile.phonePrefix}-${profile.phoneNum}`;
-        const phoneClean = `${profile.phonePrefix}${profile.phoneNum}`;
         const doc = `${profile.docType}-${profile.docNum}`;
-        const docClean = `${profile.docType}${profile.docNum}`;
         const holder = profile.holder || "Pago Móvil";
 
         const modal = document.getElementById("pm-modal-qr");
+        const activeView = document.getElementById("pm-qr-view-active");
+        const emptyView = document.getElementById("pm-qr-view-empty");
+
         const qrTitle = document.getElementById("pm-qr-bank-title");
         const qrSubtitle = document.getElementById("pm-qr-holder-subtitle");
+        const qrInfoText = document.getElementById("pm-qr-info-text");
+        const qrContainer = document.getElementById("pm-qrcode-container");
+        const emptyTitle = document.getElementById("pm-qr-empty-title");
 
         if (qrTitle) qrTitle.innerText = `${bankName} (${bankCode})`;
         if (qrSubtitle) qrSubtitle.innerText = holder;
-
-        // 1. Configurar QR Cambi (Universal / Texto plano estructurado)
-        const containerCambi = document.getElementById("pm-qrcode-container-cambi");
-        const infoCambi = document.getElementById("pm-qr-info-cambi");
-        if (infoCambi) {
-            infoCambi.innerHTML = `<strong>${bankCode}</strong> &bull; <strong>${phone}</strong> &bull; <strong>${doc}</strong>`;
-        }
-
-        if (containerCambi) {
-            containerCambi.innerHTML = "";
-            if (typeof QRCode !== "undefined") {
-                // Formato limpio multi-línea estándar para cualquier lector y para pegar
-                const payloadCambi = `${bankCode}\n${phoneClean}\n${docClean}\n${holder}`;
-                new QRCode(containerCambi, {
-                    text: payloadCambi,
-                    width: 200,
-                    height: 200,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.M
-                });
-            }
-        }
-
-        // 2. Configurar QR Suiche 7B (Oficial / Banco)
-        const activeSuiche = document.getElementById("pm-qr-suiche-active");
-        const emptySuiche = document.getElementById("pm-qr-suiche-empty");
-        const containerSuiche = document.getElementById("pm-qrcode-container-suiche");
-        const infoSuiche = document.getElementById("pm-qr-info-suiche");
-        const emptyTitle = document.getElementById("pm-qr-empty-title");
 
         let officialPayload = null;
         if (profile.bankQrs && profile.bankQrs[bankCode]) {
@@ -1426,15 +1377,17 @@
         }
 
         if (officialPayload) {
-            if (activeSuiche) activeSuiche.style.display = "block";
-            if (emptySuiche) emptySuiche.style.display = "none";
-            if (infoSuiche) {
-                infoSuiche.innerHTML = `<strong>${bankName}</strong> &bull; <strong>${phone}</strong> &bull; <strong>${doc}</strong>`;
+            if (activeView) activeView.style.display = "block";
+            if (emptyView) emptyView.style.display = "none";
+
+            if (qrInfoText) {
+                qrInfoText.innerHTML = `<strong>${bankName}</strong> &bull; <strong>${phone}</strong> &bull; <strong>${doc}</strong>`;
             }
-            if (containerSuiche) {
-                containerSuiche.innerHTML = "";
+
+            if (qrContainer) {
+                qrContainer.innerHTML = "";
                 if (typeof QRCode !== "undefined") {
-                    new QRCode(containerSuiche, {
+                    new QRCode(qrContainer, {
                         text: officialPayload,
                         width: 200,
                         height: 200,
@@ -1445,20 +1398,14 @@
                 }
             }
         } else {
-            if (activeSuiche) activeSuiche.style.display = "none";
-            if (emptySuiche) emptySuiche.style.display = "block";
-            if (emptyTitle) emptyTitle.innerText = `QR de ${bankName}`;
+            if (activeView) activeView.style.display = "none";
+            if (emptyView) emptyView.style.display = "block";
+            if (emptyTitle) emptyTitle.innerText = `Sincroniza el QR de ${bankName}`;
         }
 
-        switchPmQrTab(initialTab);
         if (modal) modal.classList.add("active");
     };
     window.showPmQR = showPmQR;
-
-    const showPlainTextQR = () => {
-        showPmQR("cambi");
-    };
-    window.showPlainTextQR = showPlainTextQR;
 
     const closePmQR = () => {
         const modal = document.getElementById("pm-modal-qr");
@@ -1514,7 +1461,7 @@
                     profile.bankQrs[currentBank] = decodedData;
                     setPmProfile(profile);
                     showToast("¡QR oficial del banco guardado exitosamente!");
-                    showPmQR("suiche");
+                    showPmQR();
                 } else {
                     showToast("No se pudo detectar el código QR en la imagen");
                 }

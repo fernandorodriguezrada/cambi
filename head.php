@@ -2736,22 +2736,6 @@
         background: rgba(52, 168, 83, 0.16);
         color: #81c995;
     }
-    .pm-qr-badge-textonly {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #fef7e0;
-        color: #b06000;
-        font-size: 0.78rem;
-        font-weight: 700;
-        padding: 4px 12px;
-        border-radius: 20px;
-        margin-bottom: 8px;
-    }
-    .dark .pm-qr-badge-textonly {
-        background: rgba(251, 188, 4, 0.16);
-        color: #fdd663;
-    }
     .pm-qr-empty-icon {
         width: 60px;
         height: 60px;
@@ -2767,44 +2751,7 @@
         font-size: 30px;
     }
 
-    /* Segmented Tabs para el Modal QR (QR Cambi vs QR Suiche 7B) */
-    .pm-qr-tabs {
-        display: flex;
-        background: var(--md-sys-color-surface-container-high);
-        border: 1px solid var(--md-sys-color-outline-variant);
-        border-radius: 16px;
-        padding: 4px;
-        margin: 0 auto 14px auto;
-        max-width: 320px;
-        gap: 4px;
-    }
-    .pm-qr-tab-btn {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        padding: 8px 12px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        border-radius: 12px;
-        border: none;
-        background: transparent;
-        color: var(--md-sys-color-on-surface-variant);
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    }
-    .pm-qr-tab-btn.active {
-        background: var(--md-sys-color-primary);
-        color: var(--md-sys-color-on-primary);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    }
-    .dark .pm-qr-tab-btn.active {
-        background: var(--cambi-magic-mint);
-        color: #003822;
-    }
-
-    .pm-qrcode-box {
+        .pm-qrcode-box {
         display: inline-flex;
         align-items: center;
         justify-content: center;
