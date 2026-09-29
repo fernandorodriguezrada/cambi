@@ -187,11 +187,15 @@
     </div>
 </div>
 
-<!-- MODAL 3: VISOR DE CÓDIGO QR -->
+<!-- MODAL 3: VISOR DE CÓDIGO QR CON SEGMENTACIÓN -->
 <div id="pm-modal-qr" class="pm-modal-overlay" onclick="if(event.target===this) closePmQR()">
     <div class="pm-modal-sheet" style="text-align: center;">
         <div class="pm-modal-handle"></div>
-        <div class="pm-modal-header" style="justify-content: flex-end;">
+        <div class="pm-modal-header" style="justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="text-align: left;">
+                <h3 id="pm-qr-bank-title" style="margin: 0; font-size: 1.15rem; font-weight: 700;">Código QR</h3>
+                <p id="pm-qr-holder-subtitle" class="pm-modal-subtext" style="margin: 0; font-size: 0.8rem;">Pago Móvil</p>
+            </div>
             <button type="button" class="pm-modal-close" onclick="closePmQR()">
                 <span class="material-symbols-rounded">close</span>
             </button>
@@ -199,62 +203,105 @@
 
         <input type="file" id="pm-qr-file-input" accept="image/*" style="display:none;" onchange="handleImportBankQR(event)">
 
-        <!-- ESTADO 1: QR ACTIVO (OFICIAL O TEXTO PLANO) -->
-        <div id="pm-qr-view-active">
-            <h3 id="pm-qr-bank-title" style="margin-top: -10px; margin-bottom: 4px;">Código QR Pago Móvil</h3>
-            <p id="pm-qr-holder-subtitle" class="pm-modal-subtext" style="margin-bottom: 8px;">Escanea para pagar</p>
-            
-            <div id="pm-qr-badge-container">
-                <span id="pm-qr-badge" class="pm-qr-badge-official">
-                    <span class="material-symbols-rounded" style="font-size: 1rem;">verified</span>
-                    <span id="pm-qr-badge-text">QR Oficial Suiche 7B</span>
+        <!-- SEGMENTED TABS: QR CAMBI vs QR SUICHE 7B -->
+        <div class="pm-qr-tabs">
+            <button type="button" id="pm-qr-tab-cambi" class="pm-qr-tab-btn active" onclick="switchPmQrTab('cambi')">
+                <span class="material-symbols-rounded" style="font-size: 1.05rem;">qr_code_2</span>
+                <span>QR Cambi</span>
+            </button>
+            <button type="button" id="pm-qr-tab-suiche" class="pm-qr-tab-btn" onclick="switchPmQrTab('suiche')">
+                <span class="material-symbols-rounded" style="font-size: 1.05rem;">account_balance</span>
+                <span>QR Banco 7B</span>
+            </button>
+        </div>
+
+        <!-- PANEL 1: QR CAMBI (UNIVERSAL / COPIAR Y PEGAR) -->
+        <div id="pm-qr-panel-cambi" class="pm-qr-panel">
+            <div id="pm-qr-badge-container-cambi">
+                <span class="pm-qr-badge-textonly">
+                    <span class="material-symbols-rounded" style="font-size: 1rem;">sync_alt</span>
+                    <span>Universal • Cualquier escáner</span>
                 </span>
             </div>
 
             <div class="pm-qr-canvas-wrapper">
-                <div id="pm-qrcode-container"></div>
+                <div id="pm-qrcode-container-cambi" class="pm-qrcode-box"></div>
             </div>
 
             <div class="pm-qr-info-box">
-                <p id="pm-qr-info-text">--</p>
+                <div id="pm-qr-info-cambi" style="font-size: 0.86rem; line-height: 1.45;">--</div>
             </div>
 
-            <div style="margin-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 6px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;" onclick="document.getElementById('pm-qr-file-input').click()">
-                    <span class="material-symbols-rounded" style="font-size: 1.15rem;">photo_camera</span>
-                    <span>Reemplazar captura de Mi QR</span>
+            <p style="font-size: 0.76rem; color: var(--md-sys-color-outline); margin: 8px 10px 14px 10px; line-height: 1.35;">
+                Compatible con la cámara de Cambi, Google Lens y la función "Pegar datos" de los bancos.
+            </p>
+
+            <div class="pm-modal-actions" style="justify-content: center; gap: 8px;">
+                <button type="button" class="pm-btn-primary" style="font-size: 0.82rem; padding: 8px 16px;" onclick="copyPmData()">
+                    <span class="material-symbols-rounded">content_copy</span>
+                    <span>Copiar Datos</span>
                 </button>
-            </div>
-
-            <div class="pm-modal-actions" style="justify-content: center; margin-top: 14px;">
-                <button type="button" class="pm-btn-secondary" onclick="closePmQR()">Cerrar</button>
+                <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 8px 16px;" onclick="closePmQR()">
+                    <span>Cerrar</span>
+                </button>
             </div>
         </div>
 
-        <!-- ESTADO 2: SIN QR OFICIAL (INVITACIÓN A IMPORTAR CAPTURA) -->
-        <div id="pm-qr-view-empty" style="display: none; padding: 8px 8px 14px 8px;">
-            <div class="pm-qr-empty-icon">
-                <span class="material-symbols-rounded">qr_code_scanner</span>
+        <!-- PANEL 2: QR BANCO / SUICHE 7B -->
+        <div id="pm-qr-panel-suiche" class="pm-qr-panel" style="display: none;">
+            <!-- Estado Con QR Oficial -->
+            <div id="pm-qr-suiche-active" style="display: none;">
+                <div id="pm-qr-badge-container-suiche">
+                    <span class="pm-qr-badge-official">
+                        <span class="material-symbols-rounded" style="font-size: 1rem;">verified</span>
+                        <span>QR Oficial Suiche 7B</span>
+                    </span>
+                </div>
+
+                <div class="pm-qr-canvas-wrapper">
+                    <div id="pm-qrcode-container-suiche" class="pm-qrcode-box"></div>
+                </div>
+
+                <div class="pm-qr-info-box">
+                    <div id="pm-qr-info-suiche" style="font-size: 0.86rem; line-height: 1.45;">--</div>
+                </div>
+
+                <p style="font-size: 0.76rem; color: var(--md-sys-color-outline); margin: 8px 10px 12px 10px; line-height: 1.35;">
+                    Para ser escaneado exclusivamente con la cámara dentro de la app bancaria (Banesco, BDV, etc.).
+                </p>
+
+                <div style="margin-top: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                    <button type="button" class="pm-btn-secondary" style="font-size: 0.78rem; padding: 6px 14px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;" onclick="document.getElementById('pm-qr-file-input').click()">
+                        <span class="material-symbols-rounded" style="font-size: 1.05rem;">photo_camera</span>
+                        <span>Reemplazar captura de Mi QR</span>
+                    </button>
+                </div>
+
+                <div class="pm-modal-actions" style="justify-content: center; margin-top: 12px;">
+                    <button type="button" class="pm-btn-secondary" onclick="closePmQR()">Cerrar</button>
+                </div>
             </div>
-            <h3 id="pm-qr-empty-title" style="margin-top: 0; margin-bottom: 6px; font-size: 1.18rem; font-weight: 700;">Sincroniza el QR</h3>
-            <p style="font-size: 0.88rem; color: var(--md-sys-color-on-surface-variant); margin-bottom: 20px; line-height: 1.45; max-width: 320px; margin-left: auto; margin-right: auto;">
-                Para que BDVApp, Banesco y otros bancos lo lean directamente, importa una sola vez la captura de <strong>"Mi QR"</strong> de tu banco.
-            </p>
 
-            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: 280px; margin: 0 auto;">
-                <button type="button" class="pm-btn-primary" style="width: 100%; justify-content: center; padding: 12px 18px;" onclick="document.getElementById('pm-qr-file-input').click()">
-                    <span class="material-symbols-rounded">photo_camera</span>
-                    <span>Importar captura de Mi QR</span>
-                </button>
+            <!-- Estado Sin QR Oficial (Invitación a sincronizar) -->
+            <div id="pm-qr-suiche-empty" style="padding: 10px 8px 14px 8px;">
+                <div class="pm-qr-empty-icon">
+                    <span class="material-symbols-rounded">account_balance</span>
+                </div>
+                <h3 id="pm-qr-empty-title" style="margin-top: 0; margin-bottom: 6px; font-size: 1.15rem; font-weight: 700;">QR de tu Banco</h3>
+                <p style="font-size: 0.84rem; color: var(--md-sys-color-on-surface-variant); margin-bottom: 18px; line-height: 1.45; max-width: 320px; margin-left: auto; margin-right: auto;">
+                    Para que otra persona te pague directamente desde la cámara de su app bancaria (Banesco, BDVApp, etc.), importa una captura de <strong>"Mi QR"</strong> de tu banco.
+                </p>
 
-                <button type="button" class="pm-btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 8px 14px;" onclick="showPlainTextQR()">
-                    <span class="material-symbols-rounded">text_snippet</span>
-                    <span>Ver QR en texto plano</span>
-                </button>
+                <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: 280px; margin: 0 auto;">
+                    <button type="button" class="pm-btn-primary" style="width: 100%; justify-content: center; padding: 11px 16px; font-size: 0.85rem;" onclick="document.getElementById('pm-qr-file-input').click()">
+                        <span class="material-symbols-rounded">photo_camera</span>
+                        <span>Importar captura de Mi QR</span>
+                    </button>
 
-                <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 6px 14px; margin-top: 4px;" onclick="closePmQR()">
-                    <span>Cerrar</span>
-                </button>
+                    <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 6px 14px; margin-top: 4px;" onclick="closePmQR()">
+                        <span>Cerrar</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
