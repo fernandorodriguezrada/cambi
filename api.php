@@ -1,16 +1,22 @@
 <?php
 /**
  * API Endpoint de lectura rápida (optimizado para móvil)
- * Devuelve instantáneamente los datos cacheados sin ralentizar la app.
- * Si se recibe ?force=1 (por ejemplo, desde el botón manual de Actualizar),
- * sincroniza llamando a cron.php de forma aislada antes de responder.
+ * 
+ * - Si la tasa en caché tiene menos de 30 minutos (TTL) y no se solicita ?force=1:
+ *   Devuelve instantáneamente cache.json (< 2ms) SIN tocar ni raspar la web del BCV.
+ * - Si la caché expiró (más de 30 minutos) o se presiona "Actualizar" (?force=1):
+ *   Ejecuta 1 sola actualización, guarda el nuevo cache.json con timestamp,
+ *   y sirve los datos frescos a todos los usuarios siguientes.
  */
 
 header('Content-Type: application/json');
 header('Cache-Control: no-store, no-cache, must-revalidate');
 
+date_default_timezone_set('America/Caracas');
+
 $cacheFile = __DIR__ . '/cache.json';
 $historyFile = __DIR__ . '/history.json';
+$cacheTtlSeconds = 1800; // 30 minutos de vigencia para evitar peticiones redundantes
 
 if (!function_exists('getHistory')) {
     function getHistory() {
@@ -22,61 +28,57 @@ if (!function_exists('getHistory')) {
 
 $forceUpdate = !empty($_GET['force']);
 
-// Si solicitó actualización forzada manual, ejecutar cron.php
-if ($forceUpdate && file_exists(__DIR__ . '/cron.php')) {
-    // Si CLI o proc_open está disponible, o vía HTTP local
-    $ch = curl_init();
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $cronUrl = $protocol . $host . '/cron.php?token=cambi_secret_key_2026';
-    
-    curl_setopt($ch, CURLOPT_URL, $cronUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 12);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    $res = curl_exec($ch);
-    curl_close($ch);
-}
+// 1. Cargar caché actual si existe
+$cachedData = null;
+$isExpired = true;
 
-// 1. Si existe la caché y tiene datos válidos, responder de inmediato
 if (file_exists($cacheFile)) {
-    $cachedData = json_decode(file_get_contents($cacheFile), true);
+    $cachedData = json_decode(@file_get_contents($cacheFile), true);
     if (!empty($cachedData) && isset($cachedData['usd'])) {
-        $cachedData['history'] = getHistory();
-        echo json_encode($cachedData);
-        exit;
+        $timestamp = $cachedData['timestamp'] ?? 0;
+        // Si no tiene timestamp numérico pero tiene fecha legible, o si han pasado menos de 30 min:
+        $isExpired = (time() - $timestamp) > $cacheTtlSeconds;
     }
 }
 
-// 2. Si no hay caché previa, intentar generar llamando a cron.php vía curl
-if (file_exists(__DIR__ . '/cron.php')) {
-    $ch = curl_init();
-    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $cronUrl = $protocol . $host . '/cron.php?token=cambi_secret_key_2026';
-    
-    curl_setopt($ch, CURLOPT_URL, $cronUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 12);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    curl_exec($ch);
-    curl_close($ch);
-
-    if (file_exists($cacheFile)) {
-        $freshData = json_decode(file_get_contents($cacheFile), true);
-        if (!empty($freshData) && isset($freshData['usd'])) {
-            $freshData['history'] = getHistory();
-            echo json_encode($freshData);
-            exit;
-        }
-    }
+// 2. Si la caché está fresca y no es actualización forzada, responder DE INMEDIATO (< 2ms)
+// Ningún usuario genera raspado al BCV mientras la tasa esté vigente
+if (!$forceUpdate && $cachedData && !$isExpired) {
+    $cachedData['history'] = getHistory();
+    $cachedData['is_cached'] = true;
+    echo json_encode($cachedData);
+    exit;
 }
 
-// 3. Si todo falló y no hay nada en caché
+// 3. Si expiró o es forzada, ejecutar la actualización (1 solo raspado)
+require_once __DIR__ . '/cron.php';
+
+$updateResult = executeRatesUpdate();
+
+if ($updateResult['status'] === 'success' && !empty($updateResult['data'])) {
+    $freshData = $updateResult['data'];
+    $freshData['history'] = getHistory();
+    $freshData['is_cached'] = false;
+    echo json_encode($freshData);
+    exit;
+}
+
+// 4. Si el raspado falló pero tenemos una tasa previa en caché, devolver la previa (Fallback resiliente)
+if ($cachedData) {
+    $cachedData['history'] = getHistory();
+    $cachedData['is_cached'] = true;
+    $cachedData['stale'] = true;
+    if (!empty($updateResult['debug_bcv'])) {
+        $cachedData['debug_bcv'] = $updateResult['debug_bcv'];
+    }
+    echo json_encode($cachedData);
+    exit;
+}
+
+// 5. En el caso extremo de que todo falle y no haya caché
 http_response_code(503);
 echo json_encode([
     "error" => "Información de tasas no disponible actualmente",
-    "is_cached" => false
+    "is_cached" => false,
+    "debug" => $updateResult['message'] ?? null
 ]);
