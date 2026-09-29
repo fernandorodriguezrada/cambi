@@ -495,16 +495,21 @@
             content.classList.toggle('active', content.id === `${tabId}-tab-content`);
         });
         if (tabId === 'calculator' && inputTop) convert(inputTop);
-        if (tabId === 'pagomovil')     // Cerrar modales al tocar el fondo oscuro (backdrop)
-    document.querySelectorAll(".pm-modal-overlay").forEach(overlay => {
-        overlay.addEventListener("click", (e) => {
-            if (e.target === overlay) {
-                overlay.classList.remove("active");
-            }
-        });
-    });
-
-    renderPmView();
+        if (tabId === 'pagomovil') {
+            document.querySelectorAll(".pm-modal-overlay").forEach(overlay => {
+                overlay.addEventListener("click", (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove("active");
+                    }
+                });
+            });
+            renderPmView();
+            const fab = document.getElementById("pm-btn-add-bank-fab");
+            if (fab) fab.classList.remove("fab-hidden");
+        } else {
+            const fab = document.getElementById("pm-btn-add-bank-fab");
+            if (fab) fab.style.display = "none";
+        }
     };
 
     window.switchTab = switchTab;
@@ -674,6 +679,8 @@
         if (!profile || !profile.banks || profile.banks.length === 0) {
             onboardingView.style.display = "flex";
             activeView.style.display = "none";
+            const fab = document.getElementById("pm-btn-add-bank-fab");
+            if (fab) fab.style.display = "none";
             goToPmSlide(0);
             return;
         }
@@ -731,6 +738,12 @@
                 `;
                 grid.appendChild(block);
             });
+        }
+
+        const fab = document.getElementById("pm-btn-add-bank-fab");
+        if (fab) {
+            const isPmTab = document.getElementById("pagomovil-tab-content")?.classList.contains("active");
+            fab.style.display = isPmTab ? "flex" : "none";
         }
     };
     window.renderPmView = renderPmView;
@@ -1248,9 +1261,41 @@
         }, { passive: true });
     }
 
+    // FAB Scroll Behavior: ocultar al scrollear hacia abajo, mostrar al scrollear hacia arriba
+    let lastMainScrollTop = 0;
+    const initPmFabScroll = () => {
+        const mainContent = document.getElementById("main-content");
+        const fab = document.getElementById("pm-btn-add-bank-fab");
+        if (!fab) return;
+
+        const onScroll = (currentY) => {
+            const isPmTab = document.getElementById("pagomovil-tab-content")?.classList.contains("active");
+            if (!isPmTab) return;
+
+            const diff = currentY - lastMainScrollTop;
+            if (diff > 8 && currentY > 40) {
+                fab.classList.add("fab-hidden");
+            } else if (diff < -8 || currentY <= 30) {
+                fab.classList.remove("fab-hidden");
+            }
+            lastMainScrollTop = Math.max(0, currentY);
+        };
+
+        if (mainContent) {
+            mainContent.addEventListener("scroll", () => {
+                onScroll(mainContent.scrollTop);
+            }, { passive: true });
+        }
+        window.addEventListener("scroll", () => {
+            onScroll(window.scrollY);
+        }, { passive: true });
+    };
+    window.initPmFabScroll = initPmFabScroll;
+
     initCustomSelects();
     syncAllCustomSelects();
     renderPmView();
+    initPmFabScroll();
 
     navItems.forEach(item => {
         item.addEventListener('click', () => {

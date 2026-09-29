@@ -1070,6 +1070,7 @@
         display: flex;
         flex-direction: column;
         flex: 1;
+        padding-bottom: 72px;
     }
 
     .pm-blocks-header {
@@ -1469,37 +1470,50 @@
         color: var(--b-pastel-sub, var(--md-sys-color-outline));
     }
 
-    /* Botón persistente abajo para añadir pago móvil */
-    .pm-bottom-action-wrapper {
-        margin-top: auto;
-        padding-top: 14px;
-        padding-bottom: 4px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .pm-btn-add-account {
-        width: 100%;
+    /* Botón flotante persistente (FAB) para añadir pago móvil */
+    .pm-fab-add-bank {
+        position: fixed;
+        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+        right: max(20px, calc(50% - 200px + 12px));
+        width: 52px;
         height: 52px;
-        border-radius: 20px;
-        border: none;
+        border-radius: 18px;
         background-color: var(--cambi-magic-mint);
         color: #004d34;
-        font-family: var(--font-google-sans);
-        font-size: 0.98rem;
-        font-weight: 700;
+        border: none !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
         cursor: pointer;
-        box-shadow: none;
-        transition: transform 0.15s, opacity 0.15s;
+        z-index: 95;
+        transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.24s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .pm-btn-add-account:active {
-        transform: scale(0.98);
-        opacity: 0.9;
+    .pm-fab-add-bank:hover {
+        transform: scale(1.06);
+    }
+
+    .pm-fab-add-bank:active {
+        transform: scale(0.94);
+    }
+
+    .pm-fab-add-bank .material-symbols-rounded {
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    /* Ocultar en scroll abajo */
+    .pm-fab-add-bank.fab-hidden {
+        transform: translateY(80px) scale(0.7);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    body.dark-mode .pm-fab-add-bank {
+        background-color: var(--cambi-magic-mint);
+        color: #003825;
+        box-shadow: 0 4px 22px rgba(0, 0, 0, 0.45) !important;
     }
 
 
