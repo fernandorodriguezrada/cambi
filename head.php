@@ -1085,9 +1085,36 @@
     .pm-blocks-header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        justify-content: space-between;
         margin-bottom: 12px;
         padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    .pm-grid-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: 1px solid var(--md-sys-color-outline-variant);
+        background-color: var(--md-sys-color-surface-container-low);
+        color: var(--md-sys-color-on-surface-variant);
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+        padding: 0;
+    }
+    .pm-grid-toggle-btn:hover {
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-on-surface);
+        border-color: var(--md-sys-color-outline);
+    }
+    .pm-grid-toggle-btn:active {
+        transform: scale(0.92);
+    }
+    .pm-grid-toggle-btn span {
+        font-size: 19px;
     }
 
     .pm-section-label {
@@ -1120,6 +1147,43 @@
         margin-bottom: 24px;
         width: 100%;
         box-sizing: border-box;
+        transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .pm-banks-grid.single-col {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .pm-banks-grid.single-col .pm-bank-block {
+        min-height: 114px;
+        padding: 16px 16px;
+        border-radius: 22px;
+    }
+
+    .pm-banks-grid.single-col .pm-block-logo {
+        width: 78px;
+        height: 32px;
+        padding: 3px 6px;
+        border-radius: 9px;
+    }
+
+    .pm-banks-grid.single-col .pm-block-code {
+        font-size: 0.76rem;
+        padding: 2px 7px;
+    }
+
+    .pm-banks-grid.single-col .pm-block-name {
+        font-size: 1.05rem;
+        margin-bottom: 3px;
+    }
+
+    .pm-banks-grid.single-col .pm-block-sub {
+        font-size: 0.82rem;
+    }
+
+    .pm-banks-grid.single-col .pm-block-chevron {
+        font-size: 24px;
     }
 
     @media (max-width: 320px) {

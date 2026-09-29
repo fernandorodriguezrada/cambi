@@ -68,8 +68,13 @@
             <!-- Sección de Bloques de Bancos -->
             <div class="pm-banks-blocks-section">
                 <div class="pm-blocks-header">
-                    <span class="pm-section-label">Bancos Registrados</span>
-                    <span id="pm-banks-count-badge" class="pm-count-badge">0</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="pm-section-label">Bancos Registrados</span>
+                        <span id="pm-banks-count-badge" class="pm-count-badge">0</span>
+                    </div>
+                    <button type="button" id="pm-grid-toggle-btn" class="pm-grid-toggle-btn" onclick="togglePmGridLayout()" title="Cambiar a vista de 1 columna" aria-label="Cambiar vista de columnas">
+                        <span id="pm-grid-toggle-icon" class="material-symbols-rounded">view_agenda</span>
+                    </button>
                 </div>
 
                 <!-- Grid de bloques de bancos agregados -->

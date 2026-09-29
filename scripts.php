@@ -751,6 +751,8 @@
             });
         }
 
+        applyPmGridLayout(getPmGridLayout());
+
         const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
         if (dial) {
             const isPmTab = document.getElementById("pagomovil-tab-content")?.classList.contains("active");
@@ -758,6 +760,38 @@
         }
     };
     window.renderPmView = renderPmView;
+
+    // ==========================================
+    // GRID LAYOUT TOGGLE (1 Columna vs 2 Columnas)
+    // ==========================================
+    const getPmGridLayout = () => {
+        return localStorage.getItem("pm_grid_layout") || "2-col";
+    };
+
+    const applyPmGridLayout = (layout) => {
+        const grid = document.getElementById("pm-banks-grid");
+        const toggleBtn = document.getElementById("pm-grid-toggle-btn");
+        const toggleIcon = document.getElementById("pm-grid-toggle-icon");
+        if (!grid) return;
+
+        if (layout === "1-col") {
+            grid.classList.add("single-col");
+            if (toggleIcon) toggleIcon.innerText = "grid_view";
+            if (toggleBtn) toggleBtn.setAttribute("title", "Cambiar a vista de 2 columnas");
+        } else {
+            grid.classList.remove("single-col");
+            if (toggleIcon) toggleIcon.innerText = "view_agenda";
+            if (toggleBtn) toggleBtn.setAttribute("title", "Cambiar a vista de 1 columna");
+        }
+    };
+
+    const togglePmGridLayout = () => {
+        const current = getPmGridLayout();
+        const next = current === "1-col" ? "2-col" : "1-col";
+        localStorage.setItem("pm_grid_layout", next);
+        applyPmGridLayout(next);
+    };
+    window.togglePmGridLayout = togglePmGridLayout;
 
     const openPmDetailModal = (bankCode) => {
         const profile = getPmProfile();
