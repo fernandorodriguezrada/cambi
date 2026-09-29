@@ -227,7 +227,16 @@
             <p id="pm-qr-info-text">--</p>
         </div>
 
-        <div class="pm-modal-actions" style="justify-content: center; margin-top: 18px;">
+        <div style="margin-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <input type="file" id="pm-qr-file-input" accept="image/*" style="display:none;" onchange="handleImportBankQR(event)">
+            <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 6px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;" onclick="document.getElementById('pm-qr-file-input').click()">
+                <span class="material-symbols-rounded" style="font-size: 1.15rem;">photo_camera</span>
+                <span id="pm-qr-import-btn-text">Importar captura de Mi QR</span>
+            </button>
+            <p id="pm-qr-status-hint" style="font-size: 0.75rem; color: var(--md-sys-color-outline); margin: 0; max-width: 290px; line-height: 1.35;"></p>
+        </div>
+
+        <div class="pm-modal-actions" style="justify-content: center; margin-top: 14px;">
             <button type="button" class="pm-btn-secondary" onclick="closePmQR()">Cerrar</button>
         </div>
     </div>

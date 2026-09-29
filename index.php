@@ -6,6 +6,7 @@ $componentsDir = __DIR__ . '/';
 <head>
     <?php include_once $componentsDir . 'head.php'; ?>
     <script src="public/qrcode.min.js"></script>
+    <script src="public/jsqr.min.js"></script>
 </head>
 <body>
     <!-- Pantalla de Carga (Splash Screen) -->
