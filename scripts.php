@@ -1332,7 +1332,7 @@
             if (qrContainer) {
                 qrContainer.innerHTML = "";
                 if (typeof QRCode !== "undefined") {
-                    const safePayload = unescape(encodeURIComponent(plainText));
+                    const safePayload = plainText;
                     new QRCode(qrContainer, {
                         text: safePayload,
                         width: 200,
