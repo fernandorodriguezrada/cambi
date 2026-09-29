@@ -164,6 +164,77 @@
     </div>
 </div>
 
+
+<!-- MODAL 4: DETALLE DE PAGO MÓVIL SELECCIONADO -->
+<div id="pm-modal-detail" class="pm-modal-overlay">
+    <div class="pm-modal-sheet">
+        <div class="pm-modal-handle"></div>
+        <div class="pm-modal-header">
+            <div id="pm-detail-badge" class="pm-detail-bank-badge">
+                <span class="material-symbols-rounded pm-detail-icon">account_balance</span>
+                <div>
+                    <h3 id="pm-detail-bank-name" class="pm-detail-title">Banco</h3>
+                    <span id="pm-detail-bank-code" class="pm-detail-code">0000</span>
+                </div>
+            </div>
+            <button type="button" class="pm-modal-close" onclick="closePmDetailModal()">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+
+        <div class="pm-detail-fields">
+            <!-- Fila Teléfono -->
+            <div class="pm-detail-field-box">
+                <div class="pm-detail-field-info">
+                    <span class="pm-detail-field-label">Teléfono</span>
+                    <span id="pm-detail-phone" class="pm-detail-field-val">04XX-XXXXXXX</span>
+                </div>
+                <button type="button" class="pm-detail-copy-single" title="Copiar Teléfono" onclick="copySinglePmField('phone')">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+            </div>
+
+            <!-- Fila Cédula / RIF -->
+            <div class="pm-detail-field-box">
+                <div class="pm-detail-field-info">
+                    <span class="pm-detail-field-label">Cédula / RIF</span>
+                    <span id="pm-detail-doc" class="pm-detail-field-val">V-00000000</span>
+                </div>
+                <button type="button" class="pm-detail-copy-single" title="Copiar Cédula" onclick="copySinglePmField('doc')">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+            </div>
+
+            <!-- Fila Titular -->
+            <div class="pm-detail-field-box">
+                <div class="pm-detail-field-info">
+                    <span class="pm-detail-field-label">Titular</span>
+                    <span id="pm-detail-holder" class="pm-detail-field-val">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones Principales -->
+        <div class="pm-detail-actions">
+            <button type="button" class="pm-btn-primary" onclick="copyPmData()">
+                <span class="material-symbols-rounded">content_copy</span>
+                <span>Copiar Datos</span>
+            </button>
+            <button type="button" class="pm-btn-secondary" onclick="showPmQR()">
+                <span class="material-symbols-rounded">qr_code_2</span>
+                <span>Ver QR</span>
+            </button>
+        </div>
+
+        <div class="pm-detail-footer">
+            <button type="button" class="pm-delete-bank-btn" onclick="deleteCurrentBank()">
+                <span class="material-symbols-rounded">delete_outline</span>
+                <span>Eliminar este banco</span>
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- TOAST NOTIFICACIÓN -->
 <div id="pm-toast" class="pm-toast">
     <span class="material-symbols-rounded">check_circle</span>

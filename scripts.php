@@ -653,11 +653,16 @@
         onboardingView.style.display = "none";
         activeView.style.display = "flex";
 
-        // Render profile info
+        // Render profile info in header
         const displayHolder = document.getElementById("pm-display-holder");
         const displayDoc = document.getElementById("pm-display-doc");
+        const displayPhone = document.getElementById("pm-display-phone");
+        const countBadge = document.getElementById("pm-banks-count-badge");
+
         if (displayHolder) displayHolder.innerText = profile.holder;
         if (displayDoc) displayDoc.innerText = `${profile.docType}-${profile.docNum}`;
+        if (displayPhone) displayPhone.innerText = `${profile.phonePrefix}-${profile.phoneNum}`;
+        if (countBadge) countBadge.innerText = profile.banks.length;
 
         // Ensure selectedBank is valid
         if (!profile.selectedBank || !profile.banks.includes(profile.selectedBank)) {
@@ -665,48 +670,100 @@
             setPmProfile(profile);
         }
 
-        // Render chips
-        const chipsContainer = document.getElementById("pm-chips-list");
-        if (chipsContainer) {
-            chipsContainer.innerHTML = "";
+        // Render colorful bank blocks
+        const grid = document.getElementById("pm-banks-grid");
+        if (grid) {
+            grid.innerHTML = "";
             profile.banks.forEach(bankCode => {
-                const btn = document.createElement("button");
-                btn.type = "button";
-                btn.className = `pm-chip ${bankCode === profile.selectedBank ? "active" : ""}`;
-                btn.onclick = () => selectPmBank(bankCode);
-                
-                const shortName = BANK_SHORT[bankCode] || bankCode;
-                btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:16px;">account_balance</span> ${shortName} <small style="opacity:0.75;">(${bankCode})</small>`;
-                chipsContainer.appendChild(btn);
+                const block = document.createElement("div");
+                block.className = `pm-bank-block pm-bank-theme-${bankCode}`;
+                block.setAttribute("role", "button");
+                block.setAttribute("tabindex", "0");
+                block.onclick = () => openPmDetailModal(bankCode);
+
+                const fullName = BANK_NAMES[bankCode] || `Banco (${bankCode})`;
+                const shortName = BANK_SHORT[bankCode] || fullName;
+
+                block.innerHTML = `
+                    <div class="pm-block-top">
+                        <div class="pm-block-badge">
+                            <span class="material-symbols-rounded">account_balance</span>
+                            <span class="pm-block-code">${bankCode}</span>
+                        </div>
+                        <span class="material-symbols-rounded pm-block-chevron">chevron_right</span>
+                    </div>
+                    <div class="pm-block-bottom">
+                        <h4 class="pm-block-name">${shortName}</h4>
+                        <span class="pm-block-sub">${profile.phonePrefix}-${profile.phoneNum}</span>
+                    </div>
+                `;
+                grid.appendChild(block);
             });
         }
-
-        // Render current selected card
-        const currentBankCode = profile.selectedBank;
-        const currentBankName = BANK_NAMES[currentBankCode] || `Banco (${currentBankCode})`;
-
-        const cardBankName = document.getElementById("pm-card-bank-name");
-        const cardBankCode = document.getElementById("pm-card-bank-code");
-        const cardPhone = document.getElementById("pm-card-phone");
-        const cardDoc = document.getElementById("pm-card-doc");
-        const cardHolder = document.getElementById("pm-card-holder");
-
-        if (cardBankName) cardBankName.innerText = currentBankName;
-        if (cardBankCode) cardBankCode.innerText = currentBankCode;
-        if (cardPhone) cardPhone.innerText = `${profile.phonePrefix}-${profile.phoneNum}`;
-        if (cardDoc) cardDoc.innerText = `${profile.docType}-${profile.docNum}`;
-        if (cardHolder) cardHolder.innerText = profile.holder;
     };
     window.renderPmView = renderPmView;
 
-    const selectPmBank = (bankCode) => {
+    const openPmDetailModal = (bankCode) => {
         const profile = getPmProfile();
         if (!profile) return;
+
         profile.selectedBank = bankCode;
         setPmProfile(profile);
-        renderPmView();
+
+        const modal = document.getElementById("pm-modal-detail");
+        const badgeWrap = document.getElementById("pm-detail-badge");
+        const bankNameEl = document.getElementById("pm-detail-bank-name");
+        const bankCodeEl = document.getElementById("pm-detail-bank-code");
+        const phoneEl = document.getElementById("pm-detail-phone");
+        const docEl = document.getElementById("pm-detail-doc");
+        const holderEl = document.getElementById("pm-detail-holder");
+
+        const fullName = BANK_NAMES[bankCode] || `Banco (${bankCode})`;
+
+        if (badgeWrap) {
+            badgeWrap.className = `pm-detail-bank-badge pm-bank-theme-${bankCode}`;
+        }
+        if (bankNameEl) bankNameEl.innerText = fullName;
+        if (bankCodeEl) bankCodeEl.innerText = bankCode;
+        if (phoneEl) phoneEl.innerText = `${profile.phonePrefix}-${profile.phoneNum}`;
+        if (docEl) docEl.innerText = `${profile.docType}-${profile.docNum}`;
+        if (holderEl) holderEl.innerText = profile.holder;
+
+        if (modal) modal.classList.add("active");
     };
-    window.selectPmBank = selectPmBank;
+    window.openPmDetailModal = openPmDetailModal;
+
+    const closePmDetailModal = () => {
+        const modal = document.getElementById("pm-modal-detail");
+        if (modal) modal.classList.remove("active");
+    };
+    window.closePmDetailModal = closePmDetailModal;
+
+    const copySinglePmField = (type) => {
+        const profile = getPmProfile();
+        if (!profile) return;
+        let textToCopy = "";
+        let msg = "";
+        if (type === "phone") {
+            textToCopy = `${profile.phonePrefix}${profile.phoneNum}`;
+            msg = "¡Teléfono copiado!";
+        } else if (type === "doc") {
+            textToCopy = `${profile.docType}-${profile.docNum}`;
+            msg = "¡Cédula/RIF copiado!";
+        }
+        if (!textToCopy) return;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast(msg);
+            }).catch(() => {
+                fallbackCopy(textToCopy);
+            });
+        } else {
+            fallbackCopy(textToCopy);
+        }
+    };
+    window.copySinglePmField = copySinglePmField;
 
     // =========================================
     // MOTOR DE SELECTORES PERSONALIZADOS M3 (PAGO MÓVIL)
@@ -1001,6 +1058,7 @@
         closeAddBankModal();
         renderPmView();
         showToast("¡Nuevo banco añadido!");
+        openPmDetailModal(newBank);
     };
     window.saveNewBank = saveNewBank;
 
@@ -1012,6 +1070,7 @@
         if (!confirm(`¿Eliminar ${bankName} de tus pagos móviles?`)) return;
 
         profile.banks = profile.banks.filter(b => b !== profile.selectedBank);
+        closePmDetailModal();
         if (profile.banks.length > 0) {
             profile.selectedBank = profile.banks[0];
             setPmProfile(profile);

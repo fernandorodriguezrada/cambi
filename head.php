@@ -1049,204 +1049,515 @@
         transform: scale(0.92);
     }
 
-    /* Sección de chips de bancos */
-    .pm-banks-section {
+    /* Submeta del perfil */
+    .pm-user-submeta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.86rem;
+        color: var(--md-sys-color-outline);
+        font-weight: 500;
+        margin-top: 3px;
+    }
+
+    .pm-meta-dot {
+        opacity: 0.5;
+    }
+
+    /* Sección de Bloques de Bancos */
+    .pm-banks-blocks-section {
         width: 100%;
-        margin-bottom: 14px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .pm-blocks-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-left: 2px;
     }
 
     .pm-section-label {
-        font-size: 0.75rem;
+        font-size: 0.78rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.04em;
         color: var(--md-sys-color-outline);
-        margin-bottom: 8px;
-        display: block;
-        padding-left: 4px;
     }
 
-    .pm-chips-scroll {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 4px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .pm-chips-scroll::-webkit-scrollbar {
-        display: none;
-    }
-
-    .pm-chips-list {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .pm-chip {
+    .pm-count-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 8px 14px;
-        border-radius: 16px;
-        background-color: var(--md-sys-color-surface-container);
-        border: 1.5px solid transparent;
-        color: var(--md-sys-color-on-surface-variant);
-        font-family: var(--font-google-sans);
-        font-size: 0.85rem;
-        font-weight: 600;
-        white-space: nowrap;
-        cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    .pm-chip.active {
-        background-color: var(--cambi-magic-mint);
-        color: #004d34;
-        font-weight: 700;
-        box-shadow: 0 2px 8px rgba(163, 241, 203, 0.35);
-    }
-
-    .pm-chip-add {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 8px 12px;
-        border-radius: 16px;
-        background-color: transparent;
-        border: 1.5px dashed var(--md-sys-color-outline);
-        color: var(--md-sys-color-outline);
-        font-family: var(--font-google-sans);
-        font-size: 0.85rem;
-        font-weight: 600;
-        white-space: nowrap;
-        cursor: pointer;
-        transition: border-color 0.2s, color 0.2s;
-    }
-
-    .pm-chip-add:hover, .pm-chip-add:active {
-        border-color: var(--cambi-magic-mint-on-surface);
-        color: var(--cambi-magic-mint-on-surface);
-    }
-
-    /* Tarjeta Principal del Pago Móvil */
-    .pm-card {
-        background-color: var(--md-sys-color-surface-container);
-        border-radius: 28px;
-        padding: 22px 20px 18px;
-        width: 100%;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(0, 0, 0, 0.03);
-    }
-
-    .pm-card-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 14px;
-        margin-bottom: 14px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    }
-
-    body.dark-mode .pm-card-top {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .pm-card-bank-badge {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 1.15rem;
-        font-weight: 700;
+        justify-content: center;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 6px;
+        border-radius: 11px;
+        background-color: var(--md-sys-color-surface-container-high);
         color: var(--md-sys-color-on-surface);
-    }
-
-    .pm-card-bank-badge .material-symbols-rounded {
-        color: var(--cambi-baby-blue-on-surface);
-    }
-
-    body.dark-mode .pm-card-bank-badge .material-symbols-rounded {
-        color: var(--cambi-baby-blue);
-    }
-
-    .pm-bank-code-pill {
-        padding: 4px 10px;
-        border-radius: 12px;
-        background-color: rgba(177, 211, 254, 0.35);
-        color: #1a6ec0;
-        font-family: monospace;
-        font-size: 0.9rem;
+        font-size: 0.76rem;
         font-weight: 700;
     }
 
-    body.dark-mode .pm-bank-code-pill {
-        background-color: rgba(177, 211, 254, 0.15);
-        color: var(--cambi-baby-blue);
+    /* Grid de Bloques de Bancos */
+    .pm-banks-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 18px;
     }
 
-    .pm-card-body {
+    @media (max-width: 340px) {
+        .pm-banks-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .pm-bank-block {
+        background-color: var(--b-bg);
+        border: 1.5px solid var(--b-border);
+        border-radius: 22px;
+        padding: 16px 14px;
+        min-height: 116px;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        justify-content: space-between;
+        cursor: pointer;
+        box-sizing: border-box;
+        box-shadow: none;
+        transition: transform 0.16s cubic-bezier(0.2, 0, 0, 1), opacity 0.16s;
+        user-select: none;
+        -webkit-user-select: none;
     }
 
-    .pm-field-row {
+    .pm-bank-block:active {
+        transform: scale(0.97);
+        opacity: 0.92;
+    }
+
+    .pm-block-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 4px 0;
-        font-size: 0.95rem;
     }
 
-    .pm-field-label {
-        color: var(--md-sys-color-outline);
-        font-weight: 500;
+    .pm-block-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px;
+        border-radius: 10px;
+        background-color: var(--b-badge-bg);
+        color: var(--b-text);
     }
 
-    .pm-field-value {
-        color: var(--md-sys-color-on-surface);
+    .pm-block-badge .material-symbols-rounded {
+        font-size: 16px;
+    }
+
+    .pm-block-code {
+        font-family: monospace;
+        font-size: 0.8rem;
         font-weight: 700;
+    }
+
+    .pm-block-chevron {
+        font-size: 20px;
+        color: var(--b-sub);
+        opacity: 0.65;
+    }
+
+    .pm-block-bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 10px;
+    }
+
+    .pm-block-name {
+        margin: 0;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--b-text);
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .pm-block-sub {
+        font-size: 0.76rem;
+        font-weight: 500;
+        color: var(--b-sub);
         letter-spacing: 0.02em;
     }
 
-    .pm-card-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 18px;
+    /* =========================================
+       TEMAS DE COLOR DE BANCOS VENEZOLANOS (SIN GLOW)
+       ========================================= */
+    /* 0102 - Banco de Venezuela */
+    .pm-bank-theme-0102 {
+        --b-bg: #edf3fa;
+        --b-border: rgba(12, 50, 96, 0.18);
+        --b-text: #0c3260;
+        --b-sub: #3d5a80;
+        --b-badge-bg: #dce7f5;
+    }
+    body.dark-mode .pm-bank-theme-0102 {
+        --b-bg: #142132;
+        --b-border: rgba(138, 180, 248, 0.22);
+        --b-text: #b6d3fe;
+        --b-sub: #8ab4f8;
+        --b-badge-bg: #1d2d44;
     }
 
-    .pm-action-btn {
+    /* 0105 - Banco Mercantil */
+    .pm-bank-theme-0105 {
+        --b-bg: #ecf3fd;
+        --b-border: rgba(0, 75, 156, 0.18);
+        --b-text: #004085;
+        --b-sub: #2762a5;
+        --b-badge-bg: #dbe8fb;
+    }
+    body.dark-mode .pm-bank-theme-0105 {
+        --b-bg: #122137;
+        --b-border: rgba(159, 197, 248, 0.22);
+        --b-text: #c0d8fd;
+        --b-sub: #9fc5f8;
+        --b-badge-bg: #1a2d48;
+    }
+
+    /* 0108 - BBVA Banco Provincial */
+    .pm-bank-theme-0108 {
+        --b-bg: #edf3fb;
+        --b-border: rgba(0, 68, 129, 0.18);
+        --b-text: #003666;
+        --b-sub: #2c5982;
+        --b-badge-bg: #dbe6f7;
+    }
+    body.dark-mode .pm-bank-theme-0108 {
+        --b-bg: #121f33;
+        --b-border: rgba(139, 181, 238, 0.22);
+        --b-text: #b8d4fa;
+        --b-sub: #8bb5ee;
+        --b-badge-bg: #192b45;
+    }
+
+    /* 0134 - Banesco */
+    .pm-bank-theme-0134 {
+        --b-bg: #eaf6ef;
+        --b-border: rgba(0, 122, 61, 0.2);
+        --b-text: #005a2b;
+        --b-sub: #1e7e48;
+        --b-badge-bg: #d5eedd;
+    }
+    body.dark-mode .pm-bank-theme-0134 {
+        --b-bg: #12271b;
+        --b-border: rgba(128, 226, 167, 0.22);
+        --b-text: #aef0c7;
+        --b-sub: #80e2a7;
+        --b-badge-bg: #1a3827;
+    }
+
+    /* 0172 - Bancamiga */
+    .pm-bank-theme-0172 {
+        --b-bg: #e6f7f6;
+        --b-border: rgba(0, 139, 139, 0.2);
+        --b-text: #006666;
+        --b-sub: #198787;
+        --b-badge-bg: #cff0ef;
+    }
+    body.dark-mode .pm-bank-theme-0172 {
+        --b-bg: #112a2a;
+        --b-border: rgba(102, 217, 217, 0.22);
+        --b-text: #9feeee;
+        --b-sub: #66d9d9;
+        --b-badge-bg: #193a3a;
+    }
+
+    /* 0114 - Bancaribe */
+    .pm-bank-theme-0114 {
+        --b-bg: #fdf5ea;
+        --b-border: rgba(217, 107, 0, 0.2);
+        --b-text: #8a4400;
+        --b-sub: #ad5c0e;
+        --b-badge-bg: #fae4c9;
+    }
+    body.dark-mode .pm-bank-theme-0114 {
+        --b-bg: #2a1f13;
+        --b-border: rgba(251, 189, 125, 0.22);
+        --b-text: #fed9ae;
+        --b-sub: #fbbd7d;
+        --b-badge-bg: #3c2d1b;
+    }
+
+    /* 0191 - Banco Nacional de Crédito (BNC) */
+    .pm-bank-theme-0191 {
+        --b-bg: #ecf5ee;
+        --b-border: rgba(30, 126, 52, 0.2);
+        --b-text: #155724;
+        --b-sub: #28843c;
+        --b-badge-bg: #d7eddb;
+    }
+    body.dark-mode .pm-bank-theme-0191 {
+        --b-bg: #132719;
+        --b-border: rgba(133, 227, 157, 0.22);
+        --b-text: #b1f2c2;
+        --b-sub: #85e39d;
+        --b-badge-bg: #1b3823;
+    }
+
+    /* 0115 - Banco Exterior */
+    .pm-bank-theme-0115 {
+        --b-bg: #edf5fa;
+        --b-border: rgba(2, 119, 189, 0.2);
+        --b-text: #014361;
+        --b-sub: #026ca3;
+        --b-badge-bg: #d8ecf7;
+    }
+    body.dark-mode .pm-bank-theme-0115 {
+        --b-bg: #13222b;
+        --b-border: rgba(129, 212, 250, 0.22);
+        --b-text: #b2e5fc;
+        --b-sub: #81d4fa;
+        --b-badge-bg: #1c303d;
+    }
+
+    /* 0175 - Banco Bicentenario */
+    .pm-bank-theme-0175 {
+        --b-bg: #fbebee;
+        --b-border: rgba(198, 40, 40, 0.2);
+        --b-text: #7f1d1d;
+        --b-sub: #a82929;
+        --b-badge-bg: #f7d5da;
+    }
+    body.dark-mode .pm-bank-theme-0175 {
+        --b-bg: #2a1417;
+        --b-border: rgba(239, 154, 154, 0.22);
+        --b-text: #fbc2c8;
+        --b-sub: #ef9a9a;
+        --b-badge-bg: #3c1e22;
+    }
+
+    /* 0163 - Banco del Tesoro */
+    .pm-bank-theme-0163 {
+        --b-bg: #fbf4e8;
+        --b-border: rgba(178, 106, 0, 0.2);
+        --b-text: #7a4300;
+        --b-sub: #9e5b0a;
+        --b-badge-bg: #f8e4c7;
+    }
+    body.dark-mode .pm-bank-theme-0163 {
+        --b-bg: #2a1d10;
+        --b-border: rgba(255, 183, 77, 0.22);
+        --b-text: #fed298;
+        --b-sub: #ffb74d;
+        --b-badge-bg: #3c2a17;
+    }
+
+    /* 0174 - Banplus */
+    .pm-bank-theme-0174 {
+        --b-bg: #edf2fa;
+        --b-border: rgba(41, 82, 163, 0.2);
+        --b-text: #1c3870;
+        --b-sub: #30579e;
+        --b-badge-bg: #dce5f6;
+    }
+    body.dark-mode .pm-bank-theme-0174 {
+        --b-bg: #141c2d;
+        --b-border: rgba(158, 188, 240, 0.22);
+        --b-text: #c2d8fa;
+        --b-sub: #9ebcf0;
+        --b-badge-bg: #1d273e;
+    }
+
+    /* 0168 - Bancrecer */
+    .pm-bank-theme-0168 {
+        --b-bg: #f5eff8;
+        --b-border: rgba(106, 27, 154, 0.2);
+        --b-text: #4a148c;
+        --b-sub: #7826a7;
+        --b-badge-bg: #ebddef;
+    }
+    body.dark-mode .pm-bank-theme-0168 {
+        --b-bg: #231528;
+        --b-border: rgba(206, 147, 216, 0.22);
+        --b-text: #e6bef0;
+        --b-sub: #ce93d8;
+        --b-badge-bg: #34203b;
+    }
+
+    /* Default para cualquier otro banco */
+    .pm-bank-theme-default,
+    .pm-bank-block:not([class*="pm-bank-theme-01"]) {
+        --b-bg: var(--md-sys-color-surface-container);
+        --b-border: rgba(0, 0, 0, 0.08);
+        --b-text: var(--md-sys-color-on-surface);
+        --b-sub: var(--md-sys-color-outline);
+        --b-badge-bg: var(--md-sys-color-surface-container-high);
+    }
+    body.dark-mode .pm-bank-theme-default,
+    body.dark-mode .pm-bank-block:not([class*="pm-bank-theme-01"]) {
+        --b-border: rgba(255, 255, 255, 0.08);
+        --b-badge-bg: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Botón persistente abajo para añadir pago móvil */
+    .pm-bottom-action-wrapper {
+        margin-top: auto;
+        padding-top: 14px;
+        padding-bottom: 4px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .pm-btn-add-account {
+        width: 100%;
+        height: 52px;
+        border-radius: 20px;
+        border: none;
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
+        font-family: var(--font-google-sans);
+        font-size: 0.98rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        box-shadow: none;
+        transition: transform 0.15s, opacity 0.15s;
+    }
+
+    .pm-btn-add-account:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+
+    /* Modal Detalle de Banco Seleccionado */
+    .pm-detail-bank-badge {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        border-radius: 18px;
+        background-color: var(--b-bg, var(--md-sys-color-surface-container));
+        border: 1.5px solid var(--b-border, rgba(0,0,0,0.08));
+    }
+
+    .pm-detail-bank-badge .pm-detail-icon {
+        font-size: 26px;
+        color: var(--b-text, var(--md-sys-color-on-surface));
+    }
+
+    .pm-detail-title {
+        margin: 0;
+        font-size: 1.12rem;
+        font-weight: 700;
+        color: var(--b-text, var(--md-sys-color-on-surface));
+        line-height: 1.2;
+    }
+
+    .pm-detail-code {
+        font-family: monospace;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--b-sub, var(--md-sys-color-outline));
+    }
+
+    .pm-detail-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 14px;
+        margin-bottom: 16px;
+    }
+
+    .pm-detail-field-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-radius: 16px;
+        background-color: var(--md-sys-color-surface-container);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+    }
+
+    body.dark-mode .pm-detail-field-box {
+        background-color: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .pm-detail-field-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .pm-detail-field-label {
+        font-size: 0.74rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: var(--md-sys-color-outline);
+    }
+
+    .pm-detail-field-val {
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+        letter-spacing: 0.01em;
+    }
+
+    .pm-detail-copy-single {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: none;
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-on-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s, background-color 0.2s;
+    }
+
+    .pm-detail-copy-single:active {
+        transform: scale(0.9);
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
+    }
+
+    .pm-detail-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .pm-detail-actions button {
         flex: 1;
+        height: 48px;
+        border-radius: 18px;
+        font-size: 0.94rem;
+        font-weight: 700;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        padding: 13px 12px;
-        border-radius: 18px;
-        border: none;
-        font-family: var(--font-google-sans);
-        font-size: 0.95rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: transform 0.15s, filter 0.15s;
+        box-shadow: none;
     }
 
-    .pm-action-btn:active {
-        transform: scale(0.97);
-        filter: brightness(0.96);
-    }
-
-    .pm-action-copy {
-        background-color: var(--cambi-magic-mint);
-        color: #004d34;
-    }
-
-    .pm-action-qr {
-        background-color: var(--cambi-baby-blue);
-        color: #0c4384;
+    .pm-detail-footer {
+        display: flex;
+        justify-content: center;
+        margin-top: 6px;
     }
 
     body.dark-mode .pm-action-qr {
@@ -1433,12 +1744,12 @@
 
     .pm-form-group input:focus, .pm-form-group select:focus {
         border-color: var(--cambi-magic-mint-on-surface);
-        box-shadow: 0 0 0 3px rgba(163, 241, 203, 0.22);
+        box-shadow: none;
     }
 
     body.dark-mode .pm-form-group input:focus, body.dark-mode .pm-form-group select:focus {
         border-color: var(--cambi-magic-mint);
-        box-shadow: 0 0 0 3px rgba(163, 241, 203, 0.15);
+        box-shadow: none;
     }
 
     /* =========================================
@@ -1480,13 +1791,13 @@
     .pm-custom-select-trigger:focus,
     .pm-custom-select-wrap.open .pm-custom-select-trigger {
         border-color: var(--cambi-magic-mint-on-surface);
-        box-shadow: 0 0 0 3px rgba(163, 241, 203, 0.22);
+        box-shadow: none;
     }
 
     body.dark-mode .pm-custom-select-trigger:focus,
     body.dark-mode .pm-custom-select-wrap.open .pm-custom-select-trigger {
         border-color: var(--cambi-magic-mint);
-        box-shadow: 0 0 0 3px rgba(163, 241, 203, 0.15);
+        box-shadow: none;
     }
 
     .pm-custom-select-text {
