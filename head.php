@@ -1571,57 +1571,181 @@
 
     .pm-detail-actions {
         display: flex;
+        align-items: center;
         gap: 10px;
-        margin-bottom: 12px;
+        margin-top: 12px;
+        margin-bottom: 0;
     }
 
-    .pm-detail-actions button {
+    .pm-detail-actions .pm-btn-primary,
+    .pm-detail-actions .pm-btn-secondary {
         flex: 1;
         height: 48px;
-        border-radius: 18px;
-        font-size: 0.94rem;
+        border-radius: 16px;
+        font-size: 0.92rem;
         font-weight: 700;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        box-shadow: none;
-    }
-
-    .pm-detail-footer {
-        display: flex;
-        justify-content: center;
-        margin-top: 6px;
-    }
-
-    body.dark-mode .pm-action-qr {
-        color: #052449;
-    }
-
-    .pm-card-footer {
-        display: flex;
-        justify-content: center;
-        margin-top: 12px;
-    }
-
-    .pm-delete-bank-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        background: none;
-        border: none;
-        color: #e53935;
-        font-size: 0.78rem;
-        font-weight: 600;
+        box-shadow: none !important;
+        border: none !important;
         cursor: pointer;
-        opacity: 0.75;
-        padding: 4px 8px;
-        border-radius: 8px;
-        transition: opacity 0.2s;
+        transition: transform 0.15s ease, opacity 0.15s ease;
     }
 
-    .pm-delete-bank-btn:hover, .pm-delete-bank-btn:active {
-        opacity: 1;
+    .pm-detail-actions .pm-btn-primary:active,
+    .pm-detail-actions .pm-btn-secondary:active {
+        transform: scale(0.97);
+    }
+
+    /* Botón eliminar banco: a la derecha, cuadrado en color rojo pastel */
+    .pm-btn-delete-icon {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 16px;
+        background-color: #FCDEDE;
+        color: #BA1A1A;
+        border: none !important;
+        box-shadow: none !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease, background-color 0.2s ease;
+        padding: 0;
+        flex-shrink: 0;
+    }
+
+    .pm-btn-delete-icon:hover {
+        background-color: #F8C8C8;
+    }
+
+    .pm-btn-delete-icon:active {
+        transform: scale(0.94);
+    }
+
+    .pm-btn-delete-icon .material-symbols-rounded {
+        font-size: 22px;
+    }
+
+    body.dark-mode .pm-btn-delete-icon {
+        background-color: #3E1A1D;
+        color: #FFB4AB;
+    }
+
+    body.dark-mode .pm-btn-delete-icon:hover {
+        background-color: #4D2024;
+    }
+
+    /* Modal de confirmación para eliminar banco */
+    .pm-modal-overlay-confirm {
+        z-index: 260 !important;
+    }
+
+    .pm-modal-confirm-sheet {
+        text-align: center;
+        padding-top: 14px !important;
+        padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pm-confirm-icon-box {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background-color: #FCDEDE;
+        color: #BA1A1A;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 6px auto 14px;
+    }
+
+    body.dark-mode .pm-confirm-icon-box {
+        background-color: #3E1A1D;
+        color: #FFB4AB;
+    }
+
+    .pm-confirm-icon-box .material-symbols-rounded {
+        font-size: 28px;
+    }
+
+    .pm-confirm-title {
+        margin: 0 0 8px 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+        font-family: var(--font-google-sans);
+    }
+
+    .pm-confirm-desc {
+        margin: 0 0 22px 0;
+        font-size: 0.9rem;
+        line-height: 1.45;
+        color: var(--md-sys-color-outline);
+        padding: 0 10px;
+    }
+
+    .pm-confirm-desc strong {
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .pm-confirm-actions {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .pm-confirm-actions button {
+        flex: 1;
+        height: 48px;
+        border-radius: 16px;
+        font-size: 0.94rem;
+        font-weight: 700;
+        border: none !important;
+        box-shadow: none !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: transform 0.15s ease, background-color 0.2s ease;
+    }
+
+    .pm-confirm-actions button:active {
+        transform: scale(0.96);
+    }
+
+    .pm-btn-cancel-delete {
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .pm-btn-cancel-delete:hover {
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+
+    .pm-btn-destructive {
+        background-color: #BA1A1A;
+        color: #FFFFFF;
+    }
+
+    .pm-btn-destructive:hover {
+        background-color: #93000A;
+    }
+
+    body.dark-mode .pm-btn-destructive {
+        background-color: #FFB4AB;
+        color: #690005;
+    }
+
+    body.dark-mode .pm-btn-destructive:hover {
+        background-color: #FFDAD6;
     }
 
     /* Modales Bottom Sheet M3 */

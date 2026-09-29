@@ -1099,27 +1099,47 @@
     };
     window.saveNewBank = saveNewBank;
 
-    const deleteCurrentBank = () => {
+    const confirmDeleteCurrentBank = () => {
         const profile = getPmProfile();
         if (!profile || !profile.selectedBank) return;
 
         const bankName = BANK_NAMES[profile.selectedBank] || profile.selectedBank;
-        if (!confirm(`¿Eliminar ${bankName} de tus pagos móviles?`)) return;
+        const desc = document.getElementById("pm-confirm-bank-desc");
+        if (desc) {
+            desc.innerHTML = `¿Estás seguro de que deseas eliminar <strong>${bankName}</strong> de tus pagos móviles?`;
+        }
+        const modal = document.getElementById("pm-modal-confirm-delete");
+        if (modal) modal.classList.add("active");
+    };
+    window.confirmDeleteCurrentBank = confirmDeleteCurrentBank;
+    window.deleteCurrentBank = confirmDeleteCurrentBank;
+
+    const closePmConfirmDeleteModal = () => {
+        const modal = document.getElementById("pm-modal-confirm-delete");
+        if (modal) modal.classList.remove("active");
+    };
+    window.closePmConfirmDeleteModal = closePmConfirmDeleteModal;
+
+    const executeDeleteCurrentBank = () => {
+        const profile = getPmProfile();
+        if (!profile || !profile.selectedBank) return;
 
         profile.banks = profile.banks.filter(b => b !== profile.selectedBank);
+        closePmConfirmDeleteModal();
         closePmDetailModal();
+
         if (profile.banks.length > 0) {
             profile.selectedBank = profile.banks[0];
             setPmProfile(profile);
             renderPmView();
-            showToast("Banco eliminado.");
+            showToast("¡Banco eliminado con éxito!");
         } else {
             localStorage.removeItem(PM_STORAGE_KEY);
             renderPmView();
             showToast("Perfil de Pago Móvil reiniciado.");
         }
     };
-    window.deleteCurrentBank = deleteCurrentBank;
+    window.executeDeleteCurrentBank = executeDeleteCurrentBank;
 
     const copyPmData = () => {
         const profile = getPmProfile();

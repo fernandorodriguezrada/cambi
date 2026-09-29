@@ -226,12 +226,31 @@
                 <span class="material-symbols-rounded">qr_code_2</span>
                 <span>Ver QR</span>
             </button>
+            <button type="button" class="pm-btn-delete-icon" title="Eliminar este banco" onclick="confirmDeleteCurrentBank()">
+                <span class="material-symbols-rounded">delete</span>
+            </button>
         </div>
+    </div>
+</div>
 
-        <div class="pm-detail-footer">
-            <button type="button" class="pm-delete-bank-btn" onclick="deleteCurrentBank()">
-                <span class="material-symbols-rounded">delete_outline</span>
-                <span>Eliminar este banco</span>
+<!-- 5. MODAL DE CONFIRMACIÓN PARA ELIMINAR BANCO -->
+<div id="pm-modal-confirm-delete" class="pm-modal-overlay pm-modal-overlay-confirm" onclick="if(event.target===this) closePmConfirmDeleteModal()">
+    <div class="pm-modal-sheet pm-modal-confirm-sheet">
+        <div class="pm-modal-handle"></div>
+        <div class="pm-confirm-icon-box">
+            <span class="material-symbols-rounded">delete</span>
+        </div>
+        <h3 class="pm-confirm-title">¿Eliminar este banco?</h3>
+        <p id="pm-confirm-bank-desc" class="pm-confirm-desc">
+            ¿Estás seguro de que deseas eliminar este banco de tus pagos móviles?
+        </p>
+        <div class="pm-confirm-actions">
+            <button type="button" class="pm-btn-secondary pm-btn-cancel-delete" onclick="closePmConfirmDeleteModal()">
+                Cancelar
+            </button>
+            <button type="button" class="pm-btn-destructive" onclick="executeDeleteCurrentBank()">
+                <span class="material-symbols-rounded">delete</span>
+                <span>Eliminar</span>
             </button>
         </div>
     </div>
