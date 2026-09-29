@@ -109,6 +109,10 @@
         user-select: none;
     }
 
+    button, input, select, textarea {
+        font-family: inherit;
+    }
+
     header {
         position: relative;
         flex-shrink: 0;
@@ -1911,6 +1915,7 @@
         flex: 1;
         height: 48px;
         border-radius: 16px;
+        font-family: var(--font-google-sans);
         font-size: 0.94rem;
         font-weight: 700;
         border: none !important;
@@ -2309,6 +2314,8 @@
         flex: 1;
         padding: 13px 16px;
         border-radius: 18px;
+        font-family: var(--font-google-sans);
+        font-weight: 700;
     }
 
     /* Visor QR */
