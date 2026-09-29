@@ -1076,50 +1076,136 @@
     };
     window.savePmProfile = savePmProfile;
 
+    const normalizeSearchStr = (str) => {
+        return (str || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    };
+
+    const renderBankSearchResults = (query = "") => {
+        const container = document.getElementById("pm-bank-search-results");
+        if (!container) return;
+
+        const profile = getPmProfile() || { banks: [] };
+        const userBanks = profile.banks || [];
+        const normQ = normalizeSearchStr(query);
+
+        const bankEntries = Object.entries(BANK_NAMES);
+
+        const filtered = bankEntries.filter(([code, name]) => {
+            if (!normQ) return true;
+            const normCode = normalizeSearchStr(code);
+            const normName = normalizeSearchStr(name);
+            const normShort = normalizeSearchStr(BANK_SHORT[code] || "");
+            return normCode.includes(normQ) || normName.includes(normQ) || normShort.includes(normQ);
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="pm-bank-search-empty">
+                    <span class="material-symbols-rounded" style="font-size: 2rem; display: block; margin-bottom: 6px; opacity: 0.6;">search_off</span>
+                    No se encontraron bancos para "${query}"
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = filtered.map(([code, name]) => {
+            const isAdded = userBanks.includes(code);
+            const logoHtml = getBankLogoHtml(code);
+
+            if (isAdded) {
+                return `
+                    <div class="pm-bank-search-item pm-bank-item-disabled" title="Este banco ya está en tu lista">
+                        <div class="pm-bank-item-left">
+                            <div class="pm-bank-item-logo">${logoHtml}</div>
+                            <div class="pm-bank-item-info">
+                                <span class="pm-bank-item-name">${name}</span>
+                                <span class="pm-bank-item-code">Código: ${code}</span>
+                            </div>
+                        </div>
+                        <div class="pm-bank-item-action">
+                            <span class="pm-bank-item-added-badge">
+                                <span class="material-symbols-rounded" style="font-size: 0.95rem;">check</span>
+                                Añadido
+                            </span>
+                        </div>
+                    </div>`;
+            }
+
+            return `
+                <button type="button" class="pm-bank-search-item" onclick="addBankToProfile('${code}')">
+                    <div class="pm-bank-item-left">
+                        <div class="pm-bank-item-logo">${logoHtml}</div>
+                        <div class="pm-bank-item-info">
+                            <span class="pm-bank-item-name">${name}</span>
+                            <span class="pm-bank-item-code">Código: ${code}</span>
+                        </div>
+                    </div>
+                    <div class="pm-bank-item-action">
+                        <span class="material-symbols-rounded">add_circle</span>
+                    </div>
+                </button>`;
+        }).join("");
+    };
+    window.renderBankSearchResults = renderBankSearchResults;
+
+    const filterBankSearchResults = (query) => {
+        const clearBtn = document.getElementById("pm-bank-search-clear");
+        if (clearBtn) clearBtn.style.display = query.trim() ? "inline-flex" : "none";
+        renderBankSearchResults(query);
+    };
+    window.filterBankSearchResults = filterBankSearchResults;
+
+    const clearBankSearch = () => {
+        const input = document.getElementById("pm-bank-search-input");
+        const clearBtn = document.getElementById("pm-bank-search-clear");
+        if (input) {
+            input.value = "";
+            input.focus();
+        }
+        if (clearBtn) clearBtn.style.display = "none";
+        renderBankSearchResults("");
+    };
+    window.clearBankSearch = clearBankSearch;
+
+    const addBankToProfile = (bankCode) => {
+        if (!bankCode) return;
+        const profile = getPmProfile();
+        if (!profile) return;
+
+        profile.banks = profile.banks || [];
+        if (!profile.banks.includes(bankCode)) {
+            profile.banks.push(bankCode);
+        }
+        profile.selectedBank = bankCode;
+        setPmProfile(profile);
+        closeAddBankModal();
+        renderPmView();
+        const bName = BANK_NAMES[bankCode] || "Banco";
+        showToast(`¡${bName} añadido con éxito!`);
+        openPmDetailModal(bankCode);
+    };
+    window.addBankToProfile = addBankToProfile;
+
     const openAddBankModal = () => {
         const modal = document.getElementById("pm-modal-add-bank");
-        const select = document.getElementById("pm-new-bank-select");
-        if (select) select.value = "";
-        syncAllCustomSelects();
-        closeAllCustomSelects();
+        const input = document.getElementById("pm-bank-search-input");
+        const clearBtn = document.getElementById("pm-bank-search-clear");
+        if (input) input.value = "";
+        if (clearBtn) clearBtn.style.display = "none";
+        renderBankSearchResults("");
         if (modal) modal.classList.add("active");
+        setTimeout(() => input?.focus(), 150);
     };
     window.openAddBankModal = openAddBankModal;
 
     const closeAddBankModal = () => {
-        closeAllCustomSelects();
         const modal = document.getElementById("pm-modal-add-bank");
         if (modal) modal.classList.remove("active");
     };
     window.closeAddBankModal = closeAddBankModal;
-
-    const saveNewBank = (e) => {
-        e.preventDefault();
-        const select = document.getElementById("pm-new-bank-select");
-        const newBank = select ? select.value : "";
-        if (!newBank) return;
-
-        const profile = getPmProfile();
-        if (!profile) return;
-
-        if (profile.banks.includes(newBank)) {
-            alert("Este banco ya se encuentra en tu lista.");
-            profile.selectedBank = newBank;
-            setPmProfile(profile);
-            closeAddBankModal();
-            renderPmView();
-            return;
-        }
-
-        profile.banks.push(newBank);
-        profile.selectedBank = newBank;
-        setPmProfile(profile);
-        closeAddBankModal();
-        renderPmView();
-        showToast("¡Nuevo banco añadido!");
-        openPmDetailModal(newBank);
-    };
-    window.saveNewBank = saveNewBank;
 
     const confirmDeleteCurrentBank = () => {
         const profile = getPmProfile();

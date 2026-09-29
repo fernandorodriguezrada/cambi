@@ -88,8 +88,8 @@
     </div>
 </div>
 
-<!-- MODAL 2: AÑADIR OTRO BANCO RÁPIDAMENTE -->
-<div id="pm-modal-add-bank" class="pm-modal-overlay">
+<!-- MODAL 2: AÑADIR OTRO BANCO CON BUSCADOR -->
+<div id="pm-modal-add-bank" class="pm-modal-overlay" onclick="if(event.target===this) closeAddBankModal()">
     <div class="pm-modal-sheet">
         <div class="pm-modal-handle"></div>
         <div class="pm-modal-header">
@@ -98,43 +98,23 @@
                 <span class="material-symbols-rounded">close</span>
             </button>
         </div>
-        <p class="pm-modal-subtext">Tu titular, cédula y teléfono se mantendrán iguales. Solo elige el nuevo banco:</p>
-        <form id="pm-form-add-bank" onsubmit="saveNewBank(event)">
-            <div class="pm-form-group">
-                <label for="pm-new-bank-select">Banco a Añadir</label>
-                <select id="pm-new-bank-select" class="pm-styled-select" required>
-                    <option value="">Selecciona un banco</option>
-                    <option value="0102">0102 - Banco de Venezuela</option>
-                    <option value="0105">0105 - Banco Mercantil</option>
-                    <option value="0108">0108 - BBVA Banco Provincial</option>
-                    <option value="0134">0134 - Banesco</option>
-                    <option value="0172">0172 - Bancamiga</option>
-                    <option value="0114">0114 - Bancaribe</option>
-                    <option value="0191">0191 - Banco Nacional de Crédito (BNC)</option>
-                    <option value="0115">0115 - Banco Exterior</option>
-                    <option value="0175">0175 - Banco Bicentenario</option>
-                    <option value="0163">0163 - Banco del Tesoro</option>
-                    <option value="0171">0171 - Banco Activo</option>
-                    <option value="0174">0174 - Banplus</option>
-                    <option value="0157">0157 - DelSur</option>
-                    <option value="0151">0151 - BFC Banco Fondo Común</option>
-                    <option value="0168">0168 - Bancrecer</option>
-                    <option value="0177">0177 - BANFANB</option>
-                    <option value="0104">0104 - Venezolano de Crédito</option>
-                    <option value="0128">0128 - Banco Caroní</option>
-                    <option value="0137">0137 - Banco Sofitasa</option>
-                    <option value="0138">0138 - Banco Plaza</option>
-                    <option value="0156">0156 - 100% Banco</option>
-                    <option value="0166">0166 - Banco Agrícola de Venezuela</option>
-                    <option value="0169">0169 - Mi Banco</option>
-                    <option value="0146">0146 - Bangente</option>
-                </select>
-            </div>
-            <div class="pm-modal-actions">
-                <button type="button" class="pm-btn-secondary" onclick="closeAddBankModal()">Cancelar</button>
-                <button type="submit" class="pm-btn-primary">Añadir Banco</button>
-            </div>
-        </form>
+        <p class="pm-modal-subtext" style="margin-bottom: 12px;">Busca o selecciona el nuevo banco para vincular a tus datos:</p>
+        
+        <div class="pm-bank-search-bar">
+            <span class="material-symbols-rounded pm-bank-search-icon">search</span>
+            <input type="text" id="pm-bank-search-input" class="pm-bank-search-field" placeholder="Buscar por banco o código (ej: 0102, Mercantil)..." autocomplete="off" oninput="filterBankSearchResults(this.value)">
+            <button type="button" id="pm-bank-search-clear" class="pm-bank-search-clear" onclick="clearBankSearch()" style="display: none;" title="Limpiar búsqueda">
+                <span class="material-symbols-rounded">cancel</span>
+            </button>
+        </div>
+
+        <div id="pm-bank-search-results" class="pm-bank-search-list">
+            <!-- Resultados renderizados dinámicamente -->
+        </div>
+
+        <div class="pm-modal-actions" style="margin-top: 14px; justify-content: center;">
+            <button type="button" class="pm-btn-secondary" onclick="closeAddBankModal()">Cerrar</button>
+        </div>
     </div>
 </div>
 

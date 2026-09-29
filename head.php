@@ -2318,6 +2318,166 @@
         font-weight: 700;
     }
 
+    /* Buscador de Bancos */
+    .pm-bank-search-bar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background-color: var(--md-sys-color-surface-container-high);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: 24px;
+        padding: 4px 14px;
+        margin-bottom: 12px;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .pm-bank-search-bar:focus-within {
+        border-color: var(--md-sys-color-primary);
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+    .pm-bank-search-icon {
+        font-size: 1.25rem;
+        color: var(--md-sys-color-outline);
+        margin-right: 8px;
+        flex-shrink: 0;
+    }
+    .pm-bank-search-field {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: inherit;
+        font-size: 0.92rem;
+        color: var(--md-sys-color-on-surface);
+        padding: 8px 0;
+    }
+    .pm-bank-search-field::placeholder {
+        color: var(--md-sys-color-outline);
+    }
+    .pm-bank-search-clear {
+        background: transparent;
+        border: none;
+        padding: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--md-sys-color-outline);
+        border-radius: 50%;
+        transition: color 0.15s ease;
+    }
+    .pm-bank-search-clear:hover {
+        color: var(--md-sys-color-on-surface);
+    }
+    .pm-bank-search-clear span {
+        font-size: 1.15rem;
+    }
+    .pm-bank-search-list {
+        max-height: 290px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-right: 4px;
+    }
+    .pm-bank-search-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    .pm-bank-search-list::-webkit-scrollbar-thumb {
+        background: var(--md-sys-color-outline-variant);
+        border-radius: 4px;
+    }
+    .pm-bank-search-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-radius: 14px;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-family: inherit;
+        transition: background-color 0.15s ease, transform 0.1s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .pm-bank-search-item:hover:not(.pm-bank-item-disabled) {
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+    .pm-bank-search-item:active:not(.pm-bank-item-disabled) {
+        transform: scale(0.985);
+    }
+    .pm-bank-item-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        flex: 1;
+    }
+    .pm-bank-item-logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        flex-shrink: 0;
+    }
+    .pm-bank-item-logo img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    .pm-bank-item-info {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+    .pm-bank-item-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--md-sys-color-on-surface);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .pm-bank-item-code {
+        font-size: 0.76rem;
+        color: var(--md-sys-color-outline);
+        font-weight: 500;
+    }
+    .pm-bank-item-action {
+        display: flex;
+        align-items: center;
+        color: var(--md-sys-color-primary);
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+    .pm-bank-item-disabled {
+        opacity: 0.45;
+        cursor: default;
+    }
+    .pm-bank-item-added-badge {
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: var(--md-sys-color-outline);
+        background: var(--md-sys-color-surface-container-highest);
+        padding: 3px 8px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .pm-bank-search-empty {
+        padding: 24px 12px;
+        text-align: center;
+        color: var(--md-sys-color-outline);
+        font-size: 0.88rem;
+    }
+
     /* Badges y estados del Visor QR */
     .pm-qr-badge-official {
         display: inline-flex;
