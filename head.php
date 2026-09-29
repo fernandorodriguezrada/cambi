@@ -1117,38 +1117,26 @@
     }
 
     .pm-bank-block {
-        background-color: var(--md-sys-color-surface);
-        border: 1px solid var(--md-sys-color-outline);
-        border-radius: 20px;
-        padding: 15px 14px;
-        min-height: 108px;
+        background-color: var(--b-pastel-bg, var(--md-sys-color-surface-container));
+        color: var(--b-pastel-text, var(--md-sys-color-on-surface));
+        border: none !important;
+        border-radius: 22px;
+        padding: 16px 14px;
+        min-height: 114px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         cursor: pointer;
         box-sizing: border-box;
-        box-shadow: none;
-        transition: transform 0.16s cubic-bezier(0.2, 0, 0, 1), background-color 0.16s, border-color 0.16s;
+        box-shadow: none !important;
+        transition: transform 0.16s cubic-bezier(0.2, 0, 0, 1), opacity 0.16s;
         user-select: none;
         -webkit-user-select: none;
     }
 
-    body.dark-mode .pm-bank-block {
-        background-color: var(--md-sys-color-surface);
-        border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .pm-bank-block:hover {
-        border-color: var(--cambi-magic-mint-on-surface);
-    }
-
-    body.dark-mode .pm-bank-block:hover {
-        border-color: var(--cambi-magic-mint);
-    }
-
     .pm-bank-block:active {
         transform: scale(0.97);
-        background-color: var(--md-sys-color-surface-container);
+        opacity: 0.9;
     }
 
     .pm-block-top {
@@ -1163,40 +1151,36 @@
         gap: 8px;
     }
 
-    .pm-block-icon-wrap {
+    .pm-block-logo {
         width: 32px;
         height: 32px;
-        border-radius: 10px;
-        background-color: rgba(177, 211, 254, 0.28);
-        color: var(--cambi-baby-blue-on-surface);
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
     }
 
-    body.dark-mode .pm-block-icon-wrap {
-        background-color: rgba(177, 211, 254, 0.15);
-        color: var(--cambi-baby-blue);
-    }
-
-    .pm-block-icon-wrap .material-symbols-rounded {
-        font-size: 18px;
+    .pm-block-logo svg {
+        display: block;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
     }
 
     .pm-block-code {
         font-family: monospace;
         font-size: 0.8rem;
         font-weight: 700;
-        color: var(--md-sys-color-outline);
-        background-color: var(--md-sys-color-surface-container);
-        padding: 3px 7px;
-        border-radius: 8px;
+        color: var(--b-pastel-text, var(--md-sys-color-on-surface));
+        background-color: var(--b-pastel-pill, rgba(0, 0, 0, 0.08));
+        padding: 3px 8px;
+        border-radius: 10px;
     }
 
     .pm-block-chevron {
         font-size: 20px;
-        color: var(--md-sys-color-outline);
-        opacity: 0.6;
+        color: var(--b-pastel-text, var(--md-sys-color-on-surface));
+        opacity: 0.55;
     }
 
     .pm-block-bottom {
@@ -1208,9 +1192,9 @@
 
     .pm-block-name {
         margin: 0;
-        font-size: 0.98rem;
+        font-size: 1.02rem;
         font-weight: 700;
-        color: var(--md-sys-color-on-surface);
+        color: var(--b-pastel-text, var(--md-sys-color-on-surface));
         letter-spacing: -0.01em;
         line-height: 1.25;
         white-space: nowrap;
@@ -1219,10 +1203,194 @@
     }
 
     .pm-block-sub {
-        font-size: 0.76rem;
-        font-weight: 500;
-        color: var(--md-sys-color-outline);
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--b-pastel-sub, var(--md-sys-color-outline));
         letter-spacing: 0.02em;
+        opacity: 0.85;
+    }
+
+    /* =========================================
+       PALETA PASTEL DE BANCOS (SIN BORDES, CERO GLOW)
+       ========================================= */
+
+    /* 0134 - Banesco (Verde Pastel) */
+    .pm-bank-pastel-0134 {
+        --b-pastel-bg: #d5f2e1;
+        --b-pastel-text: #064d2b;
+        --b-pastel-sub: #176d41;
+        --b-pastel-pill: rgba(6, 77, 43, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0134 {
+        --b-pastel-bg: #153322;
+        --b-pastel-text: #96e5b8;
+        --b-pastel-sub: #67c590;
+        --b-pastel-pill: rgba(150, 229, 184, 0.15);
+    }
+
+    /* 0105 - Mercantil (Azul Marino Pastel) */
+    .pm-bank-pastel-0105 {
+        --b-pastel-bg: #d7e7fa;
+        --b-pastel-text: #002d62;
+        --b-pastel-sub: #164d8a;
+        --b-pastel-pill: rgba(0, 45, 98, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0105 {
+        --b-pastel-bg: #13263e;
+        --b-pastel-text: #a6cbf7;
+        --b-pastel-sub: #74a6e2;
+        --b-pastel-pill: rgba(166, 203, 247, 0.15);
+    }
+
+    /* 0172 - Bancamiga (Verde Claro / Menta Pastel) */
+    .pm-bank-pastel-0172 {
+        --b-pastel-bg: #cef4ed;
+        --b-pastel-text: #004d43;
+        --b-pastel-sub: #136f62;
+        --b-pastel-pill: rgba(0, 77, 67, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0172 {
+        --b-pastel-bg: #11322d;
+        --b-pastel-text: #8be5d5;
+        --b-pastel-sub: #56c3b0;
+        --b-pastel-pill: rgba(139, 229, 213, 0.15);
+    }
+
+    /* 0102 - Banco de Venezuela (Azul Pastel Institucional) */
+    .pm-bank-pastel-0102 {
+        --b-pastel-bg: #dbe8f9;
+        --b-pastel-text: #0c2d54;
+        --b-pastel-sub: #274f7b;
+        --b-pastel-pill: rgba(12, 45, 84, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0102 {
+        --b-pastel-bg: #14253a;
+        --b-pastel-text: #a9caf4;
+        --b-pastel-sub: #75a2d8;
+        --b-pastel-pill: rgba(169, 202, 244, 0.15);
+    }
+
+    /* 0108 - BBVA Banco Provincial (Azul Suave Pastel) */
+    .pm-bank-pastel-0108 {
+        --b-pastel-bg: #d7e5f8;
+        --b-pastel-text: #003366;
+        --b-pastel-sub: #1b538e;
+        --b-pastel-pill: rgba(0, 51, 102, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0108 {
+        --b-pastel-bg: #13253b;
+        --b-pastel-text: #a3c6f5;
+        --b-pastel-sub: #6fa0de;
+        --b-pastel-pill: rgba(163, 198, 245, 0.15);
+    }
+
+    /* 0191 - BNC (Verde Esmeralda Pastel) */
+    .pm-bank-pastel-0191 {
+        --b-pastel-bg: #d4eed8;
+        --b-pastel-text: #0e4d20;
+        --b-pastel-sub: #206d36;
+        --b-pastel-pill: rgba(14, 77, 32, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0191 {
+        --b-pastel-bg: #14331c;
+        --b-pastel-text: #97e2a6;
+        --b-pastel-sub: #61bf75;
+        --b-pastel-pill: rgba(151, 226, 166, 0.15);
+    }
+
+    /* 0114 - Bancaribe (Melocotón / Naranja Pastel) */
+    .pm-bank-pastel-0114 {
+        --b-pastel-bg: #fde5cd;
+        --b-pastel-text: #6b3200;
+        --b-pastel-sub: #924d11;
+        --b-pastel-pill: rgba(107, 50, 0, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0114 {
+        --b-pastel-bg: #37210f;
+        --b-pastel-text: #fbc48e;
+        --b-pastel-sub: #dca064;
+        --b-pastel-pill: rgba(251, 196, 142, 0.15);
+    }
+
+    /* 0115 - Banco Exterior (Celeste Pastel) */
+    .pm-bank-pastel-0115 {
+        --b-pastel-bg: #d6eef8;
+        --b-pastel-text: #024b6f;
+        --b-pastel-sub: #176a95;
+        --b-pastel-pill: rgba(2, 75, 111, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0115 {
+        --b-pastel-bg: #112c3a;
+        --b-pastel-text: #8dceee;
+        --b-pastel-sub: #5bafd8;
+        --b-pastel-pill: rgba(141, 206, 238, 0.15);
+    }
+
+    /* 0163 - Banco del Tesoro (Ámbar Cálido Pastel) */
+    .pm-bank-pastel-0163 {
+        --b-pastel-bg: #fbedcd;
+        --b-pastel-text: #663d00;
+        --b-pastel-sub: #8c570d;
+        --b-pastel-pill: rgba(102, 61, 0, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0163 {
+        --b-pastel-bg: #35240f;
+        --b-pastel-text: #f8c876;
+        --b-pastel-sub: #d8a246;
+        --b-pastel-pill: rgba(248, 200, 118, 0.15);
+    }
+
+    /* 0174 - Banplus (Lavanda Pastel) */
+    .pm-bank-pastel-0174 {
+        --b-pastel-bg: #dce3f8;
+        --b-pastel-text: #1c306d;
+        --b-pastel-sub: #344d93;
+        --b-pastel-pill: rgba(28, 48, 109, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0174 {
+        --b-pastel-bg: #17213b;
+        --b-pastel-text: #a6b7ee;
+        --b-pastel-sub: #7b91d8;
+        --b-pastel-pill: rgba(166, 183, 238, 0.15);
+    }
+
+    /* 0168 - Bancrecer (Malva Pastel) */
+    .pm-bank-pastel-0168 {
+        --b-pastel-bg: #eedcf5;
+        --b-pastel-text: #48165e;
+        --b-pastel-sub: #6c298c;
+        --b-pastel-pill: rgba(72, 22, 94, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0168 {
+        --b-pastel-bg: #2c1635;
+        --b-pastel-text: #d6a6eb;
+        --b-pastel-sub: #b074cb;
+        --b-pastel-pill: rgba(214, 166, 235, 0.15);
+    }
+
+    /* 0175 - Banco Bicentenario (Rosa Coral Pastel) */
+    .pm-bank-pastel-0175 {
+        --b-pastel-bg: #fcdede;
+        --b-pastel-text: #6b1418;
+        --b-pastel-sub: #92262c;
+        --b-pastel-pill: rgba(107, 20, 24, 0.1);
+    }
+    body.dark-mode .pm-bank-pastel-0175 {
+        --b-pastel-bg: #371618;
+        --b-pastel-text: #f5a0a4;
+        --b-pastel-sub: #d66f74;
+        --b-pastel-pill: rgba(245, 160, 164, 0.15);
+    }
+
+    /* Default (Otros bancos) */
+    .pm-bank-pastel-default {
+        --b-pastel-bg: var(--md-sys-color-surface-container);
+        --b-pastel-text: var(--md-sys-color-on-surface);
+        --b-pastel-sub: var(--md-sys-color-outline);
+        --b-pastel-pill: rgba(0, 0, 0, 0.08);
+    }
+    body.dark-mode .pm-bank-pastel-default {
+        --b-pastel-pill: rgba(255, 255, 255, 0.1);
     }
 
     /* Modal Detalle de Banco Seleccionado */
@@ -1230,33 +1398,33 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        padding: 6px 14px 6px 8px;
+        border-radius: 18px;
+        background-color: var(--b-pastel-bg, var(--md-sys-color-surface-container));
+        color: var(--b-pastel-text, var(--md-sys-color-on-surface));
     }
 
-    .pm-detail-icon-wrap {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        background-color: rgba(177, 211, 254, 0.28);
-        color: var(--cambi-baby-blue-on-surface);
+    .pm-detail-logo {
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
     }
 
-    body.dark-mode .pm-detail-icon-wrap {
-        background-color: rgba(177, 211, 254, 0.15);
-        color: var(--cambi-baby-blue);
-    }
-
-    .pm-detail-icon-wrap .material-symbols-rounded {
-        font-size: 24px;
+    .pm-detail-logo svg {
+        display: block;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
     }
 
     .pm-detail-title {
         margin: 0;
-        font-size: 1.15rem;
+        font-size: 1.12rem;
         font-weight: 700;
-        color: var(--md-sys-color-on-surface);
+        color: var(--b-pastel-text, var(--md-sys-color-on-surface));
         line-height: 1.2;
     }
 
@@ -1264,7 +1432,7 @@
         font-family: monospace;
         font-size: 0.82rem;
         font-weight: 700;
-        color: var(--md-sys-color-outline);
+        color: var(--b-pastel-sub, var(--md-sys-color-outline));
     }
 
     /* Botón persistente abajo para añadir pago móvil */

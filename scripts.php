@@ -637,6 +637,38 @@
     };
     window.showToast = showToast;
 
+    const getBankLogoSvg = (bankCode) => {
+        switch (bankCode) {
+            case "0134": // Banesco
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#007A3D"/><path d="M10 26V10h8c3.4 0 5.8 1.8 5.8 4.6 0 1.8-1 3.2-2.7 3.8 2.1.6 3.6 2.2 3.6 4.5 0 3.1-2.5 5.1-6.4 5.1H10zm4.4-9.2h3.2c1.4 0 2.2-.7 2.2-1.9s-.8-1.9-2.2-1.9h-3.2v3.8zm0 6.2h3.6c1.5 0 2.5-.8 2.5-2.1s-1-2.1-2.5-2.1h-3.6V23z" fill="#FFFFFF"/><circle cx="27" cy="11" r="2.5" fill="#78BE20"/></svg>`;
+            case "0105": // Mercantil
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#002D72"/><circle cx="18" cy="18" r="9" stroke="#FFFFFF" stroke-width="2" fill="none"/><path d="M18 9c-3 3-4.5 5.5-4.5 9s1.5 6 4.5 9c3-3 4.5-5.5 4.5-9s-1.5-6-4.5-9z" stroke="#FFFFFF" stroke-width="1.8" fill="none"/><line x1="9" y1="18" x2="27" y2="18" stroke="#FFFFFF" stroke-width="1.8"/><path d="M14 18a4 4 0 0 0 8 0" stroke="#FF6A00" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+            case "0102": // Banco de Venezuela
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#0B284B"/><path d="M10 11h6.5c3.8 0 6 2.4 6 6.5s-2.2 6.5-6 6.5H10V11zm4 3.5v6h2.2c1.8 0 2.8-1.1 2.8-3s-1-3-2.8-3H14z" fill="#FFFFFF"/><path d="M21 11h3.2l2.8 7-2.8 7H21l2.5-7-2.5-7z" fill="#D32F2F"/><circle cx="28" cy="18" r="1.5" fill="#FBC02D"/></svg>`;
+            case "0108": // BBVA Banco Provincial
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#004481"/><text x="18" y="21.5" font-family="sans-serif" font-weight="900" font-size="8.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="-0.3">BBVA</text></svg>`;
+            case "0172": // Bancamiga
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#008B8B"/><circle cx="18" cy="18" r="5" stroke="#FFFFFF" stroke-width="2.2" fill="none"/><path d="M11 18c0 3.9 3.1 7 7 7s7-3.1 7-7" stroke="#66D9D9" stroke-width="2.2" stroke-linecap="round" fill="none"/><circle cx="18" cy="18" r="2" fill="#FFFFFF"/></svg>`;
+            case "0191": // BNC
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#006837"/><text x="18" y="22" font-family="sans-serif" font-weight="900" font-size="9.5" fill="#FFFFFF" text-anchor="middle">BNC</text></svg>`;
+            case "0114": // Bancaribe
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#003882"/><path d="M10 13c5-3 12-2 16 3" stroke="#FF7900" stroke-width="3" stroke-linecap="round"/><path d="M9 22c4 4 11 4 16 0" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/></svg>`;
+            case "0115": // Banco Exterior
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#0277BD"/><polygon points="18,9 21,15.5 28,18 21,20.5 18,27 15,20.5 8,18 15,15.5" fill="#FFFFFF"/></svg>`;
+            case "0175": // Banco Bicentenario
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#C62828"/><polygon points="18,10 20.2,15 25.5,15.8 21.6,19.5 22.6,24.8 18,22.2 13.4,24.8 14.4,19.5 10.5,15.8 15.8,15" fill="#FFFFFF"/></svg>`;
+            case "0163": // Banco del Tesoro
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#B26A00"/><path d="M11 14h14l-2 10h-10l-2-10z" stroke="#FFFFFF" stroke-width="2" fill="none"/><line x1="18" y1="14" x2="18" y2="24" stroke="#FFFFFF" stroke-width="2"/><circle cx="18" cy="11.5" r="2" fill="#FCD34D"/></svg>`;
+            case "0174": // Banplus
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#1C3870"/><path d="M12 11v14h5c2.6 0 4.2-1.3 4.2-3.3 0-1.3-.7-2.3-2-2.7 1.1-.4 1.7-1.4 1.7-2.6 0-2-1.6-3.4-4.2-3.4H12zm2.6 2.6h2.2c1 0 1.6.5 1.6 1.4s-.6 1.4-1.6 1.4h-2.2v-2.8zm0 5h2.5c1.1 0 1.8.6 1.8 1.6s-.7 1.6-1.8 1.6h-2.5v-3.2z" fill="#FFFFFF"/><path d="M26 15v6m-3-3h6" stroke="#F97316" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+            case "0168": // Bancrecer
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="#6A1B9A"/><path d="M18 25V13m0 0c-3-2-6.5 0-6.5 3.8 0 3.8 4.5 4.8 6.5 1.8m0-5.6c3-2 6.5 0 6.5 3.8 0 3.8-4.5 4.8-6.5 1.8" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`;
+            default:
+                return `<svg viewBox="0 0 36 36" width="30" height="30" fill="none"><rect width="36" height="36" rx="9" fill="rgba(0,0,0,0.12)"/><path d="M10 15l8-5 8 5v2H10v-2zm1 4h2v6h-2v-6zm5 0h2v6h-2v-6zm5 0h2v6h-2v-6zM9 26h18v2H9v-2z" fill="currentColor"/></svg>`;
+        }
+    };
+    window.getBankLogoSvg = getBankLogoSvg;
+
     const renderPmView = () => {
         const profile = getPmProfile();
         const onboardingView = document.getElementById("pm-onboarding-view");
@@ -670,25 +702,27 @@
             setPmProfile(profile);
         }
 
-        // Render colorful bank blocks
+        // Render colorful pastel bank blocks with logos
         const grid = document.getElementById("pm-banks-grid");
         if (grid) {
             grid.innerHTML = "";
             profile.banks.forEach(bankCode => {
                 const block = document.createElement("div");
-                block.className = "pm-bank-block";
+                const pastelClass = `pm-bank-pastel-${bankCode}`;
+                block.className = `pm-bank-block ${pastelClass}`;
                 block.setAttribute("role", "button");
                 block.setAttribute("tabindex", "0");
                 block.onclick = () => openPmDetailModal(bankCode);
 
                 const fullName = BANK_NAMES[bankCode] || `Banco (${bankCode})`;
                 const shortName = BANK_SHORT[bankCode] || fullName;
+                const logoSvg = getBankLogoSvg(bankCode);
 
                 block.innerHTML = `
                     <div class="pm-block-top">
                         <div class="pm-block-badge">
-                            <div class="pm-block-icon-wrap">
-                                <span class="material-symbols-rounded">account_balance</span>
+                            <div class="pm-block-logo">
+                                ${logoSvg}
                             </div>
                             <span class="pm-block-code">${bankCode}</span>
                         </div>
@@ -722,6 +756,13 @@
 
         const fullName = BANK_NAMES[bankCode] || `Banco (${bankCode})`;
 
+        if (badgeWrap) {
+            badgeWrap.className = `pm-detail-bank-badge pm-bank-pastel-${bankCode}`;
+        }
+        const logoContainer = document.getElementById("pm-detail-logo-container");
+        if (logoContainer) {
+            logoContainer.innerHTML = getBankLogoSvg(bankCode);
+        }
 
         if (bankNameEl) bankNameEl.innerText = fullName;
         if (bankCodeEl) bankCodeEl.innerText = bankCode;

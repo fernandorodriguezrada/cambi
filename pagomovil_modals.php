@@ -171,8 +171,8 @@
         <div class="pm-modal-handle"></div>
         <div class="pm-modal-header">
             <div id="pm-detail-badge" class="pm-detail-bank-badge">
-                <div class="pm-detail-icon-wrap">
-                    <span class="material-symbols-rounded">account_balance</span>
+                <div id="pm-detail-logo-container" class="pm-detail-logo">
+                    <!-- SVG logo del banco -->
                 </div>
                 <div>
                     <h3 id="pm-detail-bank-name" class="pm-detail-title">Banco</h3>
