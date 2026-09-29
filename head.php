@@ -2368,20 +2368,23 @@
         border-radius: 20px;
         box-sizing: border-box;
         pointer-events: none;
+        overflow: hidden;
     }
     .pm-scanner-laser {
         position: absolute;
+        top: 0;
         left: 0;
         right: 0;
         height: 2px;
         background-color: var(--md-sys-color-primary, #6750a4);
         pointer-events: none;
-        animation: pmLaserAnim 2.2s ease-in-out infinite alternate;
+        will-change: transform, opacity;
+        animation: pmLaserAnim 2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
     }
     @keyframes pmLaserAnim {
-        0% { top: 10%; opacity: 0.4; }
+        0% { transform: translateY(8px); opacity: 0.35; }
         50% { opacity: 1; }
-        100% { top: 90%; opacity: 0.4; }
+        100% { transform: translateY(190px); opacity: 0.35; }
     }
 
     .pm-scanner-bank-btn {
