@@ -1667,50 +1667,72 @@
         color: var(--b-pastel-sub, var(--md-sys-color-outline));
     }
 
-    /* Botón flotante persistente (FAB) para añadir pago móvil */
-    .pm-fab-add-bank {
+    /* Grupo de Botones Flotantes Persistentes (FABs) */
+    .pm-fabs-group {
         position: fixed;
         bottom: calc(108px + env(safe-area-inset-bottom, 0px));
         right: max(20px, calc(50% - 200px + 20px));
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 105;
+        transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.24s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .pm-fab-btn, .pm-fab-add-bank {
         width: 62px;
         height: 62px;
         border-radius: 20px;
-        background-color: var(--cambi-magic-mint);
-        color: #004d34;
         border: none !important;
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22) !important;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 105;
-        transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.24s cubic-bezier(0.2, 0, 0, 1);
+        transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+        -webkit-tap-highlight-color: transparent;
     }
 
-    .pm-fab-add-bank:hover {
+    .pm-fab-btn:hover, .pm-fab-add-bank:hover {
         transform: scale(1.06);
     }
 
-    .pm-fab-add-bank:active {
+    .pm-fab-btn:active, .pm-fab-add-bank:active {
         transform: scale(0.94);
     }
 
-    .pm-fab-add-bank .material-symbols-rounded {
-        font-size: 36px;
+    .pm-fab-btn .material-symbols-rounded, .pm-fab-add-bank .material-symbols-rounded {
+        font-size: 32px;
         font-weight: 600;
     }
 
-    /* Ocultar en scroll abajo */
-    .pm-fab-add-bank.fab-hidden {
-        transform: translateY(80px) scale(0.7);
-        opacity: 0;
-        pointer-events: none;
+    /* Botón Añadir Banco (Magic Mint) */
+    .pm-fab-add, .pm-fab-add-bank {
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
     }
-
-    body.dark-mode .pm-fab-add-bank {
+    body.dark-mode .pm-fab-add, body.dark-mode .pm-fab-add-bank {
         background-color: var(--cambi-magic-mint);
         color: #003825;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    /* Botón Escanear QR (Baby Blue) */
+    .pm-fab-scan {
+        background-color: var(--cambi-baby-blue);
+        color: #0d3c61;
+    }
+    body.dark-mode .pm-fab-scan {
+        background-color: var(--cambi-baby-blue);
+        color: #052640;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    /* Ocultar en scroll abajo */
+    .pm-fabs-group.fab-hidden, .pm-fab-add-bank.fab-hidden {
+        transform: translateY(80px) scale(0.7);
+        opacity: 0;
+        pointer-events: none;
     }
 
 
@@ -2318,63 +2340,6 @@
         font-weight: 700;
     }
 
-    /* Tarjeta de Acceso Rápido: Escáner QR */
-    .pm-scanner-action-card {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        background-color: var(--md-sys-color-surface-container-low);
-        border: 1px solid var(--md-sys-color-outline-variant);
-        border-radius: 20px;
-        padding: 14px 16px;
-        margin: 14px 0 18px 0;
-        cursor: pointer;
-        transition: background-color 0.2s ease, transform 0.15s ease;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .pm-scanner-action-card:hover {
-        background-color: var(--md-sys-color-surface-container);
-    }
-    .pm-scanner-action-card:active {
-        transform: scale(0.985);
-    }
-    .pm-scanner-action-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        background-color: var(--md-sys-color-primary-container);
-        color: var(--md-sys-color-on-primary-container);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .pm-scanner-action-icon span {
-        font-size: 1.45rem;
-    }
-    .pm-scanner-action-texts {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-width: 0;
-    }
-    .pm-scanner-action-title {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--md-sys-color-on-surface);
-        line-height: 1.25;
-    }
-    .pm-scanner-action-desc {
-        font-size: 0.78rem;
-        color: var(--md-sys-color-outline);
-        margin-top: 2px;
-        line-height: 1.3;
-    }
-    .pm-scanner-action-arrow {
-        color: var(--md-sys-color-outline);
-        font-size: 1.3rem;
-        flex-shrink: 0;
-    }
 
     /* Modal de Escáner QR */
     .pm-scanner-viewport {

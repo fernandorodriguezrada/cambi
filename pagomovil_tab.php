@@ -60,26 +60,9 @@
                         <span id="pm-display-phone" class="pm-user-phone">--</span>
                     </div>
                 </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="pm-icon-btn" title="Escanear QR para pagar" onclick="openQrScannerModal()">
-                        <span class="material-symbols-rounded">qr_code_scanner</span>
-                    </button>
-                    <button class="pm-icon-btn" title="Editar Perfil" onclick="openPmModal('edit')">
-                        <span class="material-symbols-rounded">edit</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Banner / Acceso rápido: Escanear QR para pagar -->
-            <div class="pm-scanner-action-card" onclick="openQrScannerModal()">
-                <div class="pm-scanner-action-icon">
-                    <span class="material-symbols-rounded">qr_code_scanner</span>
-                </div>
-                <div class="pm-scanner-action-texts">
-                    <span class="pm-scanner-action-title">Escanear QR para pagar</span>
-                    <span class="pm-scanner-action-desc">Copia los datos de cobro y abre tu banco al instante</span>
-                </div>
-                <span class="material-symbols-rounded pm-scanner-action-arrow">chevron_right</span>
+                <button class="pm-icon-btn" title="Editar Perfil" onclick="openPmModal('edit')">
+                    <span class="material-symbols-rounded">edit</span>
+                </button>
             </div>
 
             <!-- Sección de Bloques de Bancos -->

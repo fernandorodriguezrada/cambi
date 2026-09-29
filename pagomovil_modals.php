@@ -362,7 +362,12 @@
     <span id="pm-toast-msg">¡Datos copiados al portapapeles!</span>
 </div>
 
-<!-- BOTÓN FLOTANTE PARA AÑADIR PAGO MÓVIL (FAB) -->
-<button id="pm-btn-add-bank-fab" class="pm-fab-add-bank" style="display: none;" title="Añadir Pago Móvil" onclick="openAddBankModal()">
-    <span class="material-symbols-rounded">add</span>
-</button>
+<!-- BOTONES FLOTANTES PERSISTENTES (FABS): ESCANEAR QR Y AÑADIR BANCO -->
+<div id="pm-fabs-group" class="pm-fabs-group" style="display: none;">
+    <button id="pm-btn-scan-qr-fab" class="pm-fab-btn pm-fab-scan" title="Escanear QR para pagar" onclick="openQrScannerModal()">
+        <span class="material-symbols-rounded">qr_code_scanner</span>
+    </button>
+    <button id="pm-btn-add-bank-fab" class="pm-fab-btn pm-fab-add" title="Añadir Pago Móvil" onclick="openAddBankModal()">
+        <span class="material-symbols-rounded">add</span>
+    </button>
+</div>
