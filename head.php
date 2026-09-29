@@ -1152,11 +1152,10 @@
     }
 
     .pm-block-logo {
+        width: 88px;
         height: 32px;
-        min-width: 44px;
-        max-width: 100px;
         padding: 4px 8px;
-        background-color: rgba(255, 255, 255, 0.88);
+        background-color: rgba(255, 255, 255, 0.9);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -1171,11 +1170,13 @@
     }
 
     .pm-block-logo img {
+        width: 100%;
         height: 100%;
-        max-height: 24px;
-        max-width: 84px;
+        max-height: 22px;
+        max-width: 74px;
         object-fit: contain;
         display: block;
+        margin: auto;
     }
 
     .pm-block-logo .material-symbols-rounded {
@@ -1421,9 +1422,8 @@
     }
 
     .pm-detail-logo {
+        width: 108px;
         height: 40px;
-        min-width: 52px;
-        max-width: 120px;
         padding: 5px 10px;
         background-color: rgba(255, 255, 255, 0.92);
         border-radius: 12px;
@@ -1440,11 +1440,13 @@
     }
 
     .pm-detail-logo img {
+        width: 100%;
         height: 100%;
-        max-height: 30px;
-        max-width: 100px;
+        max-height: 28px;
+        max-width: 90px;
         object-fit: contain;
         display: block;
+        margin: auto;
     }
 
     .pm-detail-logo .material-symbols-rounded {
