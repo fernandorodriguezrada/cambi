@@ -2318,6 +2318,54 @@
         font-weight: 700;
     }
 
+    /* Badges y estados del Visor QR */
+    .pm-qr-badge-official {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e6f4ea;
+        color: #137333;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+    }
+    .dark .pm-qr-badge-official {
+        background: rgba(52, 168, 83, 0.16);
+        color: #81c995;
+    }
+    .pm-qr-badge-textonly {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fef7e0;
+        color: #b06000;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+    }
+    .dark .pm-qr-badge-textonly {
+        background: rgba(251, 188, 4, 0.16);
+        color: #fdd663;
+    }
+    .pm-qr-empty-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+    .pm-qr-empty-icon span {
+        font-size: 30px;
+    }
+
     /* Visor QR (debe estar por encima del modal de detalle del banco) */
     #pm-modal-qr {
         z-index: 270 !important;

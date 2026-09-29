@@ -1255,81 +1255,109 @@
         return payloadNoCrc + crc;
     };
 
-    const showPmQR = () => {
+    const showPmQR = (forcePlainText = false) => {
         const profile = getPmProfile();
         if (!profile || !profile.selectedBank) return;
 
         const bankCode = profile.selectedBank;
         const bankName = BANK_NAMES[bankCode] || "Banco";
-        const phone = `${profile.phonePrefix}${profile.phoneNum}`;
-        const doc = `${profile.docType}${profile.docNum}`;
+        const phone = `${profile.phonePrefix}-${profile.phoneNum}`;
+        const doc = `${profile.docType}-${profile.docNum}`;
         const holder = profile.holder;
+
+        const modal = document.getElementById("pm-modal-qr");
+        const activeView = document.getElementById("pm-qr-view-active");
+        const emptyView = document.getElementById("pm-qr-view-empty");
 
         const qrTitle = document.getElementById("pm-qr-bank-title");
         const qrSubtitle = document.getElementById("pm-qr-holder-subtitle");
         const qrInfoText = document.getElementById("pm-qr-info-text");
         const qrContainer = document.getElementById("pm-qrcode-container");
-        const modal = document.getElementById("pm-modal-qr");
+        const badgeEl = document.getElementById("pm-qr-badge");
+        const emptyTitle = document.getElementById("pm-qr-empty-title");
 
-        if (qrTitle) qrTitle.innerText = `${bankName} (${bankCode})`;
-        if (qrSubtitle) qrSubtitle.innerText = holder;
-        if (qrInfoText) qrInfoText.innerText = `${profile.phonePrefix}-${profile.phoneNum} • ${profile.docType}-${profile.docNum}`;
-
-        let qrPayload = "";
-        let isOfficial = false;
-
+        let officialPayload = null;
         if (profile.bankQrs && profile.bankQrs[bankCode]) {
-            qrPayload = profile.bankQrs[bankCode];
-            isOfficial = true;
+            officialPayload = profile.bankQrs[bankCode];
         } else if (bankCode === "0134" && profile.phoneNum === "7040141") {
-            // Payload oficial Suiche 7B extraído de la captura de Banesco del usuario
-            qrPayload = "YRbMTpNdhtuGfRPPR6kYwwTiW7AMphcmue2HwIns4rUqgAcVLUU5PEL+ifxENwOVvy7Y00EKMnv9osiaIGZzsf91O5S+4tgY1z2D8L6+NEvmhoQFKjG6BKhYNGj7GAK8PNSTgnUM5kBbVvvp9AoO/p2+b2uDfTxvjzBHY7qR9dDgF8PhhPRFgYAIh394Ke1T?merchantId=0134&strong_id=1790656181";
-            isOfficial = true;
+            officialPayload = "YRbMTpNdhtuGfRPPR6kYwwTiW7AMphcmue2HwIns4rUqgAcVLUU5PEL+ifxENwOVvy7Y00EKMnv9osiaIGZzsf91O5S+4tgY1z2D8L6+NEvmhoQFKjG6BKhYNGj7GAK8PNSTgnUM5kBbVvvp9AoO/p2+b2uDfTxvjzBHY7qR9dDgF8PhhPRFgYAIh394Ke1T?merchantId=0134&strong_id=1790656181";
             profile.bankQrs = profile.bankQrs || {};
-            profile.bankQrs[bankCode] = qrPayload;
+            profile.bankQrs[bankCode] = officialPayload;
             setPmProfile(profile);
-        } else {
-            qrPayload = buildSuiche7bQr(
-                bankCode,
-                profile.docType,
-                profile.docNum,
-                profile.phonePrefix,
-                profile.phoneNum,
-                holder
-            );
         }
 
-        const hintEl = document.getElementById("pm-qr-status-hint");
-        const btnTextEl = document.getElementById("pm-qr-import-btn-text");
-        if (hintEl) {
-            hintEl.innerText = isOfficial
-                ? "✓ Código Suiche 7B oficial sincronizado con tu banco"
-                : "Tip: Puedes importar la captura de 'Mi QR' de tu banco para compatibilidad 100%.";
-        }
-        if (btnTextEl) {
-            btnTextEl.innerText = isOfficial ? "Reemplazar captura de Mi QR" : "Importar captura de Mi QR";
-        }
+        if (officialPayload) {
+            // ESTADO 1: QR Oficial Suiche 7B
+            if (activeView) activeView.style.display = "block";
+            if (emptyView) emptyView.style.display = "none";
 
-        if (qrContainer) {
-            qrContainer.innerHTML = "";
-            
-            if (typeof QRCode !== "undefined") {
-                new QRCode(qrContainer, {
-                    text: qrPayload,
-                    width: 200,
-                    height: 200,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.M
-                });
-            } else {
-                qrContainer.innerHTML = '<p style="color:var(--md-sys-color-outline); font-size:0.85rem;">Generador QR no disponible offline todavía.</p>';
+            if (qrTitle) qrTitle.innerText = `${bankName} (${bankCode})`;
+            if (qrSubtitle) qrSubtitle.innerText = holder;
+            if (qrInfoText) qrInfoText.innerText = `${phone} • ${doc}`;
+
+            if (badgeEl) {
+                badgeEl.className = "pm-qr-badge-official";
+                badgeEl.innerHTML = '<span class="material-symbols-rounded" style="font-size: 1rem;">verified</span><span>QR Oficial Suiche 7B</span>';
             }
+
+            if (qrContainer) {
+                qrContainer.innerHTML = "";
+                if (typeof QRCode !== "undefined") {
+                    new QRCode(qrContainer, {
+                        text: officialPayload,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            }
+        } else if (forcePlainText) {
+            // ESTADO 2: Texto plano (para cámaras estándar)
+            if (activeView) activeView.style.display = "block";
+            if (emptyView) emptyView.style.display = "none";
+
+            if (qrTitle) qrTitle.innerText = `${bankName} (${bankCode})`;
+            if (qrSubtitle) qrSubtitle.innerText = holder;
+            if (qrInfoText) qrInfoText.innerText = `${phone} • ${doc}`;
+
+            if (badgeEl) {
+                badgeEl.className = "pm-qr-badge-textonly";
+                badgeEl.innerHTML = '<span class="material-symbols-rounded" style="font-size: 1rem;">info</span><span>Texto plano (cámaras estándar)</span>';
+            }
+
+            const plainText = `Pago Móvil:\nBanco: ${bankName} (${bankCode})\nTeléfono: ${phone}\nCédula: ${doc}\nTitular: ${holder}`;
+
+            if (qrContainer) {
+                qrContainer.innerHTML = "";
+                if (typeof QRCode !== "undefined") {
+                    const safePayload = unescape(encodeURIComponent(plainText));
+                    new QRCode(qrContainer, {
+                        text: safePayload,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                }
+            }
+        } else {
+            // ESTADO 3: Sin QR oficial - Invitación a sincronizar captura
+            if (activeView) activeView.style.display = "none";
+            if (emptyView) emptyView.style.display = "block";
+            if (emptyTitle) emptyTitle.innerText = `Sincroniza el QR de ${bankName}`;
         }
 
         if (modal) modal.classList.add("active");
     };
     window.showPmQR = showPmQR;
+
+    const showPlainTextQR = () => {
+        showPmQR(true);
+    };
+    window.showPlainTextQR = showPlainTextQR;
 
     const closePmQR = () => {
         const modal = document.getElementById("pm-modal-qr");
