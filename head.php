@@ -1667,7 +1667,7 @@
         color: var(--b-pastel-sub, var(--md-sys-color-outline));
     }
 
-    /* Material 3 Speed Dial Floating Action Menu */
+    /* Material 3 Speed Dial Floating Action Menu (Fijo y estático) */
     .pm-speed-dial {
         position: fixed;
         bottom: calc(108px + env(safe-area-inset-bottom, 0px));
@@ -1676,14 +1676,6 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.24s cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    /* Ocultar en scroll abajo */
-    .pm-speed-dial.fab-hidden {
-        transform: translateY(80px) scale(0.7);
-        opacity: 0;
-        pointer-events: none;
     }
 
     /* Backdrop sutil cuando el menú está abierto */

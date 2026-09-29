@@ -506,7 +506,7 @@
             renderPmView();
             togglePmSpeedDial(false);
             const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
-            if (dial) dial.classList.remove("fab-hidden");
+            if (dial) dial.style.display = "flex";
         } else {
             togglePmSpeedDial(false);
             const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
@@ -1503,36 +1503,8 @@
         }, { passive: true });
     }
 
-    // FAB Scroll Behavior: ocultar al scrollear hacia abajo, mostrar al scrollear hacia arriba
-    let lastMainScrollTop = 0;
-    const initPmFabScroll = () => {
-        const mainContent = document.getElementById("main-content");
-        const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
-        if (!dial) return;
-
-        const onScroll = (currentY) => {
-            const isPmTab = document.getElementById("pagomovil-tab-content")?.classList.contains("active");
-            if (!isPmTab) return;
-
-            const diff = currentY - lastMainScrollTop;
-            if (diff > 8 && currentY > 40) {
-                togglePmSpeedDial(false);
-                dial.classList.add("fab-hidden");
-            } else if (diff < -8 || currentY <= 30) {
-                dial.classList.remove("fab-hidden");
-            }
-            lastMainScrollTop = Math.max(0, currentY);
-        };
-
-        if (mainContent) {
-            mainContent.addEventListener("scroll", () => {
-                onScroll(mainContent.scrollTop);
-            }, { passive: true });
-        }
-        window.addEventListener("scroll", () => {
-            onScroll(window.scrollY);
-        }, { passive: true });
-    };
+    // FAB estático: se mantiene fijo en su posición sin ocultarse en scroll
+    const initPmFabScroll = () => {};
     window.initPmFabScroll = initPmFabScroll;
 
     // ==========================================
