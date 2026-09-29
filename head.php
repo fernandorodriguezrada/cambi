@@ -1152,19 +1152,35 @@
     }
 
     .pm-block-logo {
-        width: 32px;
         height: 32px;
+        min-width: 44px;
+        max-width: 100px;
+        padding: 4px 8px;
+        background-color: rgba(255, 255, 255, 0.88);
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        box-sizing: border-box;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    .pm-block-logo svg {
+    body.dark-mode .pm-block-logo {
+        background-color: rgba(255, 255, 255, 0.94);
+    }
+
+    .pm-block-logo img {
+        height: 100%;
+        max-height: 24px;
+        max-width: 84px;
+        object-fit: contain;
         display: block;
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
+    }
+
+    .pm-block-logo .material-symbols-rounded {
+        font-size: 20px;
+        color: #1a1a1a;
     }
 
     .pm-block-code {
@@ -1405,19 +1421,35 @@
     }
 
     .pm-detail-logo {
-        width: 40px;
         height: 40px;
+        min-width: 52px;
+        max-width: 120px;
+        padding: 5px 10px;
+        background-color: rgba(255, 255, 255, 0.92);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        box-sizing: border-box;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
     }
 
-    .pm-detail-logo svg {
+    body.dark-mode .pm-detail-logo {
+        background-color: rgba(255, 255, 255, 0.96);
+    }
+
+    .pm-detail-logo img {
+        height: 100%;
+        max-height: 30px;
+        max-width: 100px;
+        object-fit: contain;
         display: block;
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
+    }
+
+    .pm-detail-logo .material-symbols-rounded {
+        font-size: 24px;
+        color: #1a1a1a;
     }
 
     .pm-detail-title {
