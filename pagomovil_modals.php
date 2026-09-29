@@ -362,12 +362,33 @@
     <span id="pm-toast-msg">¡Datos copiados al portapapeles!</span>
 </div>
 
-<!-- BOTONES FLOTANTES PERSISTENTES (FABS): ESCANEAR QR Y AÑADIR BANCO -->
-<div id="pm-fabs-group" class="pm-fabs-group" style="display: none;">
-    <button id="pm-btn-scan-qr-fab" class="pm-fab-btn pm-fab-scan" title="Escanear QR para pagar" onclick="openQrScannerModal()">
-        <span class="material-symbols-rounded">qr_code_scanner</span>
-    </button>
-    <button id="pm-btn-add-bank-fab" class="pm-fab-btn pm-fab-add" title="Añadir Pago Móvil" onclick="openAddBankModal()">
-        <span class="material-symbols-rounded">add</span>
+<!-- SPEED-DIAL FAB MATERIAL 3: MENÚ DE ACCIONES (AÑADIR BANCO & ESCANEAR QR) -->
+<div id="pm-speed-dial" class="pm-speed-dial" style="display: none;">
+    <!-- Backdrop sutil para cerrar al tocar fuera -->
+    <div id="pm-speed-dial-backdrop" class="pm-speed-dial-backdrop" onclick="togglePmSpeedDial(false)"></div>
+
+    <!-- Opciones desplegables hacia arriba -->
+    <div class="pm-speed-dial-options">
+        <!-- Opción 1: Escanear QR -->
+        <button type="button" class="pm-speed-dial-item pm-speed-dial-item-scan" onclick="handleSpeedDialAction('scan')" title="Escanear QR para pagar">
+            <span class="pm-speed-dial-label">Escanear QR</span>
+            <div class="pm-speed-dial-btn pm-speed-dial-btn-scan">
+                <span class="material-symbols-rounded">qr_code_scanner</span>
+            </div>
+        </button>
+
+        <!-- Opción 2: Añadir Banco -->
+        <button type="button" class="pm-speed-dial-item pm-speed-dial-item-add" onclick="handleSpeedDialAction('add')" title="Añadir nuevo banco">
+            <span class="pm-speed-dial-label">Añadir banco</span>
+            <div class="pm-speed-dial-btn pm-speed-dial-btn-add">
+                <span class="material-symbols-rounded">add</span>
+            </div>
+        </button>
+    </div>
+
+    <!-- Botón Principal Disparador (Menú Hamburguesa) -->
+    <button type="button" id="pm-speed-dial-btn" class="pm-fab-main" onclick="togglePmSpeedDial()" title="Menú de acciones" aria-label="Menú de Pago Móvil">
+        <span class="material-symbols-rounded pm-fab-icon-menu">menu</span>
+        <span class="material-symbols-rounded pm-fab-icon-close">close</span>
     </button>
 </div>

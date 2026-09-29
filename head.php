@@ -1667,72 +1667,198 @@
         color: var(--b-pastel-sub, var(--md-sys-color-outline));
     }
 
-    /* Grupo de Botones Flotantes Persistentes (FABs) */
-    .pm-fabs-group {
+    /* Material 3 Speed Dial Floating Action Menu */
+    .pm-speed-dial {
         position: fixed;
         bottom: calc(108px + env(safe-area-inset-bottom, 0px));
         right: max(20px, calc(50% - 200px + 20px));
-        display: flex;
-        align-items: center;
-        gap: 12px;
         z-index: 105;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
         transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.24s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .pm-fab-btn, .pm-fab-add-bank {
+    /* Ocultar en scroll abajo */
+    .pm-speed-dial.fab-hidden {
+        transform: translateY(80px) scale(0.7);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Backdrop sutil cuando el menú está abierto */
+    .pm-speed-dial-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease;
+        z-index: 104;
+    }
+    .pm-speed-dial.open .pm-speed-dial-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Botón disparador principal (FAB Hamburguesa) */
+    .pm-fab-main {
+        position: relative;
         width: 62px;
         height: 62px;
         border-radius: 20px;
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
         border: none !important;
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22) !important;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+        z-index: 106;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
         -webkit-tap-highlight-color: transparent;
     }
-
-    .pm-fab-btn:hover, .pm-fab-add-bank:hover {
-        transform: scale(1.06);
-    }
-
-    .pm-fab-btn:active, .pm-fab-add-bank:active {
-        transform: scale(0.94);
-    }
-
-    .pm-fab-btn .material-symbols-rounded, .pm-fab-add-bank .material-symbols-rounded {
-        font-size: 32px;
-        font-weight: 600;
-    }
-
-    /* Botón Añadir Banco (Magic Mint) */
-    .pm-fab-add, .pm-fab-add-bank {
-        background-color: var(--cambi-magic-mint);
-        color: #004d34;
-    }
-    body.dark-mode .pm-fab-add, body.dark-mode .pm-fab-add-bank {
+    body.dark-mode .pm-fab-main {
         background-color: var(--cambi-magic-mint);
         color: #003825;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
     }
-
-    /* Botón Escanear QR (Baby Blue) */
-    .pm-fab-scan {
-        background-color: var(--cambi-baby-blue);
-        color: #0d3c61;
+    .pm-fab-main:hover {
+        transform: scale(1.06);
     }
-    body.dark-mode .pm-fab-scan {
+    .pm-fab-main:active {
+        transform: scale(0.94);
+    }
+
+    /* Iconos del botón principal con transición de rotación y fundido M3 */
+    .pm-fab-main .pm-fab-icon-menu,
+    .pm-fab-main .pm-fab-icon-close {
+        position: absolute;
+        font-size: 30px;
+        font-weight: 600;
+        transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .pm-fab-main .pm-fab-icon-close {
+        opacity: 0;
+        transform: rotate(-90deg) scale(0.6);
+    }
+    .pm-speed-dial.open .pm-fab-main {
+        background-color: var(--md-sys-color-surface-container-highest, #e6e0e9);
+        color: var(--md-sys-color-on-surface, #1d1b20);
+        transform: scale(1.02);
+    }
+    body.dark-mode .pm-speed-dial.open .pm-fab-main {
+        background-color: #3b434d;
+        color: #ffffff;
+    }
+    .pm-speed-dial.open .pm-fab-main .pm-fab-icon-menu {
+        opacity: 0;
+        transform: rotate(90deg) scale(0.6);
+    }
+    .pm-speed-dial.open .pm-fab-main .pm-fab-icon-close {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+    }
+
+    /* Contenedor de opciones (hacia arriba) */
+    .pm-speed-dial-options {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        margin-bottom: 14px;
+        pointer-events: none;
+        z-index: 106;
+    }
+
+    /* Ítem de opción (etiqueta + botón) */
+    .pm-speed-dial-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(18px) scale(0.85);
+        transition: transform 0.24s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
+        -webkit-tap-highlight-color: transparent;
+    }
+    .pm-speed-dial.open .pm-speed-dial-item {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
+
+    /* Animación escalonada (Stagger effect) */
+    .pm-speed-dial.open .pm-speed-dial-item-add {
+        transition-delay: 0.03s;
+    }
+    .pm-speed-dial.open .pm-speed-dial-item-scan {
+        transition-delay: 0.07s;
+    }
+
+    /* Etiquetas flotantes tipo Chip Material 3 */
+    .pm-speed-dial-label {
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 12px;
+        background: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-on-surface);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        white-space: nowrap;
+        pointer-events: none;
+    }
+    body.dark-mode .pm-speed-dial-label {
+        background: #2b323b;
+        color: #e5e9f0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Botones de las opciones */
+    .pm-speed-dial-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+        transition: transform 0.15s ease;
+    }
+    .pm-speed-dial-item:hover .pm-speed-dial-btn {
+        transform: scale(1.08);
+    }
+    .pm-speed-dial-item:active .pm-speed-dial-btn {
+        transform: scale(0.92);
+    }
+
+    /* Colores pastel de cada opción */
+    .pm-speed-dial-btn-add {
+        background-color: var(--cambi-magic-mint);
+        color: #004d34;
+    }
+    body.dark-mode .pm-speed-dial-btn-add {
+        background-color: var(--cambi-magic-mint);
+        color: #003825;
+    }
+    .pm-speed-dial-btn-scan {
+        background-color: var(--cambi-baby-blue);
+        color: #0a3a60;
+    }
+    body.dark-mode .pm-speed-dial-btn-scan {
         background-color: var(--cambi-baby-blue);
         color: #052640;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
     }
-
-    /* Ocultar en scroll abajo */
-    .pm-fabs-group.fab-hidden, .pm-fab-add-bank.fab-hidden {
-        transform: translateY(80px) scale(0.7);
-        opacity: 0;
-        pointer-events: none;
+    .pm-speed-dial-btn .material-symbols-rounded {
+        font-size: 26px;
+        font-weight: 600;
     }
 
 

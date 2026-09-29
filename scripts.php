@@ -504,11 +504,13 @@
                 });
             });
             renderPmView();
-            const fabs = document.getElementById("pm-fabs-group") || document.getElementById("pm-btn-add-bank-fab");
-            if (fabs) fabs.classList.remove("fab-hidden");
+            togglePmSpeedDial(false);
+            const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
+            if (dial) dial.classList.remove("fab-hidden");
         } else {
-            const fabs = document.getElementById("pm-fabs-group") || document.getElementById("pm-btn-add-bank-fab");
-            if (fabs) fabs.style.display = "none";
+            togglePmSpeedDial(false);
+            const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
+            if (dial) dial.style.display = "none";
         }
     };
 
@@ -688,8 +690,8 @@
         if (!profile || !profile.banks || profile.banks.length === 0) {
             onboardingView.style.display = "flex";
             activeView.style.display = "none";
-            const fabs = document.getElementById("pm-fabs-group") || document.getElementById("pm-btn-add-bank-fab");
-            if (fabs) fabs.style.display = "none";
+            const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
+            if (dial) dial.style.display = "none";
             goToPmSlide(0);
             return;
         }
@@ -749,10 +751,10 @@
             });
         }
 
-        const fabs = document.getElementById("pm-fabs-group") || document.getElementById("pm-btn-add-bank-fab");
-        if (fabs) {
+        const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
+        if (dial) {
             const isPmTab = document.getElementById("pagomovil-tab-content")?.classList.contains("active");
-            fabs.style.display = isPmTab ? "flex" : "none";
+            dial.style.display = isPmTab ? "flex" : "none";
         }
     };
     window.renderPmView = renderPmView;
@@ -1533,8 +1535,8 @@
     let lastMainScrollTop = 0;
     const initPmFabScroll = () => {
         const mainContent = document.getElementById("main-content");
-        const fabs = document.getElementById("pm-fabs-group") || document.getElementById("pm-btn-add-bank-fab");
-        if (!fabs) return;
+        const dial = document.getElementById("pm-speed-dial") || document.getElementById("pm-fabs-group");
+        if (!dial) return;
 
         const onScroll = (currentY) => {
             const isPmTab = document.getElementById("pagomovil-tab-content")?.classList.contains("active");
@@ -1542,9 +1544,10 @@
 
             const diff = currentY - lastMainScrollTop;
             if (diff > 8 && currentY > 40) {
-                fabs.classList.add("fab-hidden");
+                togglePmSpeedDial(false);
+                dial.classList.add("fab-hidden");
             } else if (diff < -8 || currentY <= 30) {
-                fabs.classList.remove("fab-hidden");
+                dial.classList.remove("fab-hidden");
             }
             lastMainScrollTop = Math.max(0, currentY);
         };
@@ -1561,6 +1564,31 @@
     window.initPmFabScroll = initPmFabScroll;
 
     // ==========================================
+    // ==========================================
+    // MATERIAL 3 SPEED-DIAL FAB (MENÚ FLOTANTE)
+    // ==========================================
+    const togglePmSpeedDial = (forceState) => {
+        const speedDial = document.getElementById("pm-speed-dial");
+        if (!speedDial) return;
+        if (typeof forceState === "boolean") {
+            if (forceState) speedDial.classList.add("open");
+            else speedDial.classList.remove("open");
+        } else {
+            speedDial.classList.toggle("open");
+        }
+    };
+    window.togglePmSpeedDial = togglePmSpeedDial;
+
+    const handleSpeedDialAction = (action) => {
+        togglePmSpeedDial(false);
+        if (action === "scan") {
+            openQrScannerModal();
+        } else if (action === "add") {
+            openAddBankModal();
+        }
+    };
+    window.handleSpeedDialAction = handleSpeedDialAction;
+
     // ESCÁNER QR PARA PAGAR & LANZADOR DE BANCOS
     // ==========================================
     const BANK_APPS = {
