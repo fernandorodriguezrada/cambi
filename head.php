@@ -2318,6 +2318,153 @@
         font-weight: 700;
     }
 
+    /* Tarjeta de Acceso Rápido: Escáner QR */
+    .pm-scanner-action-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background-color: var(--md-sys-color-surface-container-low);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        border-radius: 20px;
+        padding: 14px 16px;
+        margin: 14px 0 18px 0;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .pm-scanner-action-card:hover {
+        background-color: var(--md-sys-color-surface-container);
+    }
+    .pm-scanner-action-card:active {
+        transform: scale(0.985);
+    }
+    .pm-scanner-action-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .pm-scanner-action-icon span {
+        font-size: 1.45rem;
+    }
+    .pm-scanner-action-texts {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+    .pm-scanner-action-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--md-sys-color-on-surface);
+        line-height: 1.25;
+    }
+    .pm-scanner-action-desc {
+        font-size: 0.78rem;
+        color: var(--md-sys-color-outline);
+        margin-top: 2px;
+        line-height: 1.3;
+    }
+    .pm-scanner-action-arrow {
+        color: var(--md-sys-color-outline);
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    /* Modal de Escáner QR */
+    .pm-scanner-viewport {
+        position: relative;
+        width: 100%;
+        max-width: 290px;
+        height: 290px;
+        margin: 0 auto 16px auto;
+        border-radius: 24px;
+        overflow: hidden;
+        background-color: #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .pm-scanner-viewport video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .pm-scanner-target-box {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border: 2px solid rgba(255, 255, 255, 0.85);
+        border-radius: 20px;
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+    .pm-scanner-laser {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: var(--md-sys-color-primary, #6750a4);
+        pointer-events: none;
+        animation: pmLaserAnim 2.2s ease-in-out infinite alternate;
+    }
+    @keyframes pmLaserAnim {
+        0% { top: 10%; opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { top: 90%; opacity: 0.4; }
+    }
+
+    .pm-scanner-bank-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 16px;
+        background-color: var(--md-sys-color-surface-container-high);
+        border: 1px solid var(--md-sys-color-outline-variant);
+        color: var(--md-sys-color-on-surface);
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.15s ease, transform 0.1s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .pm-scanner-bank-btn:hover {
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+    .pm-scanner-bank-btn:active {
+        transform: scale(0.985);
+    }
+    .pm-scanner-bank-btn-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .pm-scanner-bank-btn-logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        flex-shrink: 0;
+    }
+    .pm-scanner-bank-btn-logo img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
     /* Buscador de Bancos */
     .pm-bank-search-bar {
         position: relative;

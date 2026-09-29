@@ -1560,6 +1560,336 @@
     };
     window.initPmFabScroll = initPmFabScroll;
 
+    // ==========================================
+    // ESCÁNER QR PARA PAGAR & LANZADOR DE BANCOS
+    // ==========================================
+    const BANK_APPS = {
+        "0102": { name: "BDVApp (Banco de Venezuela)", short: "BDVApp", package: "com.bancodevenezuela.bdvdigital", webUrl: "https://bdvenlinea.banvenez.com" },
+        "0134": { name: "BanescoMóvil", short: "Banesco", package: "com.banesco.samfbancamovilunificada", webUrl: "https://www.banesconline.com" },
+        "0105": { name: "Mercantil Móvil", short: "Mercantil", package: "com.mercantilbanco.mercantilmovil", webUrl: "https://www.mercantilenlinea.com" },
+        "0108": { name: "BBVA Provinet Móvil", short: "Provincial", package: "com.dinerorapido.bancamovil", webUrl: "https://www.provinet.net" },
+        "0172": { name: "Bancamiga Suite", short: "Bancamiga", package: "com.bancamiga", webUrl: "https://bancamigaenlinea.com" },
+        "0191": { name: "BNC Móvil", short: "BNC", package: "bnc.bncnet.mobile2", webUrl: "https://bncenlinea.banconacionaldecredito.com.ve" },
+        "0114": { name: "Bancaribe Móvil", short: "Bancaribe", package: "com.bancaribe.movil", webUrl: "https://www.bancaribe.com.ve" },
+        "0115": { name: "Banco Exterior", short: "Exterior", package: "com.bancoexterior.nexomovil", webUrl: "https://www.bancoexterior.com" },
+        "0163": { name: "Tesoro Móvil", short: "Tesoro", package: "ve.gob.bt.tesoromovil", webUrl: "https://www.bt.com.ve" },
+        "0175": { name: "Bicentenario Móvil", short: "Bicentenario", package: "com.bicentenario.bancamovil", webUrl: "https://www.bicentenariobu.com" },
+        "0174": { name: "Banplus Móvil", short: "Banplus", package: "com.banplus.movil", webUrl: "https://www.banplus.com" },
+        "0151": { name: "BFC Móvil", short: "BFC", package: "com.bfc.bancamovil", webUrl: "https://www.bfc.com.ve" },
+        "0157": { name: "DelSur Móvil", short: "DelSur", package: "com.delsurbanco.delsurmovil", webUrl: "https://www.delsur.com.ve" },
+        "0171": { name: "Banco Activo", short: "Activo", package: "com.bancoactivo.activomovil", webUrl: "https://www.bancoactivo.com" }
+    };
+
+    let scannerMediaStream = null;
+    let scannerScanAnimId = null;
+    let scannerVideoEl = null;
+    window._lastScannedClipboardText = "";
+
+    const openQrScannerModal = () => {
+        const modal = document.getElementById("pm-modal-scanner");
+        const cameraView = document.getElementById("pm-scanner-view-camera");
+        const resultView = document.getElementById("pm-scanner-view-result");
+        if (cameraView) cameraView.style.display = "block";
+        if (resultView) resultView.style.display = "none";
+
+        if (modal) modal.classList.add("active");
+        startCameraScanner();
+    };
+    window.openQrScannerModal = openQrScannerModal;
+
+    const closeQrScannerModal = () => {
+        stopCameraScanner();
+        const modal = document.getElementById("pm-modal-scanner");
+        if (modal) modal.classList.remove("active");
+    };
+    window.closeQrScannerModal = closeQrScannerModal;
+
+    const resetQrScanner = () => {
+        const cameraView = document.getElementById("pm-scanner-view-camera");
+        const resultView = document.getElementById("pm-scanner-view-result");
+        if (cameraView) cameraView.style.display = "block";
+        if (resultView) resultView.style.display = "none";
+        startCameraScanner();
+    };
+    window.resetQrScanner = resetQrScanner;
+
+    const startCameraScanner = async () => {
+        stopCameraScanner();
+        scannerVideoEl = document.getElementById("pm-scanner-video");
+        if (!scannerVideoEl) return;
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
+            });
+            scannerMediaStream = stream;
+            scannerVideoEl.srcObject = stream;
+            scannerVideoEl.setAttribute("playsinline", true);
+            await scannerVideoEl.play();
+            scanCameraLoop();
+        } catch (err) {
+            console.warn("Camera access error:", err);
+            showToast("No se pudo activar la cámara. Puedes subir una captura del QR.");
+        }
+    };
+
+    const stopCameraScanner = () => {
+        if (scannerScanAnimId) {
+            cancelAnimationFrame(scannerScanAnimId);
+            scannerScanAnimId = null;
+        }
+        if (scannerMediaStream) {
+            scannerMediaStream.getTracks().forEach(t => t.stop());
+            scannerMediaStream = null;
+        }
+        if (scannerVideoEl) {
+            scannerVideoEl.srcObject = null;
+        }
+    };
+
+    const scanCameraLoop = () => {
+        if (!scannerVideoEl || scannerVideoEl.readyState !== scannerVideoEl.HAVE_ENOUGH_DATA) {
+            scannerScanAnimId = requestAnimationFrame(scanCameraLoop);
+            return;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = scannerVideoEl.videoWidth;
+        canvas.height = scannerVideoEl.videoHeight;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        ctx.drawImage(scannerVideoEl, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        if (typeof jsQR !== "undefined") {
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: "dontInvert"
+            });
+            if (code && code.data) {
+                handleQrDetected(code.data);
+                return;
+            }
+        }
+
+        scannerScanAnimId = requestAnimationFrame(scanCameraLoop);
+    };
+
+    const handleScannerFile = (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                let width = img.width;
+                let height = img.height;
+                const maxDim = 1200;
+                if (width > maxDim || height > maxDim) {
+                    if (width > height) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d", { willReadFrequently: true });
+                ctx.drawImage(img, 0, 0, width, height);
+                const imageData = ctx.getImageData(0, 0, width, height);
+
+                let decodedData = null;
+                if (typeof jsQR !== "undefined") {
+                    const code = jsQR(imageData.data, width, height, { inversionAttempts: "dontInvert" });
+                    if (code && code.data) decodedData = code.data;
+                    else {
+                        const codeInv = jsQR(imageData.data, width, height, { inversionAttempts: "onlyInvert" });
+                        if (codeInv && codeInv.data) decodedData = codeInv.data;
+                    }
+                }
+
+                if (decodedData) {
+                    handleQrDetected(decodedData);
+                } else {
+                    showToast("No se detectó ningún código QR en la imagen");
+                }
+                event.target.value = "";
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+    window.handleScannerFile = handleScannerFile;
+
+    const parseScannedQr = (rawText) => {
+        const text = (rawText || "").trim();
+        let bankCode = "";
+        let phone = "";
+        let doc = "";
+        let amount = "";
+        let isOfficialSuiche = false;
+
+        if (text.includes("merchantId=")) {
+            isOfficialSuiche = true;
+            const mMatch = text.match(/merchantId=(\d{4})/);
+            if (mMatch) bankCode = mMatch[1];
+        }
+
+        const phoneMatch = text.match(/(?:0412|0414|0424|0416|0426)[-\s]?\d{7}/);
+        if (phoneMatch) {
+            phone = phoneMatch[0].replace(/[-\s]/g, "");
+        }
+
+        const docMatch = text.match(/(?:CI|Cédula|Cedula|Doc|RIF)?[\s-]*([VvEeJjGg][-\s]?\d{5,9})/i);
+        if (docMatch) {
+            doc = docMatch[1].replace(/[-\s]/g, "").toUpperCase();
+        }
+
+        if (!bankCode) {
+            const bankMatch = text.match(/\b(01\d{2})\b/);
+            if (bankMatch && BANK_NAMES[bankMatch[1]]) {
+                bankCode = bankMatch[1];
+            }
+        }
+
+        const amtMatch = text.match(/(?:Bs\.?|Monto|Total)[:\s]*([\d.,]+)/i);
+        if (amtMatch) {
+            amount = amtMatch[1];
+        }
+
+        let clipboardText = "";
+        if (isOfficialSuiche) {
+            clipboardText = text;
+        } else if (bankCode && phone && doc) {
+            clipboardText = `${bankCode}\n${phone}\n${doc}` + (amount ? `\n${amount}` : "");
+        } else {
+            clipboardText = text;
+        }
+
+        return {
+            raw: text,
+            isOfficialSuiche,
+            bankCode,
+            phone,
+            doc,
+            amount,
+            clipboardText
+        };
+    };
+
+    const handleQrDetected = (decodedText) => {
+        try {
+            if (navigator.vibrate) navigator.vibrate(60);
+        } catch (_) {}
+
+        stopCameraScanner();
+
+        const parsed = parseScannedQr(decodedText);
+        window._lastScannedClipboardText = parsed.clipboardText;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(parsed.clipboardText).catch(() => {});
+        }
+
+        const cameraView = document.getElementById("pm-scanner-view-camera");
+        const resultView = document.getElementById("pm-scanner-view-result");
+        const parsedBox = document.getElementById("pm-scanner-parsed-box");
+        const bankShortcuts = document.getElementById("pm-scanner-bank-shortcuts");
+
+        if (cameraView) cameraView.style.display = "none";
+        if (resultView) resultView.style.display = "block";
+
+        if (parsedBox) {
+            const destBankName = parsed.bankCode ? (BANK_NAMES[parsed.bankCode] || `Banco (${parsed.bankCode})`) : "No especificado";
+            const destLogo = parsed.bankCode ? getBankLogoHtml(parsed.bankCode) : `<span class="material-symbols-rounded">account_balance</span>`;
+
+            parsedBox.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--md-sys-color-outline-variant);">
+                    <div class="pm-scanner-bank-btn-logo" style="width: 36px; height: 36px;">${destLogo}</div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--md-sys-color-on-surface); font-size: 0.95rem;">${destBankName}</div>
+                        <div style="font-size: 0.76rem; color: var(--md-sys-color-outline);">${parsed.isOfficialSuiche ? "QR Oficial Suiche 7B" : "Datos de Pago Móvil"}</div>
+                    </div>
+                </div>
+                ${parsed.phone ? `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--md-sys-color-outline);">Teléfono:</span><strong>${parsed.phone}</strong></div>` : ""}
+                ${parsed.doc ? `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--md-sys-color-outline);">Cédula / RIF:</span><strong>${parsed.doc}</strong></div>` : ""}
+                ${parsed.amount ? `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--md-sys-color-outline);">Monto:</span><strong>Bs. ${parsed.amount}</strong></div>` : ""}
+                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                    <button type="button" class="pm-btn-secondary" style="font-size: 0.76rem; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;" onclick="copyScannedRawAgain()">
+                        <span class="material-symbols-rounded" style="font-size: 0.9rem;">content_copy</span>
+                        <span>Copiar nuevamente</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        if (bankShortcuts) {
+            const profile = getPmProfile() || { banks: [] };
+            const userBanks = (profile.banks && profile.banks.length > 0) ? profile.banks : ["0102", "0134", "0105", "0108", "0172"];
+
+            bankShortcuts.innerHTML = userBanks.map(code => {
+                const bName = BANK_NAMES[code] || `Banco (${code})`;
+                const logoHtml = getBankLogoHtml(code);
+                const appInfo = BANK_APPS[code];
+                const appTitle = appInfo ? `Abrir ${appInfo.short}` : `Abrir ${bName}`;
+
+                return `
+                    <button type="button" class="pm-scanner-bank-btn" onclick="launchBankApp('${code}')">
+                        <div class="pm-scanner-bank-btn-left">
+                            <div class="pm-scanner-bank-btn-logo">${logoHtml}</div>
+                            <span>${appTitle}</span>
+                        </div>
+                        <span class="material-symbols-rounded" style="font-size: 1.15rem; color: var(--md-sys-color-primary);">open_in_new</span>
+                    </button>
+                `;
+            }).join("");
+        }
+
+        showToast("¡Datos copiados al portapapeles! Elige tu banco para pagar.");
+    };
+
+    const copyScannedRawAgain = () => {
+        if (window._lastScannedClipboardText && navigator.clipboard) {
+            navigator.clipboard.writeText(window._lastScannedClipboardText);
+            showToast("¡Datos copiados al portapapeles!");
+        }
+    };
+    window.copyScannedRawAgain = copyScannedRawAgain;
+
+    const launchBankApp = (bankCode) => {
+        const appInfo = BANK_APPS[bankCode];
+        const bankName = (appInfo && appInfo.short) || BANK_NAMES[bankCode] || "tu banco";
+
+        if (window._lastScannedClipboardText && navigator.clipboard) {
+            navigator.clipboard.writeText(window._lastScannedClipboardText).catch(() => {});
+        }
+
+        showToast(`Abriendo ${bankName}... Usa "Pegar datos" para completar el pago.`);
+
+        if (!appInfo || !appInfo.package) {
+            if (appInfo && appInfo.webUrl) {
+                window.open(appInfo.webUrl, "_blank");
+            }
+            return;
+        }
+
+        const isAndroid = /android/i.test(navigator.userAgent);
+        if (isAndroid) {
+            const fallback = encodeURIComponent(appInfo.webUrl || ("https://play.google.com/store/apps/details?id=" + appInfo.package));
+            const intentUri = `intent://#Intent;package=${appInfo.package};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url=${fallback};end;`;
+            window.location.href = intentUri;
+        } else {
+            if (appInfo.webUrl) {
+                window.open(appInfo.webUrl, "_blank");
+            } else {
+                window.open(`https://play.google.com/store/apps/details?id=${appInfo.package}`, "_blank");
+            }
+        }
+    };
+    window.launchBankApp = launchBankApp;
+
     initCustomSelects();
     syncAllCustomSelects();
     renderPmView();

@@ -283,6 +283,79 @@
     </div>
 </div>
 
+<!-- MODAL 6: ESCÁNER QR PARA PAGAR -->
+<div id="pm-modal-scanner" class="pm-modal-overlay" onclick="if(event.target===this) closeQrScannerModal()">
+    <div class="pm-modal-sheet" style="max-width: 420px;">
+        <div class="pm-modal-handle"></div>
+
+        <!-- VISTA A: CÁMARA ESCANEANDO -->
+        <div id="pm-scanner-view-camera">
+            <div class="pm-modal-header" style="margin-bottom: 12px;">
+                <h3>Escanear QR para pagar</h3>
+                <button type="button" class="pm-modal-close" onclick="closeQrScannerModal()">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            <p class="pm-modal-subtext" style="margin-bottom: 14px;">Apunta tu cámara al código QR de pago:</p>
+            
+            <div class="pm-scanner-viewport">
+                <video id="pm-scanner-video" playsinline autoplay muted></video>
+                <div class="pm-scanner-target-box">
+                    <div class="pm-scanner-laser"></div>
+                </div>
+            </div>
+
+            <input type="file" id="pm-scanner-file-input" accept="image/*" style="display: none;" onchange="handleScannerFile(event)">
+
+            <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; margin-top: 14px;">
+                <button type="button" class="pm-btn-secondary" style="font-size: 0.85rem; padding: 8px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;" onclick="document.getElementById('pm-scanner-file-input').click()">
+                    <span class="material-symbols-rounded" style="font-size: 1.15rem;">photo_library</span>
+                    <span>O subir captura del QR</span>
+                </button>
+                <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 6px 14px; margin-top: 2px;" onclick="closeQrScannerModal()">
+                    <span>Cancelar</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- VISTA B: RESULTADO DEL ESCANEO Y LANZADOR DE BANCOS -->
+        <div id="pm-scanner-view-result" style="display: none; padding: 4px 4px 10px 4px;">
+            <div style="text-align: center; margin-bottom: 14px;">
+                <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                    <span class="material-symbols-rounded" style="font-size: 28px;">check</span>
+                </div>
+                <h3 style="margin: 0 0 6px 0; font-size: 1.2rem; font-weight: 700;">¡Código QR detectado!</h3>
+                <span class="pm-qr-badge-official" style="font-size: 0.78rem;">✓ Datos copiados al portapapeles</span>
+            </div>
+
+            <!-- Resumen de los datos detectados -->
+            <div id="pm-scanner-parsed-box" style="background: var(--md-sys-color-surface-container-high); border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; padding: 12px 14px; margin-bottom: 16px; font-size: 0.88rem;">
+                <!-- Rellenado dinámicamente con JS -->
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <span style="font-size: 0.84rem; font-weight: 700; color: var(--md-sys-color-on-surface); display: block; margin-bottom: 8px;">
+                    ¿Con cuál de tus bancos deseas pagar?
+                </span>
+                <div id="pm-scanner-bank-shortcuts" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Botones de bancos agregados por el usuario -->
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: center; margin-top: 14px;">
+                <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 8px 14px;" onclick="resetQrScanner()">
+                    <span class="material-symbols-rounded" style="font-size: 1rem;">restart_alt</span>
+                    <span>Escanear otro</span>
+                </button>
+                <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 8px 14px;" onclick="closeQrScannerModal()">
+                    <span>Cerrar</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <!-- TOAST NOTIFICACIÓN -->
 <div id="pm-toast" class="pm-toast">
     <span class="material-symbols-rounded">check_circle</span>
