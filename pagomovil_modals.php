@@ -138,32 +138,6 @@
     </div>
 </div>
 
-<!-- MODAL 3: VISOR DE CÓDIGO QR -->
-<div id="pm-modal-qr" class="pm-modal-overlay">
-    <div class="pm-modal-sheet" style="text-align: center;">
-        <div class="pm-modal-handle"></div>
-        <div class="pm-modal-header" style="justify-content: flex-end;">
-            <button type="button" class="pm-modal-close" onclick="closePmQR()">
-                <span class="material-symbols-rounded">close</span>
-            </button>
-        </div>
-        <h3 id="pm-qr-bank-title" style="margin-top: -10px; margin-bottom: 4px;">Código QR Pago Móvil</h3>
-        <p id="pm-qr-holder-subtitle" class="pm-modal-subtext" style="margin-bottom: 16px;">Escanea para pagar</p>
-        
-        <div class="pm-qr-canvas-wrapper">
-            <div id="pm-qrcode-container"></div>
-        </div>
-
-        <div class="pm-qr-info-box">
-            <p id="pm-qr-info-text">--</p>
-        </div>
-
-        <div class="pm-modal-actions" style="justify-content: center; margin-top: 18px;">
-            <button type="button" class="pm-btn-secondary" onclick="closePmQR()">Cerrar</button>
-        </div>
-    </div>
-</div>
-
 
 <!-- MODAL 4: DETALLE DE PAGO MÓVIL SELECCIONADO -->
 <div id="pm-modal-detail" class="pm-modal-overlay">
@@ -229,6 +203,32 @@
             <button type="button" class="pm-btn-delete-icon" title="Eliminar este banco" onclick="confirmDeleteCurrentBank()">
                 <span class="material-symbols-rounded">delete</span>
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL 3: VISOR DE CÓDIGO QR -->
+<div id="pm-modal-qr" class="pm-modal-overlay" onclick="if(event.target===this) closePmQR()">
+    <div class="pm-modal-sheet" style="text-align: center;">
+        <div class="pm-modal-handle"></div>
+        <div class="pm-modal-header" style="justify-content: flex-end;">
+            <button type="button" class="pm-modal-close" onclick="closePmQR()">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <h3 id="pm-qr-bank-title" style="margin-top: -10px; margin-bottom: 4px;">Código QR Pago Móvil</h3>
+        <p id="pm-qr-holder-subtitle" class="pm-modal-subtext" style="margin-bottom: 16px;">Escanea para pagar</p>
+        
+        <div class="pm-qr-canvas-wrapper">
+            <div id="pm-qrcode-container"></div>
+        </div>
+
+        <div class="pm-qr-info-box">
+            <p id="pm-qr-info-text">--</p>
+        </div>
+
+        <div class="pm-modal-actions" style="justify-content: center; margin-top: 18px;">
+            <button type="button" class="pm-btn-secondary" onclick="closePmQR()">Cerrar</button>
         </div>
     </div>
 </div>

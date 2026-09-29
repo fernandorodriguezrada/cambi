@@ -1851,7 +1851,7 @@
 
     /* Modal de confirmación para eliminar banco */
     .pm-modal-overlay-confirm {
-        z-index: 260 !important;
+        z-index: 280 !important;
     }
 
     .pm-modal-confirm-sheet {
@@ -2318,7 +2318,11 @@
         font-weight: 700;
     }
 
-    /* Visor QR */
+    /* Visor QR (debe estar por encima del modal de detalle del banco) */
+    #pm-modal-qr {
+        z-index: 270 !important;
+    }
+
     .pm-qr-canvas-wrapper {
         display: flex;
         justify-content: center;
