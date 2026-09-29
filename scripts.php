@@ -1779,28 +1779,70 @@
     };
     window.handleScannerFile = handleScannerFile;
 
+    // Helper: decodificar TLV para estándar EMVCo Suiche 7B
+    const parseEmvcoTlv = (str) => {
+        const tags = {};
+        let i = 0;
+        while (i < str.length - 4) {
+            const tag = str.substr(i, 2);
+            const len = parseInt(str.substr(i + 2, 2), 10);
+            if (isNaN(len) || i + 4 + len > str.length) break;
+            tags[tag] = str.substr(i + 4, len);
+            i += 4 + len;
+        }
+        return tags;
+    };
+
+    const copySingleField = (text, label) => {
+        if (!text) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text);
+            showToast(`¡${label} copiado!`);
+        }
+    };
+    window.copySingleField = copySingleField;
+
     const parseScannedQr = (rawText) => {
         const text = (rawText || "").trim();
         let bankCode = "";
         let phone = "";
         let doc = "";
         let amount = "";
+        let beneficiary = "";
         let isOfficialSuiche = false;
+        let isEncryptedBanesco = false;
 
-        if (text.includes("merchantId=")) {
-            isOfficialSuiche = true;
+        // 1. Intentar decodificar como QR oficial EMVCo (Suiche 7B / BDV / Bancamiga)
+        if (text.startsWith("000201") || text.includes("ve.com.suiche7b")) {
+            const emvTags = parseEmvcoTlv(text);
+            if (emvTags["26"]) {
+                const sub26 = parseEmvcoTlv(emvTags["26"]);
+                if (sub26["01"]) bankCode = sub26["01"];
+                if (sub26["02"]) phone = sub26["02"].replace(/[-\s]/g, "");
+                if (sub26["03"]) doc = sub26["03"].replace(/[-\s]/g, "").toUpperCase();
+                isOfficialSuiche = true;
+            }
+            if (emvTags["54"]) amount = emvTags["54"];
+            if (emvTags["59"]) beneficiary = emvTags["59"];
+        }
+
+        // 2. Si no es EMVCo decodificable, verificar si es el QR dinámico cifrado de Banesco
+        if (!phone && (text.includes("merchantId=0134") || text.includes("strong_id="))) {
             const mMatch = text.match(/merchantId=(\d{4})/);
-            if (mMatch) bankCode = mMatch[1];
+            bankCode = mMatch ? mMatch[1] : "0134";
+            isEncryptedBanesco = true;
+            isOfficialSuiche = true;
         }
 
-        const phoneMatch = text.match(/(?:0412|0414|0424|0416|0426)[-\s]?\d{7}/);
-        if (phoneMatch) {
-            phone = phoneMatch[0].replace(/[-\s]/g, "");
+        // 3. Fallback: Parseo por expresiones regulares sobre texto plano
+        if (!phone) {
+            const phoneMatch = text.match(/(?:0412|0414|0424|0416|0426)[-\s]?\d{7}/);
+            if (phoneMatch) phone = phoneMatch[0].replace(/[-\s]/g, "");
         }
 
-        const docMatch = text.match(/(?:CI|Cédula|Cedula|Doc|RIF)?[\s-]*([VvEeJjGg][-\s]?\d{5,9})/i);
-        if (docMatch) {
-            doc = docMatch[1].replace(/[-\s]/g, "").toUpperCase();
+        if (!doc) {
+            const docMatch = text.match(/(?:CI|Cédula|Cedula|Doc|RIF)?[\s-]*([VvEeJjGg][-\s]?\d{5,9})/i);
+            if (docMatch) doc = docMatch[1].replace(/[-\s]/g, "").toUpperCase();
         }
 
         if (!bankCode) {
@@ -1810,16 +1852,19 @@
             }
         }
 
-        const amtMatch = text.match(/(?:Bs\.?|Monto|Total)[:\s]*([\d.,]+)/i);
-        if (amtMatch) {
-            amount = amtMatch[1];
+        if (!amount) {
+            const amtMatch = text.match(/(?:Bs\.?|Monto|Total)[:\s]*([\d.,]+)/i);
+            if (amtMatch) amount = amtMatch[1];
         }
 
+        // Determinar qué se copiará al portapapeles
         let clipboardText = "";
-        if (isOfficialSuiche) {
-            clipboardText = text;
-        } else if (bankCode && phone && doc) {
-            clipboardText = `${bankCode}\n${phone}\n${doc}` + (amount ? `\n${amount}` : "");
+        if (phone && doc) {
+            // Formato ordenado y limpio para Pago Móvil
+            clipboardText = `${bankCode ? bankCode + "\n" : ""}${phone}\n${doc}` + (amount ? `\n${amount}` : "");
+        } else if (isEncryptedBanesco) {
+            // No copiamos el payload binario cifrado porque no sirve como texto en formularios
+            clipboardText = "";
         } else {
             clipboardText = text;
         }
@@ -1827,10 +1872,12 @@
         return {
             raw: text,
             isOfficialSuiche,
+            isEncryptedBanesco,
             bankCode,
             phone,
             doc,
             amount,
+            beneficiary,
             clipboardText
         };
     };
@@ -1845,7 +1892,7 @@
         const parsed = parseScannedQr(decodedText);
         window._lastScannedClipboardText = parsed.clipboardText;
 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (parsed.clipboardText && navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(parsed.clipboardText).catch(() => {});
         }
 
@@ -1858,27 +1905,83 @@
         if (resultView) resultView.style.display = "block";
 
         if (parsedBox) {
-            const destBankName = parsed.bankCode ? (BANK_NAMES[parsed.bankCode] || `Banco (${parsed.bankCode})`) : "No especificado";
+            const destBankName = parsed.bankCode ? (BANK_NAMES[parsed.bankCode] || `Banco (${parsed.bankCode})`) : "No identificado";
             const destLogo = parsed.bankCode ? getBankLogoHtml(parsed.bankCode) : `<span class="material-symbols-rounded">account_balance</span>`;
 
-            parsedBox.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--md-sys-color-outline-variant);">
-                    <div class="pm-scanner-bank-btn-logo" style="width: 36px; height: 36px;">${destLogo}</div>
-                    <div>
-                        <div style="font-weight: 700; color: var(--md-sys-color-on-surface); font-size: 0.95rem;">${destBankName}</div>
-                        <div style="font-size: 0.76rem; color: var(--md-sys-color-outline);">${parsed.isOfficialSuiche ? "QR Oficial Suiche 7B" : "Datos de Pago Móvil"}</div>
+            if (parsed.isEncryptedBanesco) {
+                parsedBox.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--md-sys-color-outline-variant);">
+                        <div class="pm-scanner-bank-btn-logo" style="width: 38px; height: 38px;">${destLogo}</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--md-sys-color-on-surface); font-size: 0.95rem;">${destBankName}</div>
+                            <div style="font-size: 0.76rem; color: #ffb4ab; font-weight: 600;">🔒 QR Dinámico Cifrado</div>
+                        </div>
                     </div>
-                </div>
-                ${parsed.phone ? `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--md-sys-color-outline);">Teléfono:</span><strong>${parsed.phone}</strong></div>` : ""}
-                ${parsed.doc ? `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--md-sys-color-outline);">Cédula / RIF:</span><strong>${parsed.doc}</strong></div>` : ""}
-                ${parsed.amount ? `<div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="color: var(--md-sys-color-outline);">Monto:</span><strong>Bs. ${parsed.amount}</strong></div>` : ""}
-                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-                    <button type="button" class="pm-btn-secondary" style="font-size: 0.76rem; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;" onclick="copyScannedRawAgain()">
-                        <span class="material-symbols-rounded" style="font-size: 0.9rem;">content_copy</span>
-                        <span>Copiar nuevamente</span>
-                    </button>
-                </div>
-            `;
+                    <div style="font-size: 0.82rem; color: var(--md-sys-color-on-surface-variant); line-height: 1.45; margin-bottom: 10px; background: rgba(0,0,0,0.08); padding: 10px 12px; border-radius: 12px;">
+                        Este código fue emitido con la clave interna de Banesco (no contiene teléfono ni cédula en texto libre para copiar). Para pagarlo, ábrelo directamente con el escáner de cámara dentro de la aplicación <strong>BanescoMóvil</strong>.
+                    </div>
+                `;
+            } else {
+                parsedBox.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--md-sys-color-outline-variant);">
+                        <div class="pm-scanner-bank-btn-logo" style="width: 38px; height: 38px;">${destLogo}</div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--md-sys-color-on-surface); font-size: 0.95rem;">${destBankName}</div>
+                            <div style="font-size: 0.76rem; color: var(--cambi-magic-mint); font-weight: 600;">${parsed.isOfficialSuiche ? "✓ QR Oficial Suiche 7B" : "✓ Datos de Pago Móvil detectados"}</div>
+                        </div>
+                    </div>
+
+                    ${parsed.bankCode ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="color: var(--md-sys-color-outline); font-size: 0.8rem;">Banco:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <strong>${parsed.bankCode}</strong>
+                            <button type="button" class="pm-btn-secondary" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 8px;" onclick="copySingleField('${parsed.bankCode}', 'Código de Banco')">Copiar</button>
+                        </div>
+                    </div>` : ""}
+
+                    ${parsed.phone ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="color: var(--md-sys-color-outline); font-size: 0.8rem;">Teléfono:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <strong>${parsed.phone}</strong>
+                            <button type="button" class="pm-btn-secondary" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 8px;" onclick="copySingleField('${parsed.phone}', 'Teléfono')">Copiar</button>
+                        </div>
+                    </div>` : ""}
+
+                    ${parsed.doc ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="color: var(--md-sys-color-outline); font-size: 0.8rem;">Cédula / RIF:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <strong>${parsed.doc}</strong>
+                            <button type="button" class="pm-btn-secondary" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 8px;" onclick="copySingleField('${parsed.doc}', 'Cédula')">Copiar</button>
+                        </div>
+                    </div>` : ""}
+
+                    ${parsed.amount ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="color: var(--md-sys-color-outline); font-size: 0.8rem;">Monto:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <strong>Bs. ${parsed.amount}</strong>
+                            <button type="button" class="pm-btn-secondary" style="padding: 2px 8px; font-size: 0.72rem; border-radius: 8px;" onclick="copySingleField('${parsed.amount}', 'Monto')">Copiar</button>
+                        </div>
+                    </div>` : ""}
+
+                    ${parsed.beneficiary ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="color: var(--md-sys-color-outline); font-size: 0.8rem;">Beneficiario:</span>
+                        <strong>${parsed.beneficiary}</strong>
+                    </div>` : ""}
+
+                    ${parsed.clipboardText ? `
+                    <div style="display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px dashed var(--md-sys-color-outline-variant); padding-top: 8px;">
+                        <button type="button" class="pm-btn-primary" style="font-size: 0.8rem; padding: 6px 14px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px;" onclick="copyScannedRawAgain()">
+                            <span class="material-symbols-rounded" style="font-size: 1rem;">content_copy</span>
+                            <span>Copiar todo junto</span>
+                        </button>
+                    </div>` : ""}
+                `;
+            }
         }
 
         if (bankShortcuts) {
@@ -1903,13 +2006,17 @@
             }).join("");
         }
 
-        showToast("¡Datos copiados al portapapeles! Elige tu banco para pagar.");
+        if (parsed.isEncryptedBanesco) {
+            showToast("✓ QR de Banesco detectado. Abre tu app para procesarlo.");
+        } else {
+            showToast("¡Datos copiados al portapapeles! Elige tu banco para pagar.");
+        }
     };
 
     const copyScannedRawAgain = () => {
         if (window._lastScannedClipboardText && navigator.clipboard) {
             navigator.clipboard.writeText(window._lastScannedClipboardText);
-            showToast("¡Datos copiados al portapapeles!");
+            showToast("¡Datos de Pago Móvil copiados al portapapeles!");
         }
     };
     window.copyScannedRawAgain = copyScannedRawAgain;
@@ -1922,25 +2029,31 @@
             navigator.clipboard.writeText(window._lastScannedClipboardText).catch(() => {});
         }
 
-        showToast(`Abriendo ${bankName}... Usa "Pegar datos" para completar el pago.`);
+        showToast(`Abriendo ${bankName}... Pega los datos en Pago Móvil`);
 
         if (!appInfo || !appInfo.package) {
-            if (appInfo && appInfo.webUrl) {
-                window.open(appInfo.webUrl, "_blank");
-            }
             return;
         }
 
         const isAndroid = /android/i.test(navigator.userAgent);
         if (isAndroid) {
-            const fallback = encodeURIComponent(appInfo.webUrl || ("https://play.google.com/store/apps/details?id=" + appInfo.package));
-            const intentUri = `intent://#Intent;package=${appInfo.package};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url=${fallback};end;`;
-            window.location.href = intentUri;
+            // Intent seguro de Chrome sin fallback interno que redireccione a webs protegidas con 403
+            const playStoreFallback = `https://play.google.com/store/apps/details?id=${appInfo.package}`;
+            const intentUri = `intent:#Intent;package=${appInfo.package};S.browser_fallback_url=${encodeURIComponent(playStoreFallback)};end;`;
+            
+            // Usamos un enlace temporal con target _blank para JAMÁS alterar ni redirigir la ventana del PWA
+            const a = document.createElement("a");
+            a.href = intentUri;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                if (document.body.contains(a)) document.body.removeChild(a);
+            }, 400);
         } else {
             if (appInfo.webUrl) {
-                window.open(appInfo.webUrl, "_blank");
-            } else {
-                window.open(`https://play.google.com/store/apps/details?id=${appInfo.package}`, "_blank");
+                window.open(appInfo.webUrl, "_blank", "noopener,noreferrer");
             }
         }
     };
