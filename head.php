@@ -2771,10 +2771,10 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 48px;
-        height: 48px;
+        width: 52px;
+        height: 38px;
         background: #ffffff;
-        border-radius: 12px;
+        border-radius: 9px;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
         display: flex;
         align-items: center;
@@ -2782,7 +2782,7 @@
         pointer-events: none;
         z-index: 2;
         overflow: hidden;
-        padding: 2px;
+        padding: 3px 4px;
     }
     .pm-qr-center-logo img {
         width: 100%;
