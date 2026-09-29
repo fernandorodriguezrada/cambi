@@ -1,9 +1,8 @@
 {
     "usd": 857.8876,
     "eur": 974.71473336,
-    "last_update": "29/09/2026, 12:00 AM",
-    "source": "Oficial (DolarApi)",
-    "debug_bcv": "No se pudo conectar con el sitio del BCV",
+    "last_update": "29/09/2026, 01:53 PM",
+    "source": "Directo BCV",
     "history": [
         {
             "date": "09/05/2026",
@@ -36,6 +35,6 @@
             "eur": 974.71473336
         }
     ],
-    "timestamp": 1790702216,
+    "timestamp": 1790704402,
     "is_cached": true
 }

@@ -2771,8 +2771,8 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 46px;
-        height: 46px;
+        width: 48px;
+        height: 48px;
         background: #ffffff;
         border-radius: 12px;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
@@ -2782,6 +2782,7 @@
         pointer-events: none;
         z-index: 2;
         overflow: hidden;
+        padding: 2px;
     }
     .pm-qr-center-logo img {
         width: 100%;

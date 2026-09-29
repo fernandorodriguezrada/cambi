@@ -216,7 +216,7 @@
                 <div class="pm-qrcode-box">
                     <div id="pm-qrcode-container"></div>
                     <div class="pm-qr-center-logo" title="Red Interbancaria Suiche 7B">
-                        <img src="public/suiche7b-badge.svg" alt="Suiche 7B" width="46" height="46">
+                        <img src="public/suiche7b-logo.webp" alt="Suiche 7B" width="46" height="46">
                     </div>
                 </div>
             </div>
