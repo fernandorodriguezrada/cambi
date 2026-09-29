@@ -577,7 +577,7 @@
     #pagomovil-tab-content.active {
         width: 100%;
         min-height: 100%;
-        padding-top: 4px;
+        padding-top: 14px;
         box-sizing: border-box;
     }
 
@@ -1000,8 +1000,10 @@
         background-color: var(--md-sys-color-surface-container);
         border-radius: 24px;
         padding: 16px 20px;
-        margin-bottom: 14px;
+        margin-top: 6px;
+        margin-bottom: 16px;
         width: 100%;
+        box-sizing: border-box;
     }
 
     .pm-user-meta {
