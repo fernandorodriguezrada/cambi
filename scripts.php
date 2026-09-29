@@ -1387,14 +1387,26 @@
             if (qrContainer) {
                 qrContainer.innerHTML = "";
                 if (typeof QRCode !== "undefined") {
-                    new QRCode(qrContainer, {
-                        text: officialPayload,
-                        width: 200,
-                        height: 200,
-                        colorDark: "#000000",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.M
-                    });
+                    try {
+                        new QRCode(qrContainer, {
+                            text: officialPayload,
+                            width: 200,
+                            height: 200,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.Q
+                        });
+                    } catch (e) {
+                        qrContainer.innerHTML = "";
+                        new QRCode(qrContainer, {
+                            text: officialPayload,
+                            width: 200,
+                            height: 200,
+                            colorDark: "#000000",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.M
+                        });
+                    }
                 }
             }
         } else {

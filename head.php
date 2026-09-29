@@ -2751,7 +2751,8 @@
         font-size: 30px;
     }
 
-        .pm-qrcode-box {
+    .pm-qrcode-box {
+        position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -2764,6 +2765,29 @@
         display: block;
         max-width: 100%;
         height: auto;
+    }
+    .pm-qr-center-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 46px;
+        height: 46px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        z-index: 2;
+        overflow: hidden;
+    }
+    .pm-qr-center-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
     }
 
     /* Visor QR (debe estar por encima del modal de detalle del banco) */
