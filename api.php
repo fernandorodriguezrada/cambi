@@ -26,6 +26,13 @@ if (!function_exists('getHistory')) {
     }
 }
 
+if (!empty($_GET["update_p2p"])) {
+    require_once __DIR__ . "/cron.php";
+    $p2p = fetchParallelP2PRates();
+    echo json_encode(["status" => "success", "p2p" => $p2p]);
+    exit;
+}
+
 $forceUpdate = !empty($_GET['force']);
 
 // 1. Cargar caché actual si existe

@@ -272,12 +272,55 @@
 
             if (inputTop && cleanValue(inputTop.value) !== 0) convert(inputTop);
             updateLoadingProgress(90);
+
+            // Refresco silencioso en background si la tasa P2P ya tiene más de 3 min
+            if (data.p2p && data.p2p.is_stale) {
+                setTimeout(refreshP2PSilently, 300);
+            }
         } catch (error) {
             if (rateDisplay) rateDisplay.innerText = "Error de Red";
             if (rateEurDisplay) rateEurDisplay.innerText = "Error de Red";
             console.error("Error fetching rate:", error);
         } finally {
             hideSplashScreen();
+        }
+    }
+
+    async function refreshP2PSilently() {
+        try {
+            const res = await fetch("api.php?update_p2p=1");
+            const json = await res.json();
+            if (json && json.p2p) {
+                ratesData.binance_usdt = json.p2p.binance_usdt || 0;
+                ratesData.binance_usdc = json.p2p.binance_usdc || 0;
+                ratesData.okx_usdt = json.p2p.okx_usdt || 0;
+
+                const p2pUsdtEl = document.getElementById("rate-binance-usdt");
+                const p2pUsdcEl = document.getElementById("rate-binance-usdc");
+                const p2pOkxEl = document.getElementById("rate-okx-usdt");
+                const dateBinanceUsdt = document.getElementById("date-binance-usdt");
+                const dateBinanceUsdc = document.getElementById("date-binance-usdc");
+                const dateOkxUsdt = document.getElementById("date-okx-usdt");
+
+                if (p2pUsdtEl) p2pUsdtEl.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--.--";
+                if (p2pUsdcEl) p2pUsdcEl.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--.--";
+                if (p2pOkxEl) p2pOkxEl.innerText = ratesData.okx_usdt ? formatRAE(ratesData.okx_usdt) : "--.--";
+
+                const binanceTime = `Actualizado: ${json.p2p.last_update} (Binance P2P)`;
+                const okxTime = `Actualizado: ${json.p2p.last_update} (OKX P2P)`;
+
+                if (dateBinanceUsdt) dateBinanceUsdt.innerText = binanceTime;
+                if (dateBinanceUsdc) dateBinanceUsdc.innerText = binanceTime;
+                if (dateOkxUsdt) dateOkxUsdt.innerText = okxTime;
+
+                updateRateChipsDisplay();
+                if (selectedRateType !== "usd" && selectedRateType !== "eur") {
+                    currentRate = ratesData[selectedRateType] || 0;
+                    if (inputTop && cleanValue(inputTop.value) !== 0) convert(inputTop);
+                }
+            }
+        } catch (e) {
+            console.warn("Silent P2P refresh error:", e);
         }
     }
 
