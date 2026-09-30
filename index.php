@@ -30,6 +30,7 @@ $componentsDir = __DIR__ . '/';
     </main>
     <?php
     include_once $componentsDir . 'pagomovil_modals.php';
+    include_once $componentsDir . 'calculator_modal.php';
     include_once $componentsDir . 'bottom_nav.php';
     include_once $componentsDir . 'scripts.php';
     ?>

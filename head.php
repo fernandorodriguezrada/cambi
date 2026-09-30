@@ -567,10 +567,11 @@
         }
     }
 
-    /* Centrado vertical equilibrado para la pestaña de calculadora */
+    /* Centrado vertical equilibrado para la pestaña de calculadora (CERO SCROLL) */
     #calculator-tab-content.active {
         justify-content: center;
         padding-top: 0;
+        overflow: hidden;
     }
 
     /* Pestaña Pago Móvil: aprovecha toda la altura disponible y permite desplazamiento natural */
@@ -2956,6 +2957,23 @@
     /* ==========================================
        CALCULADORA: BOTÓN SELECTOR DE TASA Y MODAL
        ========================================== */
+    .keypad-btn.calc-rate-btn {
+        background-color: var(--md-sys-color-surface-container-high);
+        border: 1.5px solid var(--md-sys-color-outline-variant);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.15s, transform 0.1s, border-color 0.15s;
+    }
+    body.dark-mode .keypad-btn.calc-rate-btn {
+        background-color: #212930;
+        border-color: rgba(255, 255, 255, 0.14);
+    }
+    .keypad-btn.calc-rate-btn:active {
+        background-color: var(--md-sys-color-surface-container-highest);
+        transform: scale(0.95);
+    }
+
     .calc-picker-icon {
         width: 26px;
         height: 26px;
