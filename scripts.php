@@ -340,25 +340,60 @@
     }
 
     function updateRateChipsDisplay() {
-        const chipUsd = document.getElementById("chip-val-usd");
-        const chipBUsdt = document.getElementById("chip-val-binance-usdt");
-        const chipBUsdc = document.getElementById("chip-val-binance-usdc");
-        const chipOkx = document.getElementById("chip-val-okx-usdt");
-        const chipEur = document.getElementById("chip-val-eur");
+        const valUsd = document.getElementById("modal-rate-val-usd");
+        const valBUsdt = document.getElementById("modal-rate-val-binance-usdt");
+        const valBUsdc = document.getElementById("modal-rate-val-binance-usdc");
+        const valOkx = document.getElementById("modal-rate-val-okx-usdt");
+        const valEur = document.getElementById("modal-rate-val-eur");
 
-        if (chipUsd) chipUsd.innerText = ratesData.usd ? formatRAE(ratesData.usd) : "--";
-        if (chipBUsdt) chipBUsdt.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--";
-        if (chipBUsdc) chipBUsdc.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--";
-        if (chipOkx) chipOkx.innerText = ratesData.okx_usdt ? formatRAE(ratesData.okx_usdt) : "--";
-        if (chipEur) chipEur.innerText = ratesData.eur ? formatRAE(ratesData.eur) : "--";
+        if (valUsd) valUsd.innerText = ratesData.usd ? `${formatRAE(ratesData.usd)} Bs.` : "--.--";
+        if (valBUsdt) valBUsdt.innerText = ratesData.binance_usdt ? `${formatRAE(ratesData.binance_usdt)} Bs.` : "--.--";
+        if (valBUsdc) valBUsdc.innerText = ratesData.binance_usdc ? `${formatRAE(ratesData.binance_usdc)} Bs.` : "--.--";
+        if (valOkx) valOkx.innerText = ratesData.okx_usdt ? `${formatRAE(ratesData.okx_usdt)} Bs.` : "--.--";
+        if (valEur) valEur.innerText = ratesData.eur ? `${formatRAE(ratesData.eur)} Bs.` : "--.--";
     }
+
+    function openCalcRateModal() {
+        updateRateChipsDisplay();
+        const modal = document.getElementById("calc-rate-modal");
+        if (modal) modal.classList.add("active");
+    }
+    window.openCalcRateModal = openCalcRateModal;
+
+    function closeCalcRateModal() {
+        const modal = document.getElementById("calc-rate-modal");
+        if (modal) modal.classList.remove("active");
+    }
+    window.closeCalcRateModal = closeCalcRateModal;
+
+    function selectCalcRateFromModal(type) {
+        setCalcRateType(type);
+        closeCalcRateModal();
+    }
+    window.selectCalcRateFromModal = selectCalcRateFromModal;
 
     function setCalcRateType(type) {
         selectedRateType = type;
         currentRate = ratesData[type] || ratesData.usd || 0;
 
-        document.querySelectorAll(".rate-chip").forEach(chip => {
-            chip.classList.toggle("active", chip.getAttribute("data-rate-type") === type);
+        // Actualizar ícono del botón de la calculadora
+        const pickerIcon = document.getElementById("calc-picker-active-icon");
+        if (pickerIcon) {
+            if (type === "binance_usdt" || type === "binance_usdc") {
+                pickerIcon.src = "public/crypto/binance.svg";
+                pickerIcon.alt = "Binance";
+            } else if (type === "okx_usdt") {
+                pickerIcon.src = "public/crypto/okx.svg";
+                pickerIcon.alt = "OKX";
+            } else {
+                pickerIcon.src = "public/bcv.svg";
+                pickerIcon.alt = "BCV";
+            }
+        }
+
+        // Actualizar item activo en el modal
+        document.querySelectorAll(".calc-rate-option-item").forEach(item => {
+            item.classList.toggle("active", item.getAttribute("data-type") === type);
         });
 
         const cur = getCurrencySymbolForRate(type);
@@ -484,8 +519,17 @@
             const clearBtn = document.querySelector('.keypad-btn[data-key="C"]');
             if (clearBtn) clearBtn.click();
         } else if (e.key === 'Enter' || e.key === '=') {
-            const eqBtn = document.querySelector('.keypad-btn[data-key="="]');
-            if (eqBtn) eqBtn.click();
+            const operationResult = document.getElementById('operation-result');
+            if (operationResult && operationResult.innerText.startsWith('=')) {
+                const cleanRes = operationResult.innerText.replace(/[^0-9,]/g, '');
+                inputTop.value = cleanRes;
+                operationResult.innerText = '';
+                isResultPendingClear = true;
+                formatInputDisplay(inputTop);
+                convert(inputTop);
+                updateCaretPosition();
+                updateInputColors();
+            }
         } else if (/^[0-9,+\-*\/x]$/i.test(e.key)) {
             let key = e.key;
             if (key === '*') key = 'x';
@@ -556,7 +600,7 @@
         btn.addEventListener('click', () => {
             if (!inputTop) return;
             const key = btn.dataset.key;
-            if (key === 'swap') return;
+            if (!key || key === 'swap') return;
             
             // Botón C (Clear / Limpiar todo)
             if (key === 'C') {

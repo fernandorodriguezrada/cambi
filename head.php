@@ -2954,50 +2954,96 @@
     }
 
     /* ==========================================
-       CALCULADORA: SELECTOR DE TASA
+       CALCULADORA: BOTÓN SELECTOR DE TASA Y MODAL
        ========================================== */
-    .calc-rate-selector {
+    .calc-picker-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        object-fit: contain;
+        pointer-events: none;
+        transition: transform 0.15s ease;
+    }
+    .keypad-btn:active .calc-picker-icon {
+        transform: scale(0.9);
+    }
+
+    .calc-rate-options-list {
         display: flex;
+        flex-direction: column;
         gap: 8px;
-        overflow-x: auto;
-        padding: 2px 2px 10px 2px;
-        margin-bottom: 6px;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
+        margin-top: 4px;
+        margin-bottom: 8px;
     }
-    .calc-rate-selector::-webkit-scrollbar {
-        display: none;
-    }
-    .rate-chip {
-        display: inline-flex;
+    .calc-rate-option-item {
+        display: flex;
         align-items: center;
-        gap: 6px;
-        padding: 7px 14px;
-        border-radius: 14px;
-        border: 1px solid var(--md-sys-color-outline-variant);
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-radius: 18px;
         background-color: var(--md-sys-color-surface-container);
-        color: var(--md-sys-color-on-surface-variant);
-        font-size: 0.8rem;
-        font-weight: 600;
+        border: 1.5px solid transparent;
         cursor: pointer;
-        white-space: nowrap;
-        flex-shrink: 0;
         transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+        -webkit-tap-highlight-color: transparent;
     }
-    .rate-chip:hover {
+    .calc-rate-option-item:active {
+        transform: scale(0.98);
         background-color: var(--md-sys-color-surface-container-high);
+    }
+    .calc-rate-option-item.active {
+        background-color: var(--md-sys-color-surface-container-highest);
+        border-color: var(--cambi-magic-mint);
+    }
+    .calc-rate-option-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .calc-rate-option-logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+    .calc-rate-option-texts {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+    }
+    .calc-rate-option-name {
+        font-family: var(--font-google-sans);
+        font-size: 0.95rem;
+        font-weight: 700;
         color: var(--md-sys-color-on-surface);
     }
-    .rate-chip.active {
-        background-color: var(--cambi-magic-mint);
-        color: var(--cambi-rich-black);
-        border-color: transparent;
-        font-weight: 700;
-    }
-    .rate-chip-val {
-        font-size: 0.75rem;
+    .calc-rate-option-source {
+        font-size: 0.72rem;
         font-weight: 500;
-        opacity: 0.85;
+        color: var(--md-sys-color-outline);
+        margin-top: 1px;
+    }
+    .calc-rate-option-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .calc-rate-option-value {
+        font-family: var(--font-google-sans);
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--md-sys-color-primary);
+    }
+    .calc-rate-option-check {
+        font-size: 1.3rem;
+        color: var(--cambi-magic-mint);
+        opacity: 0;
+        transform: scale(0.6);
+        transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .calc-rate-option-item.active .calc-rate-option-check {
+        opacity: 1;
+        transform: scale(1);
     }
 </style>
