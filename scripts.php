@@ -626,6 +626,9 @@
     const swapBtn = document.getElementById('swap-btn');
 
     const switchTab = (tabId) => {
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) mainContent.scrollTop = 0;
+
         navItems.forEach(nav => {
             nav.classList.toggle('active', nav.dataset.tab === tabId);
         });

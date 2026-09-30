@@ -541,34 +541,30 @@
 
     /* Tab Content Styling */
     .tab-content {
-        display: flex;
+        display: none;
         width: 100%;
         flex-grow: 1;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
         padding-top: 16px;
-        
-        /* Material You Transition Properties */
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-        visibility: hidden;
-        transform: scale(0.96);
-        transition: 
-            opacity 0.3s cubic-bezier(0.2, 0, 0, 1), 
-            transform 0.3s cubic-bezier(0.2, 0, 0, 1);
-        pointer-events: none;
-        z-index: 0;
     }
     .tab-content.active {
-        opacity: 1;
-        visibility: visible;
-        transform: scale(1);
+        display: flex;
         position: relative;
-        pointer-events: auto;
         z-index: 1;
+        animation: tabFadeIn 0.2s cubic-bezier(0.2, 0, 0, 1) forwards;
+    }
+
+    @keyframes tabFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
     /* Centrado vertical equilibrado para la pestaña de calculadora */
