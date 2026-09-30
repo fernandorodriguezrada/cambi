@@ -59,7 +59,7 @@
                     <span class="material-symbols-rounded" style="color: var(--md-sys-color-primary);">currency_exchange</span>
                     <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700;">Tasa de Conversión</h3>
                 </div>
-                <button class="pm-modal-close-btn" onclick="closeCalcRateModal()" aria-label="Cerrar">
+                <button type="button" class="pm-modal-close" onclick="closeCalcRateModal()" aria-label="Cerrar">
                     <span class="material-symbols-rounded">close</span>
                 </button>
             </div>

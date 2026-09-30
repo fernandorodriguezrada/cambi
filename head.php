@@ -2229,7 +2229,7 @@
         color: var(--md-sys-color-on-surface);
     }
 
-    .pm-modal-close {
+    .pm-modal-close, .pm-modal-close-btn {
         width: 38px;
         height: 38px;
         border-radius: 50%;
@@ -2243,11 +2243,11 @@
         transition: background-color 0.2s, transform 0.15s;
     }
 
-    body.dark-mode .pm-modal-close {
+    body.dark-mode .pm-modal-close, .pm-modal-close-btn {
         background: rgba(255, 255, 255, 0.1);
     }
 
-    .pm-modal-close:active {
+    .pm-modal-close:active, .pm-modal-close-btn:active {
         transform: scale(0.92);
     }
 
