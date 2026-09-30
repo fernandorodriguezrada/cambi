@@ -41,23 +41,27 @@ if (file_exists($cacheFile)) {
     }
 }
 
-// 2. Si la caché está fresca y no es actualización forzada, responder DE INMEDIATO (< 2ms)
-// Ningún usuario genera raspado al BCV mientras la tasa esté vigente
+require_once __DIR__ . '/cron.php';
+
+// P2P en vivo (Binance USDT, Binance USDC, OKX USDT) con caché inteligente de 3 minutos
+$p2pData = getP2PRates($forceUpdate);
+
+// 2. Si la caché de BCV está fresca y no es forzada, responder DE INMEDIATO
 if (!$forceUpdate && $cachedData && !$isExpired) {
     $cachedData['history'] = getHistory();
+    $cachedData['p2p'] = $p2pData;
     $cachedData['is_cached'] = true;
     echo json_encode($cachedData);
     exit;
 }
 
-// 3. Si expiró o es forzada, ejecutar la actualización (1 solo raspado)
-require_once __DIR__ . '/cron.php';
-
+// 3. Si expiró o es forzada, ejecutar la actualización de tasas oficiales
 $updateResult = executeRatesUpdate();
 
 if ($updateResult['status'] === 'success' && !empty($updateResult['data'])) {
     $freshData = $updateResult['data'];
     $freshData['history'] = getHistory();
+    $freshData['p2p'] = $p2pData;
     $freshData['is_cached'] = false;
     echo json_encode($freshData);
     exit;
@@ -66,6 +70,7 @@ if ($updateResult['status'] === 'success' && !empty($updateResult['data'])) {
 // 4. Si el raspado falló pero tenemos una tasa previa en caché, devolver la previa (Fallback resiliente)
 if ($cachedData) {
     $cachedData['history'] = getHistory();
+    $cachedData['p2p'] = $p2pData;
     $cachedData['is_cached'] = true;
     $cachedData['stale'] = true;
     if (!empty($updateResult['debug_bcv'])) {

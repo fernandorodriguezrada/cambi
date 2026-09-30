@@ -1,5 +1,13 @@
 <script>
     let currentRate = 0;
+    let ratesData = {
+        usd: 0,
+        eur: 0,
+        binance_usdt: 0,
+        binance_usdc: 0,
+        okx_usdt: 0
+    };
+    let selectedRateType = "usd";
     let isTopUsd = true; // Estado para saber el sentido de la conversión
     let isResultPendingClear = false; // Control para limpiar el input tras un resultado
     let caretTimer = null;
@@ -210,10 +218,18 @@
                 historyList.innerHTML = historyHtml;
             }
 
-            currentRate = data.usd;
-            if (rateDisplay) rateDisplay.innerText = formatRAE(currentRate);
+            ratesData.usd = data.usd || 0;
+            ratesData.eur = data.eur || 0;
+            if (data.p2p) {
+                ratesData.binance_usdt = data.p2p.binance_usdt || 0;
+                ratesData.binance_usdc = data.p2p.binance_usdc || 0;
+                ratesData.okx_usdt = data.p2p.okx_usdt || 0;
+            }
+
+            currentRate = ratesData[selectedRateType] || ratesData.usd || 0;
+            if (rateDisplay) rateDisplay.innerText = formatRAE(ratesData.usd);
             
-            // Indicador visual de fecha y fuente
+            // Indicador visual de fecha y fuente oficial
             const sourceLabel = data.source ? ` (${data.source})` : '';
             const updateLabel = `Actualizado: ${data.last_update}${sourceLabel}`;
             
@@ -222,8 +238,8 @@
                 dateDisplay.innerText = updateLabel;
             }
 
-            if (data.eur) {
-                if (rateEurDisplay) rateEurDisplay.innerText = formatRAE(data.eur);
+            if (ratesData.eur) {
+                if (rateEurDisplay) rateEurDisplay.innerText = formatRAE(ratesData.eur);
                 if (dateEurDisplay) {
                     dateEurDisplay.style.color = "";
                     dateEurDisplay.innerText = updateLabel;
@@ -232,6 +248,26 @@
                 if (rateEurDisplay) rateEurDisplay.innerText = "No disponible";
                 if (dateEurDisplay) dateEurDisplay.innerText = "Fuente sin Euro";
             }
+
+            // Renderizar tasas P2P (Binance y OKX)
+            const p2pUsdtEl = document.getElementById("rate-binance-usdt");
+            const p2pUsdcEl = document.getElementById("rate-binance-usdc");
+            const p2pOkxEl = document.getElementById("rate-okx-usdt");
+            const dateBinanceUsdt = document.getElementById("date-binance-usdt");
+            const dateBinanceUsdc = document.getElementById("date-binance-usdc");
+            const dateOkxUsdt = document.getElementById("date-okx-usdt");
+
+            const p2pTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update}` : "Pago Móvil • En vivo";
+
+            if (p2pUsdtEl) p2pUsdtEl.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--.--";
+            if (p2pUsdcEl) p2pUsdcEl.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--.--";
+            if (p2pOkxEl) p2pOkxEl.innerText = ratesData.okx_usdt ? formatRAE(ratesData.okx_usdt) : "--.--";
+
+            if (dateBinanceUsdt) dateBinanceUsdt.innerText = p2pTime;
+            if (dateBinanceUsdc) dateBinanceUsdc.innerText = p2pTime;
+            if (dateOkxUsdt) dateOkxUsdt.innerText = p2pTime;
+
+            updateRateChipsDisplay();
 
             if (inputTop && cleanValue(inputTop.value) !== 0) convert(inputTop);
             updateLoadingProgress(90);
@@ -243,6 +279,64 @@
             hideSplashScreen();
         }
     }
+
+    function getCurrencySymbolForRate(type) {
+        switch (type) {
+            case "binance_usdt":
+            case "okx_usdt":
+                return "USDT";
+            case "binance_usdc":
+                return "USDC";
+            case "eur":
+                return "EUR";
+            case "usd":
+            default:
+                return "USD";
+        }
+    }
+
+    function updateRateChipsDisplay() {
+        const chipUsd = document.getElementById("chip-val-usd");
+        const chipBUsdt = document.getElementById("chip-val-binance-usdt");
+        const chipBUsdc = document.getElementById("chip-val-binance-usdc");
+        const chipOkx = document.getElementById("chip-val-okx-usdt");
+        const chipEur = document.getElementById("chip-val-eur");
+
+        if (chipUsd) chipUsd.innerText = ratesData.usd ? formatRAE(ratesData.usd) : "--";
+        if (chipBUsdt) chipBUsdt.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--";
+        if (chipBUsdc) chipBUsdc.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--";
+        if (chipOkx) chipOkx.innerText = ratesData.okx_usdt ? formatRAE(ratesData.okx_usdt) : "--";
+        if (chipEur) chipEur.innerText = ratesData.eur ? formatRAE(ratesData.eur) : "--";
+    }
+
+    function setCalcRateType(type) {
+        selectedRateType = type;
+        currentRate = ratesData[type] || ratesData.usd || 0;
+
+        document.querySelectorAll(".rate-chip").forEach(chip => {
+            chip.classList.toggle("active", chip.getAttribute("data-rate-type") === type);
+        });
+
+        const cur = getCurrencySymbolForRate(type);
+        if (labelTop && labelBottom) {
+            if (isTopUsd) {
+                labelTop.innerText = cur;
+                labelBottom.innerText = "VES";
+            } else {
+                labelTop.innerText = "VES";
+                labelBottom.innerText = cur;
+            }
+        }
+
+        if (inputTop) convert(inputTop);
+    }
+    window.setCalcRateType = setCalcRateType;
+
+    function selectRateForCalc(type) {
+        setCalcRateType(type);
+        switchTab("calculator");
+    }
+    window.selectRateForCalc = selectRateForCalc;
 
     function convert(triggeringInput) {
         if (!triggeringInput) return;
@@ -266,7 +360,7 @@
         if (triggeringInput === inputTop) {
             if (operationResult) {
                 if (hasOperation) {
-                    const label = isTopUsd ? "USD" : "Bs.";
+                    const cur = getCurrencySymbolForRate(selectedRateType); const label = isTopUsd ? cur : "Bs.";
                     operationResult.innerText = `= ${label} ${formatRAE(numericVal)}`;
                 } else {
                     operationResult.innerText = '';
@@ -524,9 +618,14 @@
             swapBtn.style.transform = isTopUsd ? 'rotate(0deg)' : 'rotate(180deg)';
 
             if (labelTop && labelBottom) {
-                const tempLabel = labelTop.innerText;
-                labelTop.innerText = labelBottom.innerText;
-                labelBottom.innerText = tempLabel;
+                const cur = getCurrencySymbolForRate(selectedRateType);
+                if (isTopUsd) {
+                    labelTop.innerText = cur;
+                    labelBottom.innerText = "VES";
+                } else {
+                    labelTop.innerText = "VES";
+                    labelBottom.innerText = cur;
+                }
             }
 
             if (inputTop && inputBottom) {

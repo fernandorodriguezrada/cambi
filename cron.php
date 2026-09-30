@@ -233,6 +233,159 @@ function executeRatesUpdate() {
     ];
 }
 
+/**
+ * Obtener tasa P2P en vivo de Binance (Pago Móvil)
+ */
+if (!function_exists("getBinanceP2P")) {
+    function getBinanceP2P($asset = "USDT") {
+        $url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search";
+        $body = json_encode([
+            "asset" => $asset,
+            "fiat" => "VES",
+            "merchantCheck" => false,
+            "page" => 1,
+            "rows" => 10,
+            "payTypes" => ["PagoMovil"],
+            "publisherType" => null,
+            "tradeType" => "BUY"
+        ]);
+
+        $opts = [
+            "http" => [
+                "method" => "POST",
+                "header" => "Content-Type: application/json\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\r\n",
+                "content" => $body,
+                "timeout" => 4,
+                "ignore_errors" => true
+            ],
+            "ssl" => ["verify_peer" => false, "verify_peer_name" => false]
+        ];
+        $context = stream_context_create($opts);
+        $res = @file_get_contents($url, false, $context);
+        if (!$res) return null;
+        $json = json_decode($res, true);
+        if (empty($json["data"])) return null;
+
+        $prices = [];
+        foreach ($json["data"] as $item) {
+            if (!empty($item["adv"]["price"])) {
+                $prices[] = (float)$item["adv"]["price"];
+            }
+        }
+        if (empty($prices)) return null;
+        sort($prices);
+        $slice = array_slice($prices, 0, min(5, count($prices)));
+        return round(array_sum($slice) / count($slice), 2);
+    }
+}
+
+/**
+ * Obtener tasa P2P en vivo de OKX (Pago Móvil)
+ */
+if (!function_exists("getOkxP2P")) {
+    function getOkxP2P($asset = "USDT") {
+        $url = "https://www.okx.com/v3/c2c/tradingOrders/books?quoteCurrency=ves&baseCurrency=usdt&side=buy&paymentMethod=all&userType=all";
+        $opts = [
+            "http" => [
+                "method" => "GET",
+                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\r\n",
+                "timeout" => 4,
+                "ignore_errors" => true
+            ],
+            "ssl" => ["verify_peer" => false, "verify_peer_name" => false]
+        ];
+        $context = stream_context_create($opts);
+        $res = @file_get_contents($url, false, $context);
+        if (!$res) return null;
+        $json = json_decode($res, true);
+        $buyOrders = $json["data"]["buy"] ?? [];
+        if (empty($buyOrders)) return null;
+
+        $prices = [];
+        foreach ($buyOrders as $order) {
+            $pms = $order["paymentMethods"] ?? [];
+            $isPm = false;
+            foreach ($pms as $pm) {
+                if (stripos($pm, "pago movil") !== false) {
+                    $isPm = true;
+                    break;
+                }
+            }
+            if ($isPm && !empty($order["price"])) {
+                $p = (float)$order["price"];
+                if ($p > 300) {
+                    $prices[] = $p;
+                }
+            }
+        }
+        if (empty($prices)) return null;
+        rsort($prices);
+        $slice = array_slice($prices, 0, min(5, count($prices)));
+        return round(array_sum($slice) / count($slice), 2);
+    }
+}
+
+/**
+ * Fallback paralelo (DolarApi) si Binance se demora
+ */
+if (!function_exists("getP2PFallback")) {
+    function getP2PFallback() {
+        $res = fetchRemote("https://ve.dolarapi.com/v1/dolares/paralelo", 3);
+        if ($res) {
+            $j = json_decode($res, true);
+            if (!empty($j["promedio"])) return round((float)$j["promedio"], 2);
+        }
+        return null;
+    }
+}
+
+/**
+ * Obtener tasas consolidadas de P2P con caché de 3 minutos
+ */
+if (!function_exists("getP2PRates")) {
+    function getP2PRates($force = false) {
+        $p2pCacheFile = __DIR__ . "/p2p_cache.json";
+        $ttl = 180; // 3 minutos
+
+        $cached = null;
+        if (file_exists($p2pCacheFile)) {
+            $cached = json_decode(@file_get_contents($p2pCacheFile), true);
+        }
+
+        $now = time();
+        if (!$force && $cached && !empty($cached["timestamp"]) && ($now - $cached["timestamp"] < $ttl)) {
+            return $cached;
+        }
+
+        // Consultar fuentes en vivo
+        $usdt = getBinanceP2P("USDT");
+        $usdc = getBinanceP2P("USDC");
+        $okx = getOkxP2P("USDT");
+
+        // Respaldo de contingencia
+        if (!$usdt) {
+            $usdt = $cached["binance_usdt"] ?? getP2PFallback();
+        }
+        if (!$usdc) {
+            $usdc = $cached["binance_usdc"] ?? ($usdt ? round($usdt * 1.005, 2) : null);
+        }
+        if (!$okx) {
+            $okx = $cached["okx_usdt"] ?? ($usdt ? round($usdt * 0.995, 2) : null);
+        }
+
+        $data = [
+            "binance_usdt" => $usdt,
+            "binance_usdc" => $usdc,
+            "okx_usdt" => $okx,
+            "last_update" => date("d/m/Y, h:i A"),
+            "timestamp" => $now
+        ];
+
+        @file_put_contents($p2pCacheFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        return $data;
+    }
+}
+
 // Ejecución directa de cron.php (CLI o Webhook)
 $isDirectCli = (php_sapi_name() === 'cli' && basename($_SERVER['argv'][0] ?? '') === 'cron.php');
 $isDirectWeb = (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'cron.php');
