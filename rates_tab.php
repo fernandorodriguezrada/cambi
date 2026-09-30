@@ -6,13 +6,19 @@
         </div>
 
         <div class="card">
-            <span class="label">Precio del Dólar</span>
+            <div class="rate-card-title">
+                <img src="public/bcv.svg" alt="BCV" class="rate-platform-logo">
+                <span class="label">Precio del Dólar</span>
+            </div>
             <div id="rate" class="rate-display">--.--</div>
             <div id="date" class="footer-info">Consultando BCV...</div>
         </div>
 
         <div class="card">
-            <span class="label">Precio del Euro</span>
+            <div class="rate-card-title">
+                <img src="public/bcv.svg" alt="BCV" class="rate-platform-logo">
+                <span class="label">Precio del Euro</span>
+            </div>
             <div id="rate-eur" class="rate-display">--.--</div>
             <div id="date-eur" class="footer-info">Esperando datos...</div>
         </div>

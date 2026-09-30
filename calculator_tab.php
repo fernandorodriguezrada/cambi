@@ -3,6 +3,7 @@
         <!-- Selector de tasa para la calculadora -->
         <div class="calc-rate-selector" id="calc-rate-selector">
             <button type="button" class="rate-chip active" data-rate-type="usd" onclick="setCalcRateType('usd')">
+                <img src="public/bcv.svg" alt="BCV" class="rate-chip-icon">
                 <span>Dólar BCV</span>
                 <span class="rate-chip-val" id="chip-val-usd">--</span>
             </button>
@@ -22,6 +23,7 @@
                 <span class="rate-chip-val" id="chip-val-okx-usdt">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="eur" onclick="setCalcRateType('eur')">
+                <img src="public/bcv.svg" alt="BCV" class="rate-chip-icon">
                 <span>Euro BCV</span>
                 <span class="rate-chip-val" id="chip-val-eur">--</span>
             </button>
