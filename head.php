@@ -2935,8 +2935,14 @@
     .rate-card-title {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 8px;
+        margin-left: 4px;
+        margin-bottom: 8px;
+    }
+    .rate-card-title .label {
+        margin-left: 0;
+        margin-bottom: 0;
     }
     .rate-platform-logo {
         width: 18px;
