@@ -54,6 +54,8 @@
         /* Colores para las tasas, cambian según el tema */
         --rate-usd-color: var(--cambi-magic-mint-on-surface);
         --rate-eur-color: var(--cambi-baby-blue-on-surface);
+        --rate-binance-color: #B88200;
+        --rate-okx-color: #121212;
 
         /* Colores para los botones de la calculadora */
         --key-default-text: var(--cambi-baby-blue-on-surface);
@@ -80,6 +82,8 @@
 
         --rate-usd-color: var(--cambi-magic-mint);
         --rate-eur-color: var(--cambi-baby-blue);
+        --rate-binance-color: #F3BA2F;
+        --rate-okx-color: #FFFFFF;
 
         --key-default-text: var(--md-sys-color-on-surface);
         --key-mint-text: var(--md-sys-color-on-primary);
@@ -362,6 +366,15 @@
     
     #rate { color: var(--rate-usd-color); }
     #rate-eur { color: var(--rate-eur-color); }
+    #rate-binance-usdt { color: var(--rate-binance-color); }
+    #rate-binance-usdc { color: var(--rate-binance-color); }
+    #rate-okx-usdt { color: var(--rate-okx-color); }
+
+    #modal-rate-val-usd { color: var(--rate-usd-color); }
+    #modal-rate-val-eur { color: var(--rate-eur-color); }
+    #modal-rate-val-binance-usdt { color: var(--rate-binance-color); }
+    #modal-rate-val-binance-usdc { color: var(--rate-binance-color); }
+    #modal-rate-val-okx-usdt { color: var(--rate-okx-color); }
 
     /* Estilos para el nuevo diseño unificado */
     .combined-card {
