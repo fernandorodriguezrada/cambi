@@ -1,28 +1,25 @@
 <div id="calculator-tab-content" class="tab-content">
     <div class="container">
-        <!-- Selector rápido de tasa para la calculadora -->
+        <!-- Selector de tasa para la calculadora -->
         <div class="calc-rate-selector" id="calc-rate-selector">
             <button type="button" class="rate-chip active" data-rate-type="usd" onclick="setCalcRateType('usd')">
-                <span class="rate-chip-name">USD BCV</span>
+                <span>Dólar BCV</span>
                 <span class="rate-chip-val" id="chip-val-usd">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="binance_usdt" onclick="setCalcRateType('binance_usdt')">
-                <img src="public/crypto/binance.svg" class="rate-chip-icon" alt="Binance">
-                <span class="rate-chip-name">USDT</span>
+                <span>USDT Binance</span>
                 <span class="rate-chip-val" id="chip-val-binance-usdt">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="binance_usdc" onclick="setCalcRateType('binance_usdc')">
-                <img src="public/crypto/binance.svg" class="rate-chip-icon" alt="Binance">
-                <span class="rate-chip-name">USDC</span>
+                <span>USDC Binance</span>
                 <span class="rate-chip-val" id="chip-val-binance-usdc">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="okx_usdt" onclick="setCalcRateType('okx_usdt')">
-                <img src="public/crypto/okx.svg" class="rate-chip-icon" alt="OKX">
-                <span class="rate-chip-name">OKX</span>
+                <span>USDT OKX</span>
                 <span class="rate-chip-val" id="chip-val-okx-usdt">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="eur" onclick="setCalcRateType('eur')">
-                <span class="rate-chip-name">EUR BCV</span>
+                <span>Euro BCV</span>
                 <span class="rate-chip-val" id="chip-val-eur">--</span>
             </button>
         </div>

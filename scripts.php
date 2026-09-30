@@ -257,7 +257,7 @@
             const dateBinanceUsdc = document.getElementById("date-binance-usdc");
             const dateOkxUsdt = document.getElementById("date-okx-usdt");
 
-            const p2pTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update}` : "Pago Móvil • En vivo";
+            const p2pTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (Pago Móvil)` : "Pago Móvil";
 
             if (p2pUsdtEl) p2pUsdtEl.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--.--";
             if (p2pUsdcEl) p2pUsdcEl.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--.--";

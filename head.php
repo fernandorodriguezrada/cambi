@@ -2923,137 +2923,18 @@
     .rates-section-header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin: 12px 4px 8px 4px;
-        color: var(--md-sys-color-primary);
+        margin: 16px 0 8px 4px;
     }
-    .rates-section-title-wrap {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .rates-section-title {
-        font-size: 0.95rem;
+    .rates-section-label {
+        font-size: 0.78rem;
         font-weight: 700;
-        letter-spacing: -0.01em;
-    }
-    .live-pulse-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        color: #10b981;
-        background-color: rgba(16, 185, 129, 0.12);
-        padding: 3px 8px;
-        border-radius: 12px;
+        text-transform: uppercase;
         letter-spacing: 0.04em;
-    }
-    .pulse-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: #10b981;
-        box-shadow: 0 0 6px #10b981;
-        animation: pulseDotAnimation 1.8s infinite;
-    }
-    @keyframes pulseDotAnimation {
-        0% { transform: scale(0.95); opacity: 0.8; }
-        50% { transform: scale(1.3); opacity: 1; }
-        100% { transform: scale(0.95); opacity: 0.8; }
-    }
-
-    .rate-card-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 4px;
-    }
-
-    .rate-badge {
-        font-size: 0.7rem;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 8px;
-        letter-spacing: 0.03em;
-    }
-    .rate-badge.bcv {
-        background-color: rgba(30, 133, 200, 0.12);
-        color: #1e85c8;
-    }
-    .rate-badge.binance {
-        background-color: rgba(243, 186, 47, 0.18);
-        color: #b38300;
-    }
-    .rate-badge.okx {
-        background-color: rgba(120, 120, 120, 0.16);
-        color: var(--md-sys-color-on-surface);
-    }
-
-    .p2p-cards-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        width: 100%;
-    }
-    .p2p-card {
-        cursor: pointer;
-        padding: 16px 20px;
-        margin-bottom: 0;
-        border-radius: 22px;
-        transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.15s cubic-bezier(0.2, 0, 0, 1);
-        text-align: left;
-    }
-    .p2p-card:active {
-        transform: scale(0.98);
-    }
-    .p2p-title-wrap {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .p2p-logo {
-        width: 24px;
-        height: 24px;
-        border-radius: 6px;
-        flex-shrink: 0;
-    }
-    .p2p-title {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--md-sys-color-on-surface);
-        line-height: 1.2;
-    }
-    .p2p-subtitle {
-        font-size: 0.72rem;
         color: var(--md-sys-color-outline);
-        font-weight: 500;
-    }
-    .p2p-card-body {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 6px 0 2px 0;
-    }
-    .p2p-card .rate-display {
-        font-size: 2.1rem;
-        margin: 0;
-        text-align: left;
-    }
-    .p2p-calc-icon {
-        font-size: 22px;
-        color: var(--md-sys-color-primary);
-        opacity: 0.7;
-        transition: opacity 0.2s, transform 0.2s;
-    }
-    .p2p-card:hover .p2p-calc-icon {
-        opacity: 1;
-        transform: scale(1.1);
     }
 
     /* ==========================================
-       CALCULADORA: SELECTOR DE TASA ACTIVA (CHIPS)
+       CALCULADORA: SELECTOR DE TASA
        ========================================== */
     .calc-rate-selector {
         display: flex;
@@ -3072,12 +2953,12 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 6px 12px;
-        border-radius: 18px;
+        padding: 7px 14px;
+        border-radius: 14px;
         border: 1px solid var(--md-sys-color-outline-variant);
-        background-color: var(--md-sys-color-surface-container-low);
+        background-color: var(--md-sys-color-surface-container);
         color: var(--md-sys-color-on-surface-variant);
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         font-weight: 600;
         cursor: pointer;
         white-space: nowrap;
@@ -3089,20 +2970,14 @@
         color: var(--md-sys-color-on-surface);
     }
     .rate-chip.active {
-        background-color: var(--md-sys-color-primary-container);
-        color: var(--md-sys-color-on-primary-container);
+        background-color: var(--cambi-magic-mint);
+        color: var(--cambi-rich-black);
         border-color: transparent;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    .rate-chip-icon {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        object-fit: contain;
+        font-weight: 700;
     }
     .rate-chip-val {
         font-size: 0.75rem;
-        font-weight: 600;
+        font-weight: 500;
         opacity: 0.85;
     }
 </style>

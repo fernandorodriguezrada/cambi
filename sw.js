@@ -31,8 +31,6 @@ const urlsToCache = [
   "public/banks/0175.png",
   "public/banks/0177.png",
   "public/banks/0191.png",
-  "public/crypto/binance.svg",
-  "public/crypto/okx.svg",
 ];
 
 self.addEventListener("install", (event) => {
