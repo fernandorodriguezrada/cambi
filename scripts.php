@@ -257,15 +257,16 @@
             const dateBinanceUsdc = document.getElementById("date-binance-usdc");
             const dateOkxUsdt = document.getElementById("date-okx-usdt");
 
-            const p2pTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (Pago Móvil)` : "Pago Móvil";
-
             if (p2pUsdtEl) p2pUsdtEl.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--.--";
             if (p2pUsdcEl) p2pUsdcEl.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--.--";
             if (p2pOkxEl) p2pOkxEl.innerText = ratesData.okx_usdt ? formatRAE(ratesData.okx_usdt) : "--.--";
 
-            if (dateBinanceUsdt) dateBinanceUsdt.innerText = p2pTime;
-            if (dateBinanceUsdc) dateBinanceUsdc.innerText = p2pTime;
-            if (dateOkxUsdt) dateOkxUsdt.innerText = p2pTime;
+            const binanceTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (Binance P2P)` : "Consultando Binance...";
+            const okxTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (OKX P2P)` : "Consultando OKX...";
+
+            if (dateBinanceUsdt) dateBinanceUsdt.innerText = binanceTime;
+            if (dateBinanceUsdc) dateBinanceUsdc.innerText = binanceTime;
+            if (dateOkxUsdt) dateOkxUsdt.innerText = okxTime;
 
             updateRateChipsDisplay();
 
