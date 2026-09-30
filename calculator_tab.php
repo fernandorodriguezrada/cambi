@@ -7,15 +7,18 @@
                 <span class="rate-chip-val" id="chip-val-usd">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="binance_usdt" onclick="setCalcRateType('binance_usdt')">
-                <span>USDT Binance</span>
+                <img src="public/crypto/binance.svg" alt="Binance" class="rate-chip-icon">
+                <span>USDT</span>
                 <span class="rate-chip-val" id="chip-val-binance-usdt">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="binance_usdc" onclick="setCalcRateType('binance_usdc')">
-                <span>USDC Binance</span>
+                <img src="public/crypto/binance.svg" alt="Binance" class="rate-chip-icon">
+                <span>USDC</span>
                 <span class="rate-chip-val" id="chip-val-binance-usdc">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="okx_usdt" onclick="setCalcRateType('okx_usdt')">
-                <span>USDT OKX</span>
+                <img src="public/crypto/okx.svg" alt="OKX" class="rate-chip-icon">
+                <span>OKX</span>
                 <span class="rate-chip-val" id="chip-val-okx-usdt">--</span>
             </button>
             <button type="button" class="rate-chip" data-rate-type="eur" onclick="setCalcRateType('eur')">

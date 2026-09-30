@@ -1,4 +1,4 @@
-const CACHE_NAME = "cambi-v28";
+const CACHE_NAME = "cambi-v29";
 const urlsToCache = [
   "public/logo.webp",
   "public/logo.ico",
@@ -31,6 +31,8 @@ const urlsToCache = [
   "public/banks/0175.png",
   "public/banks/0177.png",
   "public/banks/0191.png",
+  "public/crypto/binance.svg",
+  "public/crypto/okx.svg",
 ];
 
 self.addEventListener("install", (event) => {

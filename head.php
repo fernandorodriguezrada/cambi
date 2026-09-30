@@ -2932,6 +2932,24 @@
         letter-spacing: 0.04em;
         color: var(--md-sys-color-outline);
     }
+    .rate-card-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .rate-platform-logo {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+    .rate-chip-icon {
+        width: 15px;
+        height: 15px;
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
 
     /* ==========================================
        CALCULADORA: SELECTOR DE TASA

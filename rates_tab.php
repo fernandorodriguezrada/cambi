@@ -23,19 +23,28 @@
         </div>
 
         <div class="card">
-            <span class="label">Binance USDT</span>
+            <div class="rate-card-title">
+                <img src="public/crypto/binance.svg" alt="Binance" class="rate-platform-logo">
+                <span class="label">Binance USDT</span>
+            </div>
             <div id="rate-binance-usdt" class="rate-display">--.--</div>
             <div id="date-binance-usdt" class="footer-info">Pago Móvil</div>
         </div>
 
         <div class="card">
-            <span class="label">Binance USDC</span>
+            <div class="rate-card-title">
+                <img src="public/crypto/binance.svg" alt="Binance" class="rate-platform-logo">
+                <span class="label">Binance USDC</span>
+            </div>
             <div id="rate-binance-usdc" class="rate-display">--.--</div>
             <div id="date-binance-usdc" class="footer-info">Pago Móvil</div>
         </div>
 
         <div class="card">
-            <span class="label">OKX USDT</span>
+            <div class="rate-card-title">
+                <img src="public/crypto/okx.svg" alt="OKX" class="rate-platform-logo">
+                <span class="label">OKX USDT</span>
+            </div>
             <div id="rate-okx-usdt" class="rate-display">--.--</div>
             <div id="date-okx-usdt" class="footer-info">Pago Móvil</div>
         </div>
