@@ -278,9 +278,15 @@
                 setTimeout(refreshP2PSilently, 300);
             }
         } catch (error) {
-            if (rateDisplay) rateDisplay.innerText = "Error de Red";
-            if (rateEurDisplay) rateEurDisplay.innerText = "Error de Red";
             console.error("Error fetching rate:", error);
+            if (!ratesData.usd) {
+                if (rateDisplay) rateDisplay.innerText = "Error de Red";
+                if (rateEurDisplay) rateEurDisplay.innerText = "Error de Red";
+            } else {
+                if (typeof showToast === "function") {
+                    showToast("Servidor sin conexión saliente. Mostrando última tasa.");
+                }
+            }
         } finally {
             hideSplashScreen();
         }
