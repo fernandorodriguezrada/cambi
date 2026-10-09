@@ -44,8 +44,8 @@
             textAfterWidth = textMeasurer.offsetWidth;
         }
         
-        // El input tiene 16px de padding-right + 8px de margen interno del row
-        const rightOffset = 24 + textAfterWidth;
+        // Con input-field-wrapper, el padding-right del input es 8px
+        const rightOffset = 8 + textAfterWidth;
         customCaret.style.right = `${rightOffset}px`;
         customCaret.style.display = 'block';
 
@@ -155,6 +155,269 @@
             el.classList.toggle('value-zero', isMuted);
         });
     };
+
+    /**
+     * Muestra una notificación emergente tipo toast
+     */
+    function showToast(message) {
+        const toast = document.getElementById("pm-toast");
+        const toastMsg = document.getElementById("pm-toast-msg");
+        if (!toast) return;
+        if (toastMsg) toastMsg.innerText = message;
+        toast.classList.add("active");
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => {
+            toast.classList.remove("active");
+        }, 2600);
+    }
+    window.showToast = showToast;
+
+    /**
+     * Utilidad universal para copiar al portapapeles con fallback robusto
+     */
+    function copyTextToClipboard(text, successCallback) {
+        if (!text) return;
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    if (successCallback) successCallback();
+                })
+                .catch(() => {
+                    fallbackCopyText(text, successCallback);
+                });
+        } else {
+            fallbackCopyText(text, successCallback);
+        }
+    }
+    window.copyTextToClipboard = copyTextToClipboard;
+
+    function fallbackCopyText(text, successCallback) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        textArea.setAttribute("readonly", "");
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            const successful = document.execCommand("copy");
+            if (successful && successCallback) {
+                successCallback();
+            }
+        } catch (err) {
+            console.error("Fallback copy failed", err);
+        }
+        document.body.removeChild(textArea);
+    }
+
+    /**
+     * Copiar el monto de las tarjetas de tasas
+     */
+    function copyRateCard(rateId, btn) {
+        const el = document.getElementById(rateId);
+        if (!el) return;
+        const text = el.innerText.trim();
+        if (!text || text === "--.--" || text.toLowerCase().includes("error") || text.toLowerCase().includes("esperando") || text.toLowerCase().includes("no disponible")) {
+            showToast("Tasa aún no disponible para copiar");
+            return;
+        }
+
+        copyTextToClipboard(text, () => {
+            showToast(`Tasa copiada: ${text} Bs.`);
+            if (btn) {
+                const icon = btn.querySelector(".material-symbols-rounded");
+                if (icon) {
+                    const originalIcon = icon.innerText;
+                    icon.innerText = "check";
+                    btn.classList.add("copied");
+                    setTimeout(() => {
+                        icon.innerText = originalIcon;
+                        btn.classList.remove("copied");
+                    }, 1400);
+                }
+            }
+        });
+    }
+    window.copyRateCard = copyRateCard;
+
+    /**
+     * Sanitizar texto pegado para extraer únicamente el monto numérico válido
+     */
+    function sanitizePastedNumber(raw) {
+        if (!raw) return "";
+        let str = String(raw).trim();
+
+        // Eliminar saltos de línea y espacios en blanco
+        str = str.replace(/[
+	]+/g, " ").replace(/\s+/g, "");
+
+        // Extraer el primer bloque numérico
+        const match = str.match(/[-+]?[0-9.,]+/);
+        if (!match) return "";
+        let numStr = match[0];
+
+        const hasComma = numStr.includes(",");
+        const hasDot = numStr.includes(".");
+
+        if (hasComma && hasDot) {
+            const lastComma = numStr.lastIndexOf(",");
+            const lastDot = numStr.lastIndexOf(".");
+            if (lastComma > lastDot) {
+                // Formato venezolano/europeo 1.250,50 -> remover puntos de miles
+                numStr = numStr.replace(/\./g, "");
+            } else {
+                // Formato americano 1,250.50 -> remover comas de miles y usar coma decimal
+                numStr = numStr.replace(/,/g, "").replace(/\./g, ",");
+            }
+        } else if (hasDot && !hasComma) {
+            const dotParts = numStr.split(".");
+            if (dotParts.length > 2) {
+                numStr = dotParts.join("");
+            } else {
+                numStr = numStr.replace(".", ",");
+            }
+        }
+
+        // Si empieza directamente con coma (ej: ,50 -> 0,50)
+        if (numStr.startsWith(",")) numStr = "0" + numStr;
+
+        if (!/\d/.test(numStr)) return "";
+        return numStr;
+    }
+    window.sanitizePastedNumber = sanitizePastedNumber;
+
+    /**
+     * Copiar monto de la fila especificada en la calculadora (top o bottom)
+     */
+    function copyFromCalc(target, btn) {
+        const input = target === "top" ? inputTop : inputBottom;
+        if (!input || !input.value || input.value === "0,00" || input.value.trim() === "") {
+            showToast("No hay monto para copiar");
+            return;
+        }
+
+        const val = input.value.trim();
+        copyTextToClipboard(val, () => {
+            const cur = target === "top" 
+                ? (isTopUsd ? getCurrencySymbolForRate(selectedRateType) : "VES") 
+                : (isTopUsd ? "VES" : getCurrencySymbolForRate(selectedRateType));
+            showToast(`Monto copiado: ${val} ${cur}`);
+
+            if (btn) {
+                const icon = btn.querySelector(".material-symbols-rounded");
+                if (icon) {
+                    const originalIcon = icon.innerText;
+                    icon.innerText = "check";
+                    btn.classList.add("copied");
+                    setTimeout(() => {
+                        icon.innerText = originalIcon;
+                        btn.classList.remove("copied");
+                    }, 1400);
+                }
+            }
+        });
+    }
+    window.copyFromCalc = copyFromCalc;
+
+    /**
+     * Pegar monto del portapapeles en la fila especificada de la calculadora
+     */
+    async function pasteToCalc(target, btn) {
+        let text = "";
+        try {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                text = await navigator.clipboard.readText();
+            } else {
+                text = prompt("Pega aquí el monto a calcular:");
+            }
+        } catch (e) {
+            text = prompt("Pega aquí el monto a calcular:");
+        }
+
+        if (!text) return;
+
+        const sanitized = sanitizePastedNumber(text);
+        if (!sanitized) {
+            showToast("No se encontró un número válido en el portapapeles");
+            return;
+        }
+
+        if (target === "top") {
+            if (!inputTop) return;
+            inputTop.value = sanitized;
+            isResultPendingClear = false;
+            formatInputDisplay(inputTop);
+            convert(inputTop);
+            updateCaretPosition();
+            updateInputColors();
+            showToast(`Monto pegado: ${inputTop.value}`);
+        } else if (target === "bottom") {
+            if (!inputBottom) return;
+            inputBottom.value = sanitized;
+            formatInputDisplay(inputBottom);
+            convert(inputBottom);
+            updateInputColors();
+            showToast(`Monto pegado: ${inputBottom.value}`);
+        }
+
+        if (btn) {
+            const icon = btn.querySelector(".material-symbols-rounded");
+            if (icon) {
+                const originalIcon = icon.innerText;
+                icon.innerText = "check";
+                btn.classList.add("copied");
+                setTimeout(() => {
+                    icon.innerText = originalIcon;
+                    btn.classList.remove("copied");
+                }, 1400);
+            }
+        }
+    }
+    window.pasteToCalc = pasteToCalc;
+
+    /**
+     * Configurar gesto de pulsación larga en móvil para copiar o pegar
+     */
+    function setupLongPressCopyPaste(inputEl, targetType) {
+        if (!inputEl) return;
+        let pressTimer = null;
+        let startX = 0;
+        let startY = 0;
+
+        inputEl.addEventListener("touchstart", (e) => {
+            if (!e.touches || e.touches.length > 1) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            clearTimeout(pressTimer);
+            pressTimer = setTimeout(() => {
+                if (navigator.vibrate) navigator.vibrate(40);
+                const val = inputEl.value.trim();
+                if (val && val !== "0,00") {
+                    copyFromCalc(targetType);
+                } else {
+                    pasteToCalc(targetType);
+                }
+            }, 500);
+        }, { passive: true });
+
+        const cancelPress = (e) => {
+            if (e && e.touches && e.touches[0]) {
+                const dx = Math.abs(e.touches[0].clientX - startX);
+                const dy = Math.abs(e.touches[0].clientY - startY);
+                if (dx > 10 || dy > 10) {
+                    clearTimeout(pressTimer);
+                }
+            } else {
+                clearTimeout(pressTimer);
+            }
+        };
+
+        inputEl.addEventListener("touchmove", cancelPress, { passive: true });
+        inputEl.addEventListener("touchend", cancelPress, { passive: true });
+        inputEl.addEventListener("touchcancel", cancelPress, { passive: true });
+    }
 
     const updateLoadingProgress = (percent) => {
         const bar = document.getElementById('progress-bar');
@@ -486,6 +749,10 @@
             }
         });
     });
+
+    // Inicializar gestos de pulsación larga para copiar/pegar en mobile
+    setupLongPressCopyPaste(inputTop, 'top');
+    setupLongPressCopyPaste(inputBottom, 'bottom');
 
     // Permitir al usuario tocar con el dedo o hacer clic con el ratón para mover el cursor
     if (inputTop) {
@@ -827,18 +1094,7 @@
     };
     window.goToPmSlide = goToPmSlide;
 
-    const showToast = (message) => {
-        const toast = document.getElementById("pm-toast");
-        const toastMsg = document.getElementById("pm-toast-msg");
-        if (!toast) return;
-        if (toastMsg) toastMsg.innerText = message;
-        toast.classList.add("active");
-        clearTimeout(toast._timeout);
-        toast._timeout = setTimeout(() => {
-            toast.classList.remove("active");
-        }, 2600);
-    };
-    window.showToast = showToast;
+// showToast se encuentra definida de forma global más arriba
 
     const BANK_OFFICIAL_LOGOS = {
         "0102": "public/banks/0102.svg",

@@ -10,7 +10,12 @@
                 <img src="public/bcv.svg" alt="BCV" class="rate-platform-logo">
                 <span class="label">Precio del Dólar</span>
             </div>
-            <div id="rate" class="rate-display">--.--</div>
+            <div class="rate-amount-row">
+                <div id="rate" class="rate-display">--.--</div>
+                <button type="button" class="rate-copy-btn" onclick="event.stopPropagation(); copyRateCard('rate', this)" title="Copiar tasa" aria-label="Copiar tasa">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+            </div>
             <div id="date" class="footer-info">Consultando BCV...</div>
         </div>
 
@@ -19,7 +24,12 @@
                 <img src="public/bcv.svg" alt="BCV" class="rate-platform-logo">
                 <span class="label">Precio del Euro</span>
             </div>
-            <div id="rate-eur" class="rate-display">--.--</div>
+            <div class="rate-amount-row">
+                <div id="rate-eur" class="rate-display">--.--</div>
+                <button type="button" class="rate-copy-btn" onclick="event.stopPropagation(); copyRateCard('rate-eur', this)" title="Copiar tasa" aria-label="Copiar tasa">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+            </div>
             <div id="date-eur" class="footer-info">Esperando datos...</div>
         </div>
 
@@ -33,7 +43,12 @@
                 <img src="public/crypto/binance.svg" alt="Binance" class="rate-platform-logo">
                 <span class="label">Binance USDT</span>
             </div>
-            <div id="rate-binance-usdt" class="rate-display">--.--</div>
+            <div class="rate-amount-row">
+                <div id="rate-binance-usdt" class="rate-display">--.--</div>
+                <button type="button" class="rate-copy-btn" onclick="event.stopPropagation(); copyRateCard('rate-binance-usdt', this)" title="Copiar tasa" aria-label="Copiar tasa">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+            </div>
             <div id="date-binance-usdt" class="footer-info">Consultando Binance...</div>
         </div>
 
@@ -42,7 +57,12 @@
                 <img src="public/crypto/binance.svg" alt="Binance" class="rate-platform-logo">
                 <span class="label">Binance USDC</span>
             </div>
-            <div id="rate-binance-usdc" class="rate-display">--.--</div>
+            <div class="rate-amount-row">
+                <div id="rate-binance-usdc" class="rate-display">--.--</div>
+                <button type="button" class="rate-copy-btn" onclick="event.stopPropagation(); copyRateCard('rate-binance-usdc', this)" title="Copiar tasa" aria-label="Copiar tasa">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+            </div>
             <div id="date-binance-usdc" class="footer-info">Consultando Binance...</div>
         </div>
 
@@ -51,7 +71,12 @@
                 <img src="public/crypto/okx.svg" alt="OKX" class="rate-platform-logo">
                 <span class="label">OKX USDT</span>
             </div>
-            <div id="rate-okx-usdt" class="rate-display">--.--</div>
+            <div class="rate-amount-row">
+                <div id="rate-okx-usdt" class="rate-display">--.--</div>
+                <button type="button" class="rate-copy-btn" onclick="event.stopPropagation(); copyRateCard('rate-okx-usdt', this)" title="Copiar tasa" aria-label="Copiar tasa">
+                    <span class="material-symbols-rounded">content_copy</span>
+                </button>
+            </div>
             <div id="date-okx-usdt" class="footer-info">Consultando OKX...</div>
         </div>
 

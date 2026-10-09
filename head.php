@@ -288,13 +288,60 @@
         width: 100%;
     }
 
+    .rate-amount-row {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin: 8px 0;
+    }
+
     .rate-display {
         font-family: var(--font-google-sans);
         font-size: 2.85rem;
         font-weight: 700;
         letter-spacing: -0.03em;
-        margin: 8px 0;
+        margin: 0;
         transition: color var(--transition-speed); /* Añadir transición para suavidad */
+    }
+
+    .rate-copy-btn {
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        outline: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        color: var(--md-sys-color-on-surface-variant);
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s, transform 0.15s;
+        -webkit-tap-highlight-color: transparent;
+        padding: 0;
+    }
+
+    .rate-copy-btn:hover {
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-primary);
+    }
+
+    .rate-copy-btn:active {
+        transform: translateY(-50%) scale(0.9);
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+
+    .rate-copy-btn.copied {
+        color: var(--cambi-magic-mint) !important;
+    }
+
+    .rate-copy-btn .material-symbols-rounded {
+        font-size: 20px;
     }
 
     .input-group {
@@ -401,9 +448,10 @@
     .input-row {
         display: flex;
         align-items: center;
-        padding: 4px 16px;
+        padding: 4px 14px;
         height: 64px;
         cursor: text;
+        position: relative;
     }
 
     .currency-prefix {
@@ -412,20 +460,73 @@
         color: var(--md-sys-color-primary);
         min-width: 45px;
         font-size: 1.2rem;
+        user-select: none;
+    }
+
+    .input-field-wrapper {
+        position: relative;
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
     }
 
     .combined-card input {
         font-family: var(--font-google-sans);
         border: none !important;
         height: 100%;
+        width: 100%;
         padding: 0 8px;
         background: transparent;
-        flex: 1;
         text-align: right;
         font-size: 1.8rem;
         font-weight: 500;
         caret-color: transparent; /* Ocultamos el cursor nativo */
         cursor: text;
+    }
+
+    .calc-row-actions {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin-left: 6px;
+        flex-shrink: 0;
+    }
+
+    .calc-action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        color: var(--md-sys-color-on-surface-variant);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s, transform 0.15s;
+        -webkit-tap-highlight-color: transparent;
+        padding: 0;
+    }
+
+    .calc-action-btn:hover {
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-primary);
+    }
+
+    .calc-action-btn:active {
+        transform: scale(0.9);
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+
+    .calc-action-btn.copied {
+        color: var(--cambi-magic-mint) !important;
+    }
+
+    .calc-action-btn .material-symbols-rounded {
+        font-size: 19px;
     }
 
     #input-bottom:not(.value-zero) {
@@ -751,6 +852,8 @@
 
     .custom-caret {
         position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
         width: 2px;
         height: 24px;
         background-color: var(--cambi-magic-mint);

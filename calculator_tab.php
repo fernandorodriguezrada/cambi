@@ -3,17 +3,37 @@
         <div class="combined-card">
             <span class="operation-result" id="operation-result"></span>
             
-            <div class="input-row">
+            <div class="input-row" id="calc-row-top">
                 <span class="currency-prefix" id="label-top">USD</span>
-                <input type="text" id="input-top" placeholder="0,00" value="" readonly inputmode="none">
-                <div class="custom-caret" id="custom-caret"></div>
+                <div class="input-field-wrapper">
+                    <input type="text" id="input-top" placeholder="0,00" value="" readonly inputmode="none">
+                    <div class="custom-caret" id="custom-caret"></div>
+                </div>
+                <div class="calc-row-actions">
+                    <button type="button" class="calc-action-btn" id="calc-paste-top-btn" onclick="event.stopPropagation(); pasteToCalc('top', this)" title="Pegar del portapapeles" aria-label="Pegar monto">
+                        <span class="material-symbols-rounded">content_paste</span>
+                    </button>
+                    <button type="button" class="calc-action-btn" id="calc-copy-top-btn" onclick="event.stopPropagation(); copyFromCalc('top', this)" title="Copiar monto" aria-label="Copiar monto">
+                        <span class="material-symbols-rounded">content_copy</span>
+                    </button>
+                </div>
             </div>
             
             <div class="input-divider"></div>
             
-            <div class="input-row">
+            <div class="input-row" id="calc-row-bottom">
                 <span class="currency-prefix" id="label-bottom">VES</span>
-                <input type="text" id="input-bottom" placeholder="0,00" value="" readonly inputmode="none">
+                <div class="input-field-wrapper">
+                    <input type="text" id="input-bottom" placeholder="0,00" value="" readonly inputmode="none">
+                </div>
+                <div class="calc-row-actions">
+                    <button type="button" class="calc-action-btn" id="calc-paste-bottom-btn" onclick="event.stopPropagation(); pasteToCalc('bottom', this)" title="Pegar del portapapeles" aria-label="Pegar monto">
+                        <span class="material-symbols-rounded">content_paste</span>
+                    </button>
+                    <button type="button" class="calc-action-btn" id="calc-copy-bottom-btn" onclick="event.stopPropagation(); copyFromCalc('bottom', this)" title="Copiar monto" aria-label="Copiar monto">
+                        <span class="material-symbols-rounded">content_copy</span>
+                    </button>
+                </div>
             </div>
         </div>
 
