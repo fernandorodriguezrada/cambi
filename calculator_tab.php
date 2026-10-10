@@ -53,18 +53,4 @@
     </div>
     <!-- Medidor invisible para posición del caret -->
     <span id="text-measurer"></span>
-
-    <!-- Menú contextual flotante estilo iOS / Android para Copiar / Pegar -->
-    <div id="calc-context-menu" class="calc-context-menu" role="menu" aria-hidden="true">
-        <button type="button" class="calc-context-btn" id="calc-ctx-copy" onclick="triggerCtxCopy(event)">
-            <span class="material-symbols-rounded">content_copy</span>
-            <span>Copiar</span>
-        </button>
-        <div class="calc-context-divider"></div>
-        <button type="button" class="calc-context-btn" id="calc-ctx-paste" onclick="triggerCtxPaste(event)">
-            <span class="material-symbols-rounded">content_paste</span>
-            <span>Pegar</span>
-        </button>
-        <div class="calc-context-arrow" id="calc-ctx-arrow"></div>
-    </div>
 </div>

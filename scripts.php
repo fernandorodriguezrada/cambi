@@ -404,27 +404,27 @@
         const menuWidth = menuRect.width || 170;
         const menuHeight = menuRect.height || 42;
 
-        const row = sourceElement || document.getElementById(target === "top" ? "calc-row-top" : "calc-row-bottom");
+        const row = document.getElementById(target === "top" ? "calc-row-top" : "calc-row-bottom");
         const rowRect = row ? row.getBoundingClientRect() : null;
+        if (!rowRect) return;
 
-        let posX = (clientX !== undefined && clientX > 0) ? clientX : (rowRect ? rowRect.left + rowRect.width / 2 : window.innerWidth / 2);
-        let posY = (clientY !== undefined && clientY > 0) ? clientY : (rowRect ? rowRect.top : 200);
-
-        // Centrar horizontalmente respecto al toque o clic
+        // Centrar horizontalmente:
+        // Si el usuario hizo clic o tocó en un punto específico (clientX), centramos sobre ese punto;
+        // de lo contrario, centramos sobre la parte numérica derecha del input.
+        let posX = (clientX !== undefined && clientX > 0) ? clientX : (rowRect.right - 70);
         let left = posX - (menuWidth / 2);
         left = Math.max(12, Math.min(window.innerWidth - menuWidth - 12, left));
 
-        // Determinar si cabe arriba o se coloca abajo
-        const spaceAbove = rowRect ? rowRect.top : posY;
+        // La burbuja DEBE estar JUSTO ENCIMA de la fila que la invoque
+        let top = rowRect.top - menuHeight - 10;
         const arrow = document.getElementById("calc-ctx-arrow");
-        let top = 0;
 
-        if (spaceAbove >= menuHeight + 14) {
-            top = (rowRect ? rowRect.top : posY) - menuHeight - 8;
-            menu.classList.remove("arrow-top");
-        } else {
-            top = (rowRect ? rowRect.bottom : posY) + 8;
+        // Si estamos demasiado cerca del tope de la pantalla (menos de 8px):
+        if (top < 8) {
+            top = rowRect.bottom + 10;
             menu.classList.add("arrow-top");
+        } else {
+            menu.classList.remove("arrow-top");
         }
 
         menu.style.left = `${Math.round(left)}px`;
@@ -432,7 +432,7 @@
 
         if (arrow) {
             const arrowX = posX - left;
-            const clampedArrowX = Math.max(16, Math.min(menuWidth - 16, arrowX));
+            const clampedArrowX = Math.max(18, Math.min(menuWidth - 18, arrowX));
             arrow.style.left = `${Math.round(clampedArrowX)}px`;
         }
 
