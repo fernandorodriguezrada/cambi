@@ -376,33 +376,127 @@
     }
     window.pasteToCalc = pasteToCalc;
 
+    let ctxMenuTarget = "top";
+
     /**
-     * Configurar gesto de pulsación larga en móvil para copiar o pegar
+     * Muestra el menú contextual flotante estilo iOS/Android sobre el monto seleccionado
      */
-    function setupLongPressCopyPaste(inputEl, targetType) {
-        if (!inputEl) return;
+    function showCalcContextMenu(target, clientX, clientY, sourceElement) {
+        const menu = document.getElementById("calc-context-menu");
+        if (!menu) return;
+
+        ctxMenuTarget = target;
+        const input = target === "top" ? inputTop : inputBottom;
+        const copyBtn = document.getElementById("calc-ctx-copy");
+
+        // Deshabilitar visualmente Copiar si el input está vacío o es 0,00
+        const hasVal = input && input.value && input.value !== "0,00" && input.value.trim() !== "";
+        if (copyBtn) {
+            copyBtn.classList.toggle("disabled", !hasVal);
+        }
+
+        // Posicionamiento dinámico
+        menu.style.visibility = "hidden";
+        menu.style.display = "flex";
+        menu.classList.add("active");
+
+        const menuRect = menu.getBoundingClientRect();
+        const menuWidth = menuRect.width || 170;
+        const menuHeight = menuRect.height || 42;
+
+        const row = sourceElement || document.getElementById(target === "top" ? "calc-row-top" : "calc-row-bottom");
+        const rowRect = row ? row.getBoundingClientRect() : null;
+
+        let posX = (clientX !== undefined && clientX > 0) ? clientX : (rowRect ? rowRect.left + rowRect.width / 2 : window.innerWidth / 2);
+        let posY = (clientY !== undefined && clientY > 0) ? clientY : (rowRect ? rowRect.top : 200);
+
+        // Centrar horizontalmente respecto al toque o clic
+        let left = posX - (menuWidth / 2);
+        left = Math.max(12, Math.min(window.innerWidth - menuWidth - 12, left));
+
+        // Determinar si cabe arriba o se coloca abajo
+        const spaceAbove = rowRect ? rowRect.top : posY;
+        const arrow = document.getElementById("calc-ctx-arrow");
+        let top = 0;
+
+        if (spaceAbove >= menuHeight + 14) {
+            top = (rowRect ? rowRect.top : posY) - menuHeight - 8;
+            menu.classList.remove("arrow-top");
+        } else {
+            top = (rowRect ? rowRect.bottom : posY) + 8;
+            menu.classList.add("arrow-top");
+        }
+
+        menu.style.left = `${Math.round(left)}px`;
+        menu.style.top = `${Math.round(top)}px`;
+
+        if (arrow) {
+            const arrowX = posX - left;
+            const clampedArrowX = Math.max(16, Math.min(menuWidth - 16, arrowX));
+            arrow.style.left = `${Math.round(clampedArrowX)}px`;
+        }
+
+        menu.style.visibility = "";
+    }
+    window.showCalcContextMenu = showCalcContextMenu;
+
+    function hideCalcContextMenu() {
+        const menu = document.getElementById("calc-context-menu");
+        if (menu && menu.classList.contains("active")) {
+            menu.classList.remove("active");
+        }
+    }
+    window.hideCalcContextMenu = hideCalcContextMenu;
+
+    function triggerCtxCopy(e) {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        hideCalcContextMenu();
+        copyFromCalc(ctxMenuTarget);
+    }
+    window.triggerCtxCopy = triggerCtxCopy;
+
+    function triggerCtxPaste(e) {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        hideCalcContextMenu();
+        pasteToCalc(ctxMenuTarget);
+    }
+    window.triggerCtxPaste = triggerCtxPaste;
+
+    /**
+     * Configurar menú contextual estilo iOS/Android:
+     * - Pulsación larga (touch) para móvil
+     * - Clic derecho (contextmenu) para escritorio
+     */
+    function setupLongPressMenu(rowEl, inputEl, targetType) {
+        if (!rowEl) return;
         let pressTimer = null;
         let startX = 0;
         let startY = 0;
+        let isLongPress = false;
 
-        inputEl.addEventListener("touchstart", (e) => {
+        const onTouchStart = (e) => {
             if (!e.touches || e.touches.length > 1) return;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            isLongPress = false;
             clearTimeout(pressTimer);
-            pressTimer = setTimeout(() => {
-                if (navigator.vibrate) navigator.vibrate(40);
-                const val = inputEl.value.trim();
-                if (val && val !== "0,00") {
-                    copyFromCalc(targetType);
-                } else {
-                    pasteToCalc(targetType);
-                }
-            }, 500);
-        }, { passive: true });
 
-        const cancelPress = (e) => {
-            if (e && e.touches && e.touches[0]) {
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                if (navigator.vibrate) navigator.vibrate(40);
+                showCalcContextMenu(targetType, startX, startY, rowEl);
+            }, 450);
+        };
+
+        const onTouchMove = (e) => {
+            if (e.touches && e.touches[0]) {
                 const dx = Math.abs(e.touches[0].clientX - startX);
                 const dy = Math.abs(e.touches[0].clientY - startY);
                 if (dx > 10 || dy > 10) {
@@ -413,9 +507,40 @@
             }
         };
 
-        inputEl.addEventListener("touchmove", cancelPress, { passive: true });
-        inputEl.addEventListener("touchend", cancelPress, { passive: true });
-        inputEl.addEventListener("touchcancel", cancelPress, { passive: true });
+        const onTouchEnd = (e) => {
+            clearTimeout(pressTimer);
+            if (isLongPress) {
+                if (e.cancelable) e.preventDefault();
+                e.stopPropagation();
+            }
+        };
+
+        rowEl.addEventListener("touchstart", onTouchStart, { passive: true });
+        rowEl.addEventListener("touchmove", onTouchMove, { passive: true });
+        rowEl.addEventListener("touchend", onTouchEnd, { passive: false });
+        rowEl.addEventListener("touchcancel", () => clearTimeout(pressTimer), { passive: true });
+
+        // Clic derecho (Desktop)
+        rowEl.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            showCalcContextMenu(targetType, e.clientX, e.clientY, rowEl);
+        });
+    }
+
+    // Cerrar el menú contextual al tocar fuera o hacer scroll
+    document.addEventListener("pointerdown", (e) => {
+        const menu = document.getElementById("calc-context-menu");
+        if (menu && menu.classList.contains("active")) {
+            if (!menu.contains(e.target)) {
+                hideCalcContextMenu();
+            }
+        }
+    });
+
+    window.addEventListener("scroll", hideCalcContextMenu, { passive: true });
+    const mainContentEl = document.getElementById("main-content");
+    if (mainContentEl) {
+        mainContentEl.addEventListener("scroll", hideCalcContextMenu, { passive: true });
     }
 
     const updateLoadingProgress = (percent) => {
@@ -749,9 +874,11 @@
         });
     });
 
-    // Inicializar gestos de pulsación larga para copiar/pegar en mobile
-    setupLongPressCopyPaste(inputTop, 'top');
-    setupLongPressCopyPaste(inputBottom, 'bottom');
+    // Inicializar menú contextual estilo burbuja iOS/Android (long-press en mobile y clic derecho en desktop)
+    const rowTop = document.getElementById("calc-row-top");
+    const rowBottom = document.getElementById("calc-row-bottom");
+    setupLongPressMenu(rowTop, inputTop, "top");
+    setupLongPressMenu(rowBottom, inputBottom, "bottom");
 
     // Permitir al usuario tocar con el dedo o hacer clic con el ratón para mover el cursor
     if (inputTop) {

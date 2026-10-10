@@ -9,14 +9,6 @@
                     <input type="text" id="input-top" placeholder="0,00" value="" readonly inputmode="none">
                     <div class="custom-caret" id="custom-caret"></div>
                 </div>
-                <div class="calc-row-actions">
-                    <button type="button" class="calc-action-btn" id="calc-paste-top-btn" onclick="event.stopPropagation(); pasteToCalc('top', this)" title="Pegar del portapapeles" aria-label="Pegar monto">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
-                    <button type="button" class="calc-action-btn" id="calc-copy-top-btn" onclick="event.stopPropagation(); copyFromCalc('top', this)" title="Copiar monto" aria-label="Copiar monto">
-                        <span class="material-symbols-rounded">content_copy</span>
-                    </button>
-                </div>
             </div>
             
             <div class="input-divider"></div>
@@ -25,14 +17,6 @@
                 <span class="currency-prefix" id="label-bottom">VES</span>
                 <div class="input-field-wrapper">
                     <input type="text" id="input-bottom" placeholder="0,00" value="" readonly inputmode="none">
-                </div>
-                <div class="calc-row-actions">
-                    <button type="button" class="calc-action-btn" id="calc-paste-bottom-btn" onclick="event.stopPropagation(); pasteToCalc('bottom', this)" title="Pegar del portapapeles" aria-label="Pegar monto">
-                        <span class="material-symbols-rounded">content_paste</span>
-                    </button>
-                    <button type="button" class="calc-action-btn" id="calc-copy-bottom-btn" onclick="event.stopPropagation(); copyFromCalc('bottom', this)" title="Copiar monto" aria-label="Copiar monto">
-                        <span class="material-symbols-rounded">content_copy</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -69,4 +53,18 @@
     </div>
     <!-- Medidor invisible para posición del caret -->
     <span id="text-measurer"></span>
+
+    <!-- Menú contextual flotante estilo iOS / Android para Copiar / Pegar -->
+    <div id="calc-context-menu" class="calc-context-menu" role="menu" aria-hidden="true">
+        <button type="button" class="calc-context-btn" id="calc-ctx-copy" onclick="triggerCtxCopy(event)">
+            <span class="material-symbols-rounded">content_copy</span>
+            <span>Copiar</span>
+        </button>
+        <div class="calc-context-divider"></div>
+        <button type="button" class="calc-context-btn" id="calc-ctx-paste" onclick="triggerCtxPaste(event)">
+            <span class="material-symbols-rounded">content_paste</span>
+            <span>Pegar</span>
+        </button>
+        <div class="calc-context-arrow" id="calc-ctx-arrow"></div>
+    </div>
 </div>

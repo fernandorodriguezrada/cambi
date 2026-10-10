@@ -487,46 +487,110 @@
         cursor: text;
     }
 
-    .calc-row-actions {
+    /* Menú contextual estilo burbuja iOS / Material 3 */
+    .calc-context-menu {
+        position: fixed;
+        z-index: 1050;
         display: flex;
         align-items: center;
-        gap: 2px;
-        margin-left: 6px;
-        flex-shrink: 0;
+        background: rgba(32, 33, 36, 0.94);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        color: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 4px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(6px) scale(0.9);
+        transform-origin: center bottom;
+        transition: opacity 0.16s cubic-bezier(0.2, 0, 0, 1), transform 0.16s cubic-bezier(0.2, 0, 0, 1);
+        user-select: none;
+        -webkit-user-select: none;
     }
 
-    .calc-action-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        border: none;
+    body.dark-mode .calc-context-menu {
+        background: rgba(38, 44, 51, 0.96);
+        border-color: rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .calc-context-menu.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+    }
+
+    .calc-context-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
         background: transparent;
-        color: var(--md-sys-color-on-surface-variant);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        border: none;
+        color: #ffffff;
+        font-family: var(--font-google-sans);
+        font-size: 0.88rem;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 10px;
         cursor: pointer;
-        transition: background-color 0.2s, color 0.2s, transform 0.15s;
+        transition: background-color 0.15s, transform 0.1s;
         -webkit-tap-highlight-color: transparent;
-        padding: 0;
+        white-space: nowrap;
     }
 
-    .calc-action-btn:hover {
-        background-color: var(--md-sys-color-surface-container-high);
-        color: var(--md-sys-color-primary);
+    .calc-context-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
     }
 
-    .calc-action-btn:active {
-        transform: scale(0.9);
-        background-color: var(--md-sys-color-surface-container-highest);
+    .calc-context-btn:active {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(0.96);
     }
 
-    .calc-action-btn.copied {
-        color: var(--cambi-magic-mint) !important;
+    .calc-context-btn.disabled {
+        opacity: 0.45;
+        cursor: default;
+        pointer-events: none;
     }
 
-    .calc-action-btn .material-symbols-rounded {
-        font-size: 19px;
+    .calc-context-btn .material-symbols-rounded {
+        font-size: 18px;
+    }
+
+    .calc-context-divider {
+        width: 1px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 0 2px;
+    }
+
+    .calc-context-arrow {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: rgba(32, 33, 36, 0.94);
+        border-right: 1px solid rgba(255, 255, 255, 0.15);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        transform: rotate(45deg);
+        bottom: -6px;
+        left: 50%;
+        margin-left: -5px;
+    }
+
+    body.dark-mode .calc-context-arrow {
+        background: rgba(38, 44, 51, 0.96);
+        border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .calc-context-menu.arrow-top .calc-context-arrow {
+        bottom: auto;
+        top: -6px;
+        border-right: none;
+        border-bottom: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.15);
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     #input-bottom:not(.value-zero) {
