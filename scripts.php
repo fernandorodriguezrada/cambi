@@ -250,8 +250,7 @@
         let str = String(raw).trim();
 
         // Eliminar saltos de línea y espacios en blanco
-        str = str.replace(/[
-	]+/g, " ").replace(/\s+/g, "");
+        str = str.replace(/\s+/g, "");
 
         // Extraer el primer bloque numérico
         const match = str.match(/[-+]?[0-9.,]+/);
