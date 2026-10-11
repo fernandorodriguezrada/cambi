@@ -868,13 +868,12 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
-        will-change: opacity, transform;
+        transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), visibility 0.3s;
+        will-change: opacity;
     }
 
     .splash-screen.hidden {
         opacity: 0;
-        transform: scale(1.04);
         visibility: hidden;
         pointer-events: none;
     }
@@ -884,61 +883,24 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-align: center;
     }
 
     .splash-logo {
-        height: 84px;
+        height: 80px;
         width: auto;
-        animation: splash-logo-enter 0.65s cubic-bezier(0.34, 1.25, 0.64, 1) forwards;
-        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.08));
+        user-select: none;
+        -webkit-user-select: none;
+        animation: splash-logo-appear 0.35s cubic-bezier(0.2, 0, 0, 1) forwards;
     }
 
-    body.dark-mode .splash-logo {
-        filter: drop-shadow(0 6px 20px rgba(110, 240, 187, 0.2));
-    }
-
-    @keyframes splash-logo-enter {
+    @keyframes splash-logo-appear {
         0% {
             opacity: 0;
-            transform: scale(0.85);
+            transform: scale(0.95);
         }
         100% {
             opacity: 1;
             transform: scale(1);
-        }
-    }
-
-    .splash-loader {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        margin-top: 24px;
-        height: 12px;
-    }
-
-    .splash-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--cambi-magic-mint);
-        animation: splash-dot-wave 1s infinite ease-in-out both;
-    }
-
-    .splash-dot:nth-child(1) { animation-delay: -0.32s; }
-    .splash-dot:nth-child(2) { animation-delay: -0.16s; }
-    .splash-dot:nth-child(3) { animation-delay: 0s; }
-
-    @keyframes splash-dot-wave {
-        0%, 80%, 100% {
-            transform: scale(0.65);
-            opacity: 0.35;
-        }
-        40% {
-            transform: scale(1.2);
-            opacity: 1;
-            box-shadow: 0 0 10px rgba(110, 240, 187, 0.5);
         }
     }
 

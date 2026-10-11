@@ -13,11 +13,6 @@ $componentsDir = __DIR__ . '/';
     <div id="splash-screen" class="splash-screen">
         <div class="splash-content">
             <img src="public/logo.webp" alt="Cambi Logo" class="splash-logo">
-            <div class="splash-loader">
-                <span class="splash-dot"></span>
-                <span class="splash-dot"></span>
-                <span class="splash-dot"></span>
-            </div>
         </div>
     </div>
 
