@@ -548,30 +548,128 @@
         if (bar) bar.style.width = `${percent}%`;
     };
 
+    const RATES_CACHE_KEY = "cambi_latest_rates_cache";
+
     const hideSplashScreen = () => {
         const splash = document.getElementById('splash-screen');
-        if (splash) {
+        if (splash && !splash.classList.contains('hidden')) {
             updateLoadingProgress(100);
             setTimeout(() => {
                 splash.classList.add('hidden');
-            }, 500);
+            }, 250);
         }
     };
+
+    /**
+     * Dibuja los datos de tasas en la interfaz de forma reactiva
+     */
+    function applyRatesToUI(data) {
+        if (!data) return;
+
+        // Renderizar Historial si viene en el payload
+        const historyList = document.getElementById('history-list');
+        if (data.history && historyList) {
+            let historyHtml = `
+                <div class="history-header">
+                    <span>Fecha / Hora</span><span style="text-align: right">USD</span><span style="text-align: right">EUR</span>
+                </div>`;
+            [...data.history].reverse().forEach(entry => {
+                historyHtml += `
+                    <div class="history-item">
+                        <span>${entry.date}</span>
+                        <span class="usd-val">${formatRAE(entry.usd)}</span>
+                        <span class="eur-val">${entry.eur ? formatRAE(entry.eur) : 'N/D'}</span>
+                    </div>`;
+            });
+            historyList.innerHTML = historyHtml;
+        }
+
+        if (data.usd) ratesData.usd = data.usd;
+        if (data.eur) ratesData.eur = data.eur;
+        if (data.p2p) {
+            if (data.p2p.binance_usdt) ratesData.binance_usdt = data.p2p.binance_usdt;
+            if (data.p2p.binance_usdc) ratesData.binance_usdc = data.p2p.binance_usdc;
+            if (data.p2p.okx_usdt) ratesData.okx_usdt = data.p2p.okx_usdt;
+        }
+
+        currentRate = ratesData[selectedRateType] || ratesData.usd || 0;
+        if (rateDisplay && ratesData.usd) rateDisplay.innerText = formatRAE(ratesData.usd);
+
+        const sourceLabel = data.source ? ` (${data.source})` : '';
+        const updateLabel = data.last_update ? `Actualizado: ${data.last_update}${sourceLabel}` : 'Consultando BCV...';
+
+        if (dateDisplay) {
+            dateDisplay.style.color = "";
+            dateDisplay.innerText = updateLabel;
+        }
+
+        if (ratesData.eur) {
+            if (rateEurDisplay) rateEurDisplay.innerText = formatRAE(ratesData.eur);
+            if (dateEurDisplay) {
+                dateEurDisplay.style.color = "";
+                dateEurDisplay.innerText = updateLabel;
+            }
+        } else if (rateEurDisplay) {
+            rateEurDisplay.innerText = "No disponible";
+            if (dateEurDisplay) dateEurDisplay.innerText = "Fuente sin Euro";
+        }
+
+        // Renderizar tasas P2P (Binance y OKX)
+        const p2pUsdtEl = document.getElementById("rate-binance-usdt");
+        const p2pUsdcEl = document.getElementById("rate-binance-usdc");
+        const p2pOkxEl = document.getElementById("rate-okx-usdt");
+        const dateBinanceUsdt = document.getElementById("date-binance-usdt");
+        const dateBinanceUsdc = document.getElementById("date-binance-usdc");
+        const dateOkxUsdt = document.getElementById("date-okx-usdt");
+
+        if (p2pUsdtEl) p2pUsdtEl.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--.--";
+        if (p2pUsdcEl) p2pUsdcEl.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--.--";
+        if (p2pOkxEl) p2pOkxEl.innerText = ratesData.okx_usdt ? formatRAE(ratesData.okx_usdt) : "--.--";
+
+        const binanceTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (Binance P2P)` : "Consultando Binance...";
+        const okxTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (OKX P2P)` : "Consultando OKX...";
+
+        if (dateBinanceUsdt) dateBinanceUsdt.innerText = binanceTime;
+        if (dateBinanceUsdc) dateBinanceUsdc.innerText = binanceTime;
+        if (dateOkxUsdt) dateOkxUsdt.innerText = okxTime;
+
+        updateRateChipsDisplay();
+        if (inputTop && cleanValue(inputTop.value) !== 0) convert(inputTop);
+    }
+
+    /**
+     * Cargar instantáneamente la última tasa guardada en el dispositivo (0ms)
+     */
+    function loadInitialCachedRates() {
+        try {
+            const raw = localStorage.getItem(RATES_CACHE_KEY);
+            if (raw) {
+                const cached = JSON.parse(raw);
+                if (cached && (cached.usd || cached.p2p)) {
+                    applyRatesToUI(cached);
+                    // Ocultar el splash de inmediato para dar respuesta instantánea al usuario
+                    hideSplashScreen();
+                }
+            }
+        } catch (e) {
+            console.warn("Error leyendo caché local:", e);
+        }
+    }
 
     async function fetchRate(forceRefresh = false) {
         const splash = document.getElementById('splash-screen');
         const bar = document.getElementById('progress-bar');
         
-        // Si el splash está oculto (es una recarga manual), lo mostramos de nuevo fluidamente
-        if (splash && splash.classList.contains('hidden')) {
-            if (bar) bar.style.transition = 'none'; // Reset instantáneo de la barra
+        // Si el usuario presiona "Actualizar" manualmente, mostramos la animación de carga
+        if (forceRefresh && splash && splash.classList.contains('hidden')) {
+            if (bar) bar.style.transition = 'none';
             updateLoadingProgress(0);
-            if (bar) void bar.offsetWidth; // Forzar renderizado
-            if (bar) bar.style.transition = ''; // Restaurar animación
+            if (bar) void bar.offsetWidth;
+            if (bar) bar.style.transition = '';
             splash.classList.remove('hidden');
         }
 
-        updateLoadingProgress(30);
+        updateLoadingProgress(35);
         try {
             updateLoadingProgress(60);
             const queryParam = forceRefresh ? `force=1&t=${Date.now()}` : `t=${Date.now()}`;
@@ -580,89 +678,19 @@
 
             const data = await response.json();
             
-            // Log de depuración
-            console.log("--- DEBUG CAMBI ---");
-            console.log("Fuente utilizada:", data.source || "Ninguna");
-            console.log("Respuesta completa:", data);
-            if (data.debug_bcv) console.warn("Razón fallo BCV:", data.debug_bcv);
-            console.log("-------------------");
+            // Aplicar inmediatamente los datos actualizados a la interfaz
+            applyRatesToUI(data);
 
-            // Renderizar Historial
-            const historyList = document.getElementById('history-list');
-            if (data.history && historyList) {
-                let historyHtml = `
-                    <div class="history-header">
-                        <span>Fecha / Hora</span><span style="text-align: right">USD</span><span style="text-align: right">EUR</span>
-                    </div>`;
-                [...data.history].reverse().forEach(entry => {
-                    historyHtml += `
-                        <div class="history-item">
-                            <span>${entry.date}</span>
-                            <span class="usd-val">${formatRAE(entry.usd)}</span>
-                            <span class="eur-val">${entry.eur ? formatRAE(entry.eur) : 'N/D'}</span>
-                        </div>`;
-                });
-                historyList.innerHTML = historyHtml;
-            }
+            // Guardar en almacenamiento local para inicio instantáneo futuro
+            try {
+                localStorage.setItem(RATES_CACHE_KEY, JSON.stringify(data));
+            } catch (e) {}
 
-            ratesData.usd = data.usd || 0;
-            ratesData.eur = data.eur || 0;
-            if (data.p2p) {
-                ratesData.binance_usdt = data.p2p.binance_usdt || 0;
-                ratesData.binance_usdc = data.p2p.binance_usdc || 0;
-                ratesData.okx_usdt = data.p2p.okx_usdt || 0;
-            }
-
-            currentRate = ratesData[selectedRateType] || ratesData.usd || 0;
-            if (rateDisplay) rateDisplay.innerText = formatRAE(ratesData.usd);
-            
-            // Indicador visual de fecha y fuente oficial
-            const sourceLabel = data.source ? ` (${data.source})` : '';
-            const updateLabel = `Actualizado: ${data.last_update}${sourceLabel}`;
-            
-            if (dateDisplay) {
-                dateDisplay.style.color = "";
-                dateDisplay.innerText = updateLabel;
-            }
-
-            if (ratesData.eur) {
-                if (rateEurDisplay) rateEurDisplay.innerText = formatRAE(ratesData.eur);
-                if (dateEurDisplay) {
-                    dateEurDisplay.style.color = "";
-                    dateEurDisplay.innerText = updateLabel;
-                }
-            } else {
-                if (rateEurDisplay) rateEurDisplay.innerText = "No disponible";
-                if (dateEurDisplay) dateEurDisplay.innerText = "Fuente sin Euro";
-            }
-
-            // Renderizar tasas P2P (Binance y OKX)
-            const p2pUsdtEl = document.getElementById("rate-binance-usdt");
-            const p2pUsdcEl = document.getElementById("rate-binance-usdc");
-            const p2pOkxEl = document.getElementById("rate-okx-usdt");
-            const dateBinanceUsdt = document.getElementById("date-binance-usdt");
-            const dateBinanceUsdc = document.getElementById("date-binance-usdc");
-            const dateOkxUsdt = document.getElementById("date-okx-usdt");
-
-            if (p2pUsdtEl) p2pUsdtEl.innerText = ratesData.binance_usdt ? formatRAE(ratesData.binance_usdt) : "--.--";
-            if (p2pUsdcEl) p2pUsdcEl.innerText = ratesData.binance_usdc ? formatRAE(ratesData.binance_usdc) : "--.--";
-            if (p2pOkxEl) p2pOkxEl.innerText = ratesData.okx_usdt ? formatRAE(ratesData.okx_usdt) : "--.--";
-
-            const binanceTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (Binance P2P)` : "Consultando Binance...";
-            const okxTime = data.p2p?.last_update ? `Actualizado: ${data.p2p.last_update} (OKX P2P)` : "Consultando OKX...";
-
-            if (dateBinanceUsdt) dateBinanceUsdt.innerText = binanceTime;
-            if (dateBinanceUsdc) dateBinanceUsdc.innerText = binanceTime;
-            if (dateOkxUsdt) dateOkxUsdt.innerText = okxTime;
-
-            updateRateChipsDisplay();
-
-            if (inputTop && cleanValue(inputTop.value) !== 0) convert(inputTop);
             updateLoadingProgress(90);
 
-            // Refresco silencioso en background si la tasa P2P ya tiene más de 3 min
-            if (data.p2p && data.p2p.is_stale) {
-                setTimeout(refreshP2PSilently, 300);
+            // Refresco en segundo plano si es necesario o si fue forzado
+            if (forceRefresh || (data.p2p && data.p2p.is_stale)) {
+                setTimeout(refreshP2PSilently, 100);
             }
         } catch (error) {
             console.error("Error fetching rate:", error);
@@ -681,7 +709,7 @@
 
     async function refreshP2PSilently() {
         try {
-            const res = await fetch("api.php?update_p2p=1");
+            const res = await fetch(`api.php?update_p2p=1&t=${Date.now()}`, { cache: 'no-store' });
             const json = await res.json();
             if (json && json.p2p) {
                 ratesData.binance_usdt = json.p2p.binance_usdt || 0;
@@ -711,6 +739,16 @@
                     currentRate = ratesData[selectedRateType] || 0;
                     if (inputTop && cleanValue(inputTop.value) !== 0) convert(inputTop);
                 }
+
+                // Sincronizar en caché local
+                try {
+                    const raw = localStorage.getItem(RATES_CACHE_KEY);
+                    if (raw) {
+                        const cached = JSON.parse(raw);
+                        cached.p2p = json.p2p;
+                        localStorage.setItem(RATES_CACHE_KEY, JSON.stringify(cached));
+                    }
+                } catch (e) {}
             }
         } catch (e) {
             console.warn("Silent P2P refresh error:", e);
@@ -2646,6 +2684,9 @@
     const ratesTabEl = document.getElementById('rates-tab-content');
     if (ratesTabEl) ratesTabEl.classList.add('active');
     updateLoadingProgress(10);
+    // Mostrar de inmediato los datos locales si existen para arranque instantáneo (0ms)
+    loadInitialCachedRates();
+    // Consultar tasas frescas del servidor y plataformas en segundo plano
     fetchRate();
     updateInputColors();
 </script>

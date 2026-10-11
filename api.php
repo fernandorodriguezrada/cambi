@@ -57,7 +57,8 @@ if (file_exists($cacheFile)) {
 // Obtener datos P2P protegidos contra fallos
 $p2pData = null;
 try {
-    $p2pData = getP2PRates($forceUpdate);
+    // Al abrir la app o refrescar, obtener la tasa P2P en caché sin bloquear el hilo
+    $p2pData = getP2PRates(false);
 } catch (\Throwable $e) {
     $p2pCacheFile = __DIR__ . "/p2p_cache.json";
     if (file_exists($p2pCacheFile)) {
