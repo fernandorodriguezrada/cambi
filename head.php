@@ -1939,37 +1939,17 @@
         color: var(--b-pastel-sub, var(--md-sys-color-outline));
     }
 
-    /* Material 3 Speed Dial Floating Action Menu (Fijo y estático) */
-    .pm-speed-dial {
+    /* FAB Material 3 para Añadir Banco */
+    .pm-fab-container {
         position: fixed;
         bottom: calc(108px + env(safe-area-inset-bottom, 0px));
         right: max(20px, calc(50% - 200px + 20px));
         z-index: 105;
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+        justify-content: flex-end;
     }
 
-    /* Backdrop sutil cuando el menú está abierto */
-    .pm-speed-dial-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.28);
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.22s ease;
-        z-index: 104;
-    }
-    .pm-speed-dial.open .pm-speed-dial-backdrop {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* Botón disparador principal (FAB Hamburguesa) */
     .pm-fab-main {
-        position: relative;
         width: 62px;
         height: 62px;
         border-radius: 20px;
@@ -1996,135 +1976,10 @@
     .pm-fab-main:active {
         transform: scale(0.94);
     }
-
-    /* Iconos del botón principal con transición de rotación y fundido M3 */
-    .pm-fab-main .pm-fab-icon-menu,
-    .pm-fab-main .pm-fab-icon-close {
-        position: absolute;
-        font-size: 30px;
-        font-weight: 600;
-        transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
-    }
-    .pm-fab-main .pm-fab-icon-close {
-        opacity: 0;
-        transform: rotate(-90deg) scale(0.6);
-    }
-    .pm-speed-dial.open .pm-fab-main {
-        background-color: var(--md-sys-color-surface-container-highest, #e6e0e9);
-        color: var(--md-sys-color-on-surface, #1d1b20);
-        transform: scale(1.02);
-    }
-    body.dark-mode .pm-speed-dial.open .pm-fab-main {
-        background-color: #3b434d;
-        color: #ffffff;
-    }
-    .pm-speed-dial.open .pm-fab-main .pm-fab-icon-menu {
-        opacity: 0;
-        transform: rotate(90deg) scale(0.6);
-    }
-    .pm-speed-dial.open .pm-fab-main .pm-fab-icon-close {
-        opacity: 1;
-        transform: rotate(0deg) scale(1);
-    }
-
-    /* Contenedor de opciones (hacia arriba) */
-    .pm-speed-dial-options {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 12px;
-        margin-bottom: 14px;
-        pointer-events: none;
-        z-index: 106;
-    }
-
-    /* Ítem de opción (etiqueta + botón) */
-    .pm-speed-dial-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: transparent;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        opacity: 0;
-        transform: translateY(18px) scale(0.85);
-        transition: transform 0.24s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
-        -webkit-tap-highlight-color: transparent;
-    }
-    .pm-speed-dial.open .pm-speed-dial-item {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        pointer-events: auto;
-    }
-
-    /* Animación escalonada (Stagger effect) */
-    .pm-speed-dial.open .pm-speed-dial-item-add {
-        transition-delay: 0.03s;
-    }
-    .pm-speed-dial.open .pm-speed-dial-item-scan {
-        transition-delay: 0.07s;
-    }
-
-    /* Etiquetas flotantes tipo Chip Material 3 */
-    .pm-speed-dial-label {
-        font-family: inherit;
-        font-size: 0.85rem;
-        font-weight: 600;
-        padding: 6px 14px;
-        border-radius: 12px;
-        background: var(--md-sys-color-surface-container-high);
-        color: var(--md-sys-color-on-surface);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-        white-space: nowrap;
-        pointer-events: none;
-    }
-    body.dark-mode .pm-speed-dial-label {
-        background: #2b323b;
-        color: #e5e9f0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
-    }
-
-    /* Botones de las opciones */
-    .pm-speed-dial-btn {
-        width: 52px;
-        height: 52px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-        transition: transform 0.15s ease;
-    }
-    .pm-speed-dial-item:hover .pm-speed-dial-btn {
-        transform: scale(1.08);
-    }
-    .pm-speed-dial-item:active .pm-speed-dial-btn {
-        transform: scale(0.92);
-    }
-
-    /* Colores pastel de cada opción */
-    .pm-speed-dial-btn-add {
-        background-color: var(--cambi-magic-mint);
-        color: #004d34;
-    }
-    body.dark-mode .pm-speed-dial-btn-add {
-        background-color: var(--cambi-magic-mint);
-        color: #003825;
-    }
-    .pm-speed-dial-btn-scan {
-        background-color: var(--cambi-baby-blue);
-        color: #0a3a60;
-    }
-    body.dark-mode .pm-speed-dial-btn-scan {
-        background-color: var(--cambi-baby-blue);
-        color: #052640;
-    }
-    .pm-speed-dial-btn .material-symbols-rounded {
-        font-size: 26px;
+    .pm-fab-main .material-symbols-rounded {
+        font-size: 32px;
         font-weight: 600;
     }
-
 
     .pm-detail-fields {
         display: flex;
@@ -2731,98 +2586,6 @@
         font-weight: 700;
     }
 
-
-    /* Modal de Escáner QR */
-    .pm-scanner-viewport {
-        position: relative;
-        width: 100%;
-        max-width: 290px;
-        height: 290px;
-        margin: 0 auto 16px auto;
-        border-radius: 24px;
-        overflow: hidden;
-        background-color: #000000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .pm-scanner-viewport video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .pm-scanner-target-box {
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        border: 2px solid rgba(255, 255, 255, 0.85);
-        border-radius: 20px;
-        box-sizing: border-box;
-        pointer-events: none;
-        overflow: hidden;
-    }
-    .pm-scanner-laser {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-color: var(--md-sys-color-primary, #6750a4);
-        pointer-events: none;
-        will-change: transform, opacity;
-        animation: pmLaserAnim 2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
-    }
-    @keyframes pmLaserAnim {
-        0% { transform: translateY(8px); opacity: 0.35; }
-        50% { opacity: 1; }
-        100% { transform: translateY(190px); opacity: 0.35; }
-    }
-
-    .pm-scanner-bank-btn {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 10px 14px;
-        border-radius: 16px;
-        background-color: var(--md-sys-color-surface-container-high);
-        border: 1px solid var(--md-sys-color-outline-variant);
-        color: var(--md-sys-color-on-surface);
-        font-family: inherit;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.15s ease, transform 0.1s ease;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .pm-scanner-bank-btn:hover {
-        background-color: var(--md-sys-color-surface-container-highest);
-    }
-    .pm-scanner-bank-btn:active {
-        transform: scale(0.985);
-    }
-    .pm-scanner-bank-btn-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .pm-scanner-bank-btn-logo {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        flex-shrink: 0;
-    }
-    .pm-scanner-bank-btn-logo img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
 
     /* Buscador de Bancos */
     .pm-bank-search-bar {
