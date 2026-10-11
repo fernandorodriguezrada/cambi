@@ -746,6 +746,7 @@
         position: relative;
         overflow: hidden; /* El scroll está dentro de cada pestaña individual */
         background-color: var(--md-sys-color-surface);
+        touch-action: pan-y;
     }
 
     /* Pista continua 1:1 estilo carrusel / WhatsApp / ViewPager */
@@ -757,6 +758,7 @@
         transform: translate3d(0, 0, 0);
         will-change: transform;
         box-sizing: border-box;
+        touch-action: pan-y;
     }
 
     /* Tab Content Styling dentro de la pista continua */

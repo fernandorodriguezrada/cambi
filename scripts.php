@@ -1248,7 +1248,8 @@
             const tabsTrack = document.getElementById('tabs-track');
             if (tabsTrack) {
                 if (animate) {
-                    tabsTrack.style.transition = 'transform 0.32s cubic-bezier(0.2, 0, 0, 1)';
+                    tabsTrack.style.transition = 'transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)';
+                    void tabsTrack.offsetWidth;
                 } else {
                     tabsTrack.style.transition = 'none';
                 }
@@ -2505,7 +2506,7 @@
         let isDragging = false;
         let isHorizontalSwipe = false;
         let trackWidth = 0;
-        let baseOffsetPx = 0;
+        let currentPercent = 0;
 
         mainContent.addEventListener('touchstart', (e) => {
             if (document.querySelector('.pm-modal-overlay.active')) return;
@@ -2516,7 +2517,7 @@
             const initialX = touch.clientX;
             const screenW = window.innerWidth;
 
-            // Evitar bordes externos (gestos del sistema operativo)
+            // Evitar bordes externos (gestos del sistema operativo para navegación atrás/adelante)
             if (initialX < 18 || initialX > screenW - 18) return;
 
             // Evitar conflicto con carrusel de bienvenida en pago móvil
@@ -2538,7 +2539,7 @@
             isHorizontalSwipe = false;
 
             trackWidth = mainContent.clientWidth || window.innerWidth;
-            baseOffsetPx = -currentTabIndex * trackWidth;
+            currentPercent = -(currentTabIndex * (100 / 3));
         }, { passive: true });
 
         mainContent.addEventListener('touchmove', (e) => {
@@ -2572,17 +2573,19 @@
             if (isDragging) {
                 if (e.cancelable) e.preventDefault();
 
-                // Movimiento 1:1 en tiempo real acompañando al dedo
-                let targetOffset = baseOffsetPx + deltaX;
+                // Movimiento 1:1 en tiempo real acompañando al dedo expresado en %
+                const basePercent = -(currentTabIndex * (100 / 3));
+                let deltaPercent = (deltaX / trackWidth) * (100 / 3);
 
                 // Amortiguación suave en los bordes extremos (rebote elástico)
                 if (currentTabIndex === 0 && deltaX > 0) {
-                    targetOffset = deltaX * 0.28;
+                    deltaPercent = (deltaX * 0.25 / trackWidth) * (100 / 3);
                 } else if (currentTabIndex === (tabsOrder.length - 1) && deltaX < 0) {
-                    targetOffset = baseOffsetPx + deltaX * 0.28;
+                    deltaPercent = (deltaX * 0.25 / trackWidth) * (100 / 3);
                 }
 
-                tabsTrack.style.transform = `translate3d(${targetOffset}px, 0, 0)`;
+                currentPercent = basePercent + deltaPercent;
+                tabsTrack.style.transform = `translate3d(${currentPercent}%, 0, 0)`;
             }
         }, { passive: false });
 
@@ -2599,37 +2602,55 @@
             const touch = e.changedTouches ? e.changedTouches[0] : null;
             const deltaX = touch ? (touch.clientX - startX) : 0;
             const elapsed = Math.max(1, Date.now() - startTime);
-            const velocity = deltaX / elapsed;
+            const velocity = Math.abs(deltaX) / elapsed;
 
             startX = 0;
             startY = 0;
 
             let targetIdx = currentTabIndex;
-            const distanceThreshold = trackWidth * 0.22;
-            const isFastFlick = Math.abs(velocity) > 0.32;
+            const distanceThreshold = trackWidth * 0.20;
+            const isFastFlick = velocity > 0.25 && Math.abs(deltaX) > 25;
 
             if (deltaX < 0) {
-                // Arrastró a la izquierda -> pestaña siguiente
-                if (Math.abs(deltaX) > distanceThreshold || (isFastFlick && Math.abs(deltaX) > 30)) {
+                // Arrastró a la izquierda -> pestaña siguiente a la derecha
+                if (Math.abs(deltaX) > distanceThreshold || isFastFlick) {
                     if (currentTabIndex < tabsOrder.length - 1) {
                         targetIdx = currentTabIndex + 1;
                     }
                 }
             } else if (deltaX > 0) {
-                // Arrastró a la derecha -> pestaña anterior
-                if (deltaX > distanceThreshold || (isFastFlick && deltaX > 30)) {
+                // Arrastró a la derecha -> pestaña previa a la izquierda
+                if (deltaX > distanceThreshold || isFastFlick) {
                     if (currentTabIndex > 0) {
                         targetIdx = currentTabIndex - 1;
                     }
                 }
             }
 
-            // Snap animado hacia la pestaña destino
-            tabsTrack.style.transition = 'transform 0.3s cubic-bezier(0.2, 0, 0, 1)';
-            tabsTrack.style.transform = `translate3d(-${targetIdx * (100 / 3)}%, 0, 0)`;
+            // Duración dinámica: más ágil en flick rápido (260ms), suave y elegante en arrastre lento (320ms)
+            const duration = isFastFlick ? 0.26 : 0.32;
+            const targetPercent = -(targetIdx * (100 / 3));
 
-            // Sincronizar estado y barra de navegación inferior
-            switchTab(tabsOrder[targetIdx], false);
+            tabsTrack.style.transition = `transform ${duration}s cubic-bezier(0.22, 1, 0.36, 1)`;
+            void tabsTrack.offsetWidth; // Forzar commit de transición para garantizar interpolación GPU inmediata
+            tabsTrack.style.transform = `translate3d(${targetPercent}%, 0, 0)`;
+
+            // Sincronizar estado y barra de navegación de inmediato sin reiniciar ni romper la transición
+            const targetTabId = tabsOrder[targetIdx];
+            navItems.forEach(nav => {
+                nav.classList.toggle('active', nav.dataset.tab === targetTabId);
+            });
+            tabContents.forEach(content => {
+                content.classList.toggle('active', content.id === `${targetTabId}-tab-content`);
+            });
+
+            if (targetTabId === 'calculator' && inputTop) convert(inputTop);
+            if (targetTabId === 'pagomovil') {
+                renderPmView();
+            } else {
+                const fab = document.getElementById('pm-fab-container');
+                if (fab) fab.style.display = 'none';
+            }
         };
 
         mainContent.addEventListener('touchend', endSwipe, { passive: true });
