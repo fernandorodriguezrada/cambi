@@ -868,8 +868,9 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), visibility 0.3s;
+        transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1), visibility 0.35s;
         will-change: opacity;
+        contain: strict;
     }
 
     .splash-screen.hidden {
@@ -890,17 +891,21 @@
         width: auto;
         user-select: none;
         -webkit-user-select: none;
-        animation: splash-logo-appear 0.35s cubic-bezier(0.2, 0, 0, 1) forwards;
+        transform: translateZ(0);
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        animation: splash-logo-appear 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     @keyframes splash-logo-appear {
         0% {
             opacity: 0;
-            transform: scale(0.95);
+            transform: scale(0.92) translateZ(0);
         }
         100% {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateZ(0);
         }
     }
 

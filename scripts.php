@@ -546,7 +546,7 @@
     const updateLoadingProgress = (percent) => {};
 
     const RATES_CACHE_KEY = "cambi_latest_rates_cache";
-    const SPLASH_MIN_DISPLAY_MS = 500; // Duración agradable y fija (0.65s) para una transición suave sin flashazos
+    const SPLASH_MIN_DISPLAY_MS = 650; // Duración agradable y fija (0.65s) para una transición suave sin flashazos
     let splashStartTime = performance.now();
     let splashIsDismissed = false;
 
