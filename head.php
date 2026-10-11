@@ -1999,6 +1999,25 @@
         z-index: 105;
         display: flex;
         justify-content: flex-end;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.35) translateY(18px);
+        transform-origin: center bottom;
+        transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+                    visibility 0.22s;
+        will-change: transform, opacity;
+    }
+
+    .pm-fab-container.active {
+        pointer-events: auto;
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1) translateY(0);
+        transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+                    opacity 0.22s ease,
+                    visibility 0s;
     }
 
     .pm-fab-main {

@@ -1276,7 +1276,7 @@
             renderPmView();
         } else {
             const fab = document.getElementById("pm-fab-container");
-            if (fab) fab.style.display = "none";
+            if (fab) fab.classList.remove("active");
         }
     };
 
@@ -1474,7 +1474,7 @@
             onboardingView.style.display = "flex";
             activeView.style.display = "none";
             const fab = document.getElementById("pm-fab-container");
-            if (fab) fab.style.display = "none";
+            if (fab) fab.classList.remove("active");
             goToPmSlide(0);
             return;
         }
@@ -1539,7 +1539,7 @@
         const fab = document.getElementById("pm-fab-container");
         if (fab) {
             const isPmTab = document.getElementById("pagomovil-tab-content")?.classList.contains("active");
-            fab.style.display = isPmTab ? "flex" : "none";
+            fab.classList.toggle("active", Boolean(isPmTab));
         }
     };
     window.renderPmView = renderPmView;
@@ -2567,6 +2567,10 @@
                     if (document.activeElement && typeof document.activeElement.blur === 'function') {
                         document.activeElement.blur();
                     }
+                    if (currentTabIndex === 1) {
+                        const fab = document.getElementById('pm-fab-container');
+                        if (fab) fab.classList.remove('active');
+                    }
                 }
             }
 
@@ -2649,7 +2653,7 @@
                 renderPmView();
             } else {
                 const fab = document.getElementById('pm-fab-container');
-                if (fab) fab.style.display = 'none';
+                if (fab) fab.classList.remove('active');
             }
         };
 

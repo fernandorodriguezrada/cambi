@@ -295,7 +295,7 @@
 </div>
 
 <!-- FAB MATERIAL 3: AÑADIR BANCO -->
-<div id="pm-fab-container" class="pm-fab-container" style="display: none;">
+<div id="pm-fab-container" class="pm-fab-container">
     <button type="button" id="pm-add-bank-fab" class="pm-fab-main" onclick="openAddBankModal()" title="Añadir nuevo banco" aria-label="Añadir nuevo banco">
         <span class="material-symbols-rounded">add</span>
     </button>
