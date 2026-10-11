@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Cambi - Tasa Oficial</title>
 <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
-<meta name="theme-color" content="#F3EDF7">
+<meta name="theme-color" content="#262C33">
 <link rel="apple-touch-icon" href="public/512.png">
 <link rel="icon" type="image/x-icon" href="public/logo.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -871,6 +871,11 @@
         transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1), visibility 0.35s;
         will-change: opacity;
         contain: strict;
+    }
+
+    /* En PWA instalada, el SO ya muestra el splash nativo; omitimos el splash web en el arranque */
+    html.pwa-standalone .splash-screen:not(.manual-refresh) {
+        display: none !important;
     }
 
     .splash-screen.hidden {

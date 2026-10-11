@@ -546,20 +546,22 @@
     const updateLoadingProgress = (percent) => {};
 
     const RATES_CACHE_KEY = "cambi_latest_rates_cache";
-    const SPLASH_MIN_DISPLAY_MS = 650; // Duración agradable y fija (0.65s) para una transición suave sin flashazos
+    const SPLASH_MIN_DISPLAY_MS = 650; // Duración agradable y fija (0.65s) para web desktop
     let splashStartTime = performance.now();
-    let splashIsDismissed = false;
+    let splashIsDismissed = document.documentElement.classList.contains('pwa-standalone');
 
     const hideSplashScreen = (forceImmediate = false) => {
         if (splashIsDismissed) return;
         const splash = document.getElementById('splash-screen');
         if (!splash) return;
 
+        const isStandalone = document.documentElement.classList.contains('pwa-standalone');
         const elapsed = performance.now() - splashStartTime;
-        const delay = forceImmediate ? 0 : Math.max(0, SPLASH_MIN_DISPLAY_MS - elapsed);
+        const delay = (forceImmediate || isStandalone) ? 0 : Math.max(0, SPLASH_MIN_DISPLAY_MS - elapsed);
 
         setTimeout(() => {
             splash.classList.add('hidden');
+            splash.classList.remove('manual-refresh');
             splashIsDismissed = true;
         }, delay);
     };
@@ -665,6 +667,7 @@
         
         // Si el usuario presiona "Actualizar" manualmente, mostramos la animación de forma fluida
         if (forceRefresh && splash) {
+            splash.classList.add('manual-refresh');
             splashStartTime = performance.now();
             splashIsDismissed = false;
             splash.classList.remove('hidden');

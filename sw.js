@@ -1,8 +1,10 @@
-const CACHE_NAME = "cambi-v48";
+const CACHE_NAME = "cambi-v49";
 const urlsToCache = [
   "public/logo.webp",
   "public/logo.ico",
   "public/launchericon-512x512.png",
+  "public/maskable-icon-512x512.png",
+  "public/icon-192x192.png",
   "public/512.png",
   "public/qrcode.min.js",
   "public/jsqr.min.js",

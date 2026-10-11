@@ -9,6 +9,11 @@ $componentsDir = __DIR__ . '/';
     <script src="public/jsqr.min.js"></script>
 </head>
 <body>
+    <script>
+        if (window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true)) {
+            document.documentElement.classList.add('pwa-standalone');
+        }
+    </script>
     <!-- Pantalla de Carga (Splash Screen) -->
     <div id="splash-screen" class="splash-screen">
         <div class="splash-content">
