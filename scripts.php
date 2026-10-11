@@ -1232,17 +1232,37 @@
     const navItems = document.querySelectorAll('.bottom-navigation .nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
     const swapBtn = document.getElementById('swap-btn');
+    const TABS_ORDER = ['rates', 'pagomovil', 'calculator'];
 
-    const switchTab = (tabId) => {
-        const mainContent = document.querySelector('.main-content');
-        if (mainContent) mainContent.scrollTop = 0;
+    const switchTab = (tabId, animate = true) => {
+        const historyTab = document.getElementById('history-tab-content');
+        if (tabId === 'history') {
+            if (historyTab) historyTab.classList.add('active');
+            return;
+        } else {
+            if (historyTab) historyTab.classList.remove('active');
+        }
 
-        navItems.forEach(nav => {
-            nav.classList.toggle('active', nav.dataset.tab === tabId);
-        });
-        tabContents.forEach(content => {
-            content.classList.toggle('active', content.id === `${tabId}-tab-content`);
-        });
+        const targetIdx = TABS_ORDER.indexOf(tabId);
+        if (targetIdx !== -1) {
+            const tabsTrack = document.getElementById('tabs-track');
+            if (tabsTrack) {
+                if (animate) {
+                    tabsTrack.style.transition = 'transform 0.32s cubic-bezier(0.2, 0, 0, 1)';
+                } else {
+                    tabsTrack.style.transition = 'none';
+                }
+                tabsTrack.style.transform = `translate3d(-${targetIdx * (100 / 3)}%, 0, 0)`;
+            }
+
+            navItems.forEach(nav => {
+                nav.classList.toggle('active', nav.dataset.tab === tabId);
+            });
+            tabContents.forEach(content => {
+                content.classList.toggle('active', content.id === `${tabId}-tab-content`);
+            });
+        }
+
         if (tabId === 'calculator' && inputTop) convert(inputTop);
         if (tabId === 'pagomovil') {
             document.querySelectorAll(".pm-modal-overlay").forEach(overlay => {
@@ -2469,111 +2489,151 @@
     window.initModalSwipeToDismiss = initModalSwipeToDismiss;
 
     /**
-     * Navegación por gestos: Deslizar horizontalmente (swipe left/right) entre pestañas principales.
-     * Orden: Tasas <-> Pago Móvil <-> Calculadora.
+     * Navegación por gestos: Carrusel horizontal 1:1 estilo WhatsApp/Telegram.
+     * La pista completa acompaña al dedo en tiempo real y realiza snap elástico al soltar.
      */
     function initTabSwipeNavigation() {
         const mainContent = document.getElementById('main-content');
-        if (!mainContent) return;
+        const tabsTrack = document.getElementById('tabs-track');
+        if (!mainContent || !tabsTrack) return;
 
         const tabsOrder = ['rates', 'pagomovil', 'calculator'];
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchStartTime = 0;
-        let isValidGesture = false;
+        let currentTabIndex = 0;
+        let startX = 0;
+        let startY = 0;
+        let startTime = 0;
+        let isDragging = false;
+        let isHorizontalSwipe = false;
+        let trackWidth = 0;
+        let baseOffsetPx = 0;
 
         mainContent.addEventListener('touchstart', (e) => {
-            // No activar si hay algún modal abierto
-            if (document.querySelector('.pm-modal-overlay.active')) {
-                isValidGesture = false;
-                return;
-            }
-            // Solo considerar toques de 1 solo dedo
-            if (e.touches.length !== 1) {
-                isValidGesture = false;
-                return;
-            }
+            if (document.querySelector('.pm-modal-overlay.active')) return;
+            if (document.getElementById('history-tab-content')?.classList.contains('active')) return;
+            if (e.touches.length !== 1) return;
 
             const touch = e.touches[0];
-            const startX = touch.clientX;
+            const initialX = touch.clientX;
             const screenW = window.innerWidth;
 
-            // Evitar conflictos con gestos del sistema del borde de pantalla (iOS/Android back gesture)
-            if (startX < 18 || startX > screenW - 18) {
-                isValidGesture = false;
-                return;
-            }
+            // Evitar bordes externos (gestos del sistema operativo)
+            if (initialX < 18 || initialX > screenW - 18) return;
 
-            // Evitar conflicto con el carrusel de onboarding en pago móvil si está en pantalla
+            // Evitar conflicto con carrusel de bienvenida en pago móvil
             const carousel = document.getElementById('pm-carousel');
-            if (carousel && carousel.contains(e.target)) {
-                isValidGesture = false;
-                return;
-            }
+            if (carousel && carousel.contains(e.target)) return;
 
-            // Evitar conflicto si el menú contextual estilo burbuja está abierto
-            const contextMenu = document.querySelector('.calc-context-menu.active');
-            if (contextMenu) {
-                isValidGesture = false;
-                return;
-            }
+            // Evitar conflicto con menú contextual
+            if (document.querySelector('.calc-context-menu.active')) return;
 
-            touchStartX = startX;
-            touchStartY = touch.clientY;
-            touchStartTime = Date.now();
-            isValidGesture = true;
+            const activeNav = document.querySelector('.bottom-navigation .nav-item.active');
+            const activeTabId = activeNav ? activeNav.dataset.tab : 'rates';
+            currentTabIndex = tabsOrder.indexOf(activeTabId);
+            if (currentTabIndex === -1) currentTabIndex = 0;
+
+            startX = initialX;
+            startY = touch.clientY;
+            startTime = Date.now();
+            isDragging = false;
+            isHorizontalSwipe = false;
+
+            trackWidth = mainContent.clientWidth || window.innerWidth;
+            baseOffsetPx = -currentTabIndex * trackWidth;
         }, { passive: true });
 
-        mainContent.addEventListener('touchend', (e) => {
-            if (!isValidGesture) return;
-            isValidGesture = false;
-
+        mainContent.addEventListener('touchmove', (e) => {
+            if (startX === 0 && startY === 0) return;
             if (document.querySelector('.pm-modal-overlay.active')) return;
+            if (e.touches.length !== 1) return;
 
-            const touch = e.changedTouches[0];
-            const deltaX = touch.clientX - touchStartX;
-            const deltaY = touch.clientY - touchStartY;
-            const elapsed = Math.max(1, Date.now() - touchStartTime);
-            const absX = Math.abs(deltaX);
-            const absY = Math.abs(deltaY);
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - startX;
+            const deltaY = touch.clientY - startY;
 
-            // Debe ser un gesto dominantemente horizontal (más de 1.4x el movimiento vertical)
-            if (absX < absY * 1.4) return;
-            // No considerar toques prolongados mayores a 600ms
-            if (elapsed > 600) return;
+            if (!isDragging && !isHorizontalSwipe) {
+                // Si el gesto es vertical, se deja correr el scroll nativo de la pestaña
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    startX = 0;
+                    startY = 0;
+                    return;
+                }
 
-            // Umbral de distancia o flick con velocidad
-            const isFlick = (absX / elapsed) > 0.32 && absX >= 32;
-            const isSwipe = absX >= 50;
-            if (!isSwipe && !isFlick) return;
+                // Si el gesto es predominantemente horizontal (>8px)
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
+                    isHorizontalSwipe = true;
+                    isDragging = true;
+                    tabsTrack.style.transition = 'none';
+                    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                        document.activeElement.blur();
+                    }
+                }
+            }
 
-            // Determinar pestaña activa actual
-            const activeNav = document.querySelector('.bottom-navigation .nav-item.active');
-            let currentTab = activeNav ? activeNav.dataset.tab : 'rates';
+            if (isDragging) {
+                if (e.cancelable) e.preventDefault();
 
-            // Soporte si está en la pestaña de historial
-            if (currentTab === 'history') {
-                if (deltaX > 0) switchTab('rates');
+                // Movimiento 1:1 en tiempo real acompañando al dedo
+                let targetOffset = baseOffsetPx + deltaX;
+
+                // Amortiguación suave en los bordes extremos (rebote elástico)
+                if (currentTabIndex === 0 && deltaX > 0) {
+                    targetOffset = deltaX * 0.28;
+                } else if (currentTabIndex === (tabsOrder.length - 1) && deltaX < 0) {
+                    targetOffset = baseOffsetPx + deltaX * 0.28;
+                }
+
+                tabsTrack.style.transform = `translate3d(${targetOffset}px, 0, 0)`;
+            }
+        }, { passive: false });
+
+        const endSwipe = (e) => {
+            if (!isDragging) {
+                startX = 0;
+                startY = 0;
                 return;
             }
 
-            const currentIdx = tabsOrder.indexOf(currentTab);
-            if (currentIdx === -1) return;
+            isDragging = false;
+            isHorizontalSwipe = false;
+
+            const touch = e.changedTouches ? e.changedTouches[0] : null;
+            const deltaX = touch ? (touch.clientX - startX) : 0;
+            const elapsed = Math.max(1, Date.now() - startTime);
+            const velocity = deltaX / elapsed;
+
+            startX = 0;
+            startY = 0;
+
+            let targetIdx = currentTabIndex;
+            const distanceThreshold = trackWidth * 0.22;
+            const isFastFlick = Math.abs(velocity) > 0.32;
 
             if (deltaX < 0) {
-                // Swipe a la izquierda -> pestaña siguiente a la derecha
-                if (currentIdx < tabsOrder.length - 1) {
-                    const nextTab = tabsOrder[currentIdx + 1];
-                    switchTab(nextTab);
+                // Arrastró a la izquierda -> pestaña siguiente
+                if (Math.abs(deltaX) > distanceThreshold || (isFastFlick && Math.abs(deltaX) > 30)) {
+                    if (currentTabIndex < tabsOrder.length - 1) {
+                        targetIdx = currentTabIndex + 1;
+                    }
                 }
-            } else {
-                // Swipe a la derecha -> pestaña anterior a la izquierda
-                if (currentIdx > 0) {
-                    const prevTab = tabsOrder[currentIdx - 1];
-                    switchTab(prevTab);
+            } else if (deltaX > 0) {
+                // Arrastró a la derecha -> pestaña anterior
+                if (deltaX > distanceThreshold || (isFastFlick && deltaX > 30)) {
+                    if (currentTabIndex > 0) {
+                        targetIdx = currentTabIndex - 1;
+                    }
                 }
             }
-        }, { passive: true });
+
+            // Snap animado hacia la pestaña destino
+            tabsTrack.style.transition = 'transform 0.3s cubic-bezier(0.2, 0, 0, 1)';
+            tabsTrack.style.transform = `translate3d(-${targetIdx * (100 / 3)}%, 0, 0)`;
+
+            // Sincronizar estado y barra de navegación inferior
+            switchTab(tabsOrder[targetIdx], false);
+        };
+
+        mainContent.addEventListener('touchend', endSwipe, { passive: true });
+        mainContent.addEventListener('touchcancel', endSwipe, { passive: true });
     }
     window.initTabSwipeNavigation = initTabSwipeNavigation;
 

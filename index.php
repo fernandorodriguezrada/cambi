@@ -30,9 +30,11 @@ $componentsDir = __DIR__ . '/';
     include_once $componentsDir . 'header.php';
     ?>
     <main id="main-content" class="main-content">
-        <?php include_once $componentsDir . 'rates_tab.php'; ?>
-        <?php include_once $componentsDir . 'pagomovil_tab.php'; ?>
-        <?php include_once $componentsDir . 'calculator_tab.php'; ?>
+        <div id="tabs-track" class="tabs-track">
+            <?php include_once $componentsDir . 'rates_tab.php'; ?>
+            <?php include_once $componentsDir . 'pagomovil_tab.php'; ?>
+            <?php include_once $componentsDir . 'calculator_tab.php'; ?>
+        </div>
         <?php include_once $componentsDir . 'history_tab.php'; ?>
     </main>
     <?php

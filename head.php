@@ -739,35 +739,80 @@
         color: var(--md-sys-color-outline);
     }
 
-    /* Main content area to push content above bottom nav */
+    /* Main content area (ViewPager container) */
     .main-content {
         flex-grow: 1;
         width: 100%;
         position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        overflow-y: auto; /* Solo el contenido tiene scroll */
-        -webkit-overflow-scrolling: touch;
+        overflow: hidden; /* El scroll está dentro de cada pestaña individual */
         background-color: var(--md-sys-color-surface);
-        /* Ajuste dinámico del padding inferior basado en la nueva altura de la nav */
-        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px) + 16px);
     }
 
-    /* Tab Content Styling */
+    /* Pista continua 1:1 estilo carrusel / WhatsApp / ViewPager */
+    .tabs-track {
+        display: flex;
+        flex-direction: row;
+        width: 300%;
+        height: 100%;
+        transform: translate3d(0, 0, 0);
+        will-change: transform;
+        box-sizing: border-box;
+    }
+
+    /* Tab Content Styling dentro de la pista continua */
     .tab-content {
-        display: none;
-        width: 100%;
-        flex-grow: 1;
+        display: flex;
+        flex: 0 0 33.333333%;
+        width: 33.333333%;
+        height: 100%;
+        max-height: 100%;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
         padding-top: 16px;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px) + 16px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-sizing: border-box;
+        scrollbar-width: none;
     }
-    .tab-content.active {
+
+    .tab-content::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Centrado vertical equilibrado para la pestaña de calculadora (CERO SCROLL) */
+    #calculator-tab-content {
+        justify-content: center;
+        padding-top: 0;
+        overflow-y: hidden;
+    }
+
+    /* Pestaña Pago Móvil: aprovecha toda la altura disponible y permite desplazamiento natural */
+    #pagomovil-tab-content {
+        padding-top: 14px;
+    }
+
+    /* Pestaña Historial (pantalla superpuesta independiente) */
+    #history-tab-content {
+        position: absolute;
+        inset: 0;
+        z-index: 50;
+        background-color: var(--md-sys-color-surface);
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-top: 16px;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px) + 16px);
+        box-sizing: border-box;
+        scrollbar-width: none;
+    }
+    #history-tab-content.active {
         display: flex;
-        position: relative;
-        z-index: 1;
+        flex-direction: column;
+        align-items: center;
         animation: tabFadeThrough 0.28s cubic-bezier(0.2, 0, 0, 1) forwards;
     }
 
@@ -780,21 +825,6 @@
             opacity: 1;
             transform: scale(1);
         }
-    }
-
-    /* Centrado vertical equilibrado para la pestaña de calculadora (CERO SCROLL) */
-    #calculator-tab-content.active {
-        justify-content: center;
-        padding-top: 0;
-        overflow: hidden;
-    }
-
-    /* Pestaña Pago Móvil: aprovecha toda la altura disponible y permite desplazamiento natural */
-    #pagomovil-tab-content.active {
-        width: 100%;
-        min-height: 100%;
-        padding-top: 14px;
-        box-sizing: border-box;
     }
 
     /* Bottom Navigation Bar */
