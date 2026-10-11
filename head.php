@@ -768,13 +768,13 @@
         display: flex;
         position: relative;
         z-index: 1;
-        animation: tabFadeThrough 0.16s cubic-bezier(0.2, 0, 0, 1) forwards;
+        animation: tabFadeThrough 0.28s cubic-bezier(0.2, 0, 0, 1) forwards;
     }
 
     @keyframes tabFadeThrough {
         from {
             opacity: 0;
-            transform: scale(0.985);
+            transform: scale(0.975);
         }
         to {
             opacity: 1;
