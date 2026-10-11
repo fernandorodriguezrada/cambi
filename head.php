@@ -863,50 +863,83 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--md-sys-color-surface); /* Sincronizar con el color del header/body */
+        background-color: var(--md-sys-color-surface);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.5s ease, visibility 0.5s;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+        will-change: opacity, transform;
     }
 
     .splash-screen.hidden {
         opacity: 0;
+        transform: scale(1.04);
         visibility: hidden;
+        pointer-events: none;
     }
 
     .splash-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        width: 60%;
-        max-width: 250px;
     }
 
     .splash-logo {
-        height: 80px;
+        height: 84px;
         width: auto;
-        margin-bottom: 32px;
-        animation: splash-pulse 2s infinite ease-in-out;
+        animation: splash-logo-enter 0.65s cubic-bezier(0.34, 1.25, 0.64, 1) forwards;
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.08));
     }
 
-    @keyframes splash-pulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.7; }
+    body.dark-mode .splash-logo {
+        filter: drop-shadow(0 6px 20px rgba(110, 240, 187, 0.2));
     }
 
-    .progress-container {
-        width: 100%;
-        height: 4px;
-        background-color: var(--md-sys-color-surface-container);
-        border-radius: 2px;
-        overflow: hidden;
+    @keyframes splash-logo-enter {
+        0% {
+            opacity: 0;
+            transform: scale(0.85);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
-    .progress-bar {
-        height: 100%;
-        width: 0%;
+    .splash-loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 24px;
+        height: 12px;
+    }
+
+    .splash-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
         background-color: var(--cambi-magic-mint);
-        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: splash-dot-wave 1s infinite ease-in-out both;
+    }
+
+    .splash-dot:nth-child(1) { animation-delay: -0.32s; }
+    .splash-dot:nth-child(2) { animation-delay: -0.16s; }
+    .splash-dot:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes splash-dot-wave {
+        0%, 80%, 100% {
+            transform: scale(0.65);
+            opacity: 0.35;
+        }
+        40% {
+            transform: scale(1.2);
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(110, 240, 187, 0.5);
+        }
     }
 
     /* Custom Caret (Cursor) */

@@ -543,21 +543,25 @@
         mainContentEl.addEventListener("scroll", hideCalcContextMenu, { passive: true });
     }
 
-    const updateLoadingProgress = (percent) => {
-        const bar = document.getElementById('progress-bar');
-        if (bar) bar.style.width = `${percent}%`;
-    };
+    const updateLoadingProgress = (percent) => {};
 
     const RATES_CACHE_KEY = "cambi_latest_rates_cache";
+    const SPLASH_MIN_DISPLAY_MS = 650; // Duración agradable y fija (0.65s) para una transición suave sin flashazos
+    let splashStartTime = performance.now();
+    let splashIsDismissed = false;
 
-    const hideSplashScreen = () => {
+    const hideSplashScreen = (forceImmediate = false) => {
+        if (splashIsDismissed) return;
         const splash = document.getElementById('splash-screen');
-        if (splash && !splash.classList.contains('hidden')) {
-            updateLoadingProgress(100);
-            setTimeout(() => {
-                splash.classList.add('hidden');
-            }, 250);
-        }
+        if (!splash) return;
+
+        const elapsed = performance.now() - splashStartTime;
+        const delay = forceImmediate ? 0 : Math.max(0, SPLASH_MIN_DISPLAY_MS - elapsed);
+
+        setTimeout(() => {
+            splash.classList.add('hidden');
+            splashIsDismissed = true;
+        }, delay);
     };
 
     /**
@@ -658,20 +662,15 @@
 
     async function fetchRate(forceRefresh = false) {
         const splash = document.getElementById('splash-screen');
-        const bar = document.getElementById('progress-bar');
         
-        // Si el usuario presiona "Actualizar" manualmente, mostramos la animación de carga
-        if (forceRefresh && splash && splash.classList.contains('hidden')) {
-            if (bar) bar.style.transition = 'none';
-            updateLoadingProgress(0);
-            if (bar) void bar.offsetWidth;
-            if (bar) bar.style.transition = '';
+        // Si el usuario presiona "Actualizar" manualmente, mostramos la animación de forma fluida
+        if (forceRefresh && splash) {
+            splashStartTime = performance.now();
+            splashIsDismissed = false;
             splash.classList.remove('hidden');
         }
 
-        updateLoadingProgress(35);
         try {
-            updateLoadingProgress(60);
             const queryParam = forceRefresh ? `force=1&t=${Date.now()}` : `t=${Date.now()}`;
             const response = await fetch(`api.php?${queryParam}`, { cache: 'no-store' });
             if (!response.ok) throw new Error("Error en el servidor local");
@@ -685,8 +684,6 @@
             try {
                 localStorage.setItem(RATES_CACHE_KEY, JSON.stringify(data));
             } catch (e) {}
-
-            updateLoadingProgress(90);
 
             // Refresco en segundo plano si es necesario o si fue forzado
             if (forceRefresh || (data.p2p && data.p2p.is_stale)) {
@@ -2683,7 +2680,6 @@
 
     const ratesTabEl = document.getElementById('rates-tab-content');
     if (ratesTabEl) ratesTabEl.classList.add('active');
-    updateLoadingProgress(10);
     // Mostrar de inmediato los datos locales si existen para arranque instantáneo (0ms)
     loadInitialCachedRates();
     // Consultar tasas frescas del servidor y plataformas en segundo plano
