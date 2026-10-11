@@ -1851,6 +1851,9 @@
 
     /* Modal Detalle de Banco Seleccionado */
     .pm-detail-bank-badge {
+        flex: 1;
+        min-width: 0;
+        margin-right: 12px;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -1858,6 +1861,12 @@
         border-radius: 18px;
         background-color: var(--b-pastel-bg, var(--md-sys-color-surface-container));
         color: var(--b-pastel-text, var(--md-sys-color-on-surface));
+        box-sizing: border-box;
+    }
+
+    .pm-detail-text-wrap {
+        flex: 1;
+        min-width: 0;
     }
 
     .pm-detail-logo {
@@ -2422,6 +2431,7 @@
         justify-content: center;
         cursor: pointer;
         transition: background-color 0.2s, transform 0.15s;
+        flex-shrink: 0;
     }
 
     body.dark-mode .pm-modal-close, .pm-modal-close-btn {

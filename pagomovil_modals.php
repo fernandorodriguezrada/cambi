@@ -128,7 +128,7 @@
                 <div id="pm-detail-logo-container" class="pm-detail-logo">
                     <!-- SVG logo del banco -->
                 </div>
-                <div>
+                <div class="pm-detail-text-wrap">
                     <h3 id="pm-detail-bank-name" class="pm-detail-title">Banco</h3>
                     <span id="pm-detail-bank-code" class="pm-detail-code">0000</span>
                 </div>
