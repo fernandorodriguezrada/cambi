@@ -10,7 +10,7 @@
     let selectedRateType = "usd";
     let isTopUsd = true; // Estado para saber el sentido de la conversión
     let isResultPendingClear = false; // Control para limpiar el input tras un resultado
-    let isInitialDefault = true; // Control para sobreescribir el 1 inicial al primer toque
+    let isInitialDefault = true; // Control para sobreescribir el 1,00 inicial al primer toque
     let caretTimer = null;
 
     const inputTop = document.getElementById('input-top');
@@ -62,6 +62,7 @@
      */
     const setCursorFromEvent = (e) => {
         if (!inputTop || !inputTop.value) return;
+        isInitialDefault = false;
 
         const rect = inputTop.getBoundingClientRect();
         const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
@@ -644,7 +645,7 @@
         updateRateChipsDisplay();
         if (inputTop) {
             if (inputTop.value === '' || isInitialDefault) {
-                inputTop.value = '1';
+                inputTop.value = '1,00';
                 isInitialDefault = true;
                 convert(inputTop);
             } else if (cleanValue(inputTop.value) !== 0) {
@@ -1071,9 +1072,9 @@
             const key = btn.dataset.key;
             if (!key || key === 'swap') return;
             
-            // Botón C (Clear / Limpiar todo -> vuelve a 1 por defecto con tasa a la vista)
+            // Botón C (Clear / Limpiar todo -> vuelve a 1,00 por defecto con tasa a la vista)
             if (key === 'C') {
-                inputTop.value = '1';
+                inputTop.value = '1,00';
                 isInitialDefault = true;
                 isResultPendingClear = false;
                 const operationResult = document.getElementById('operation-result');
