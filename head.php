@@ -2953,19 +2953,19 @@
        CALCULADORA: BOTÓN SELECTOR DE TASA Y MODAL
        ========================================== */
     .keypad-btn.calc-rate-btn {
-        background-color: var(--md-sys-color-surface-container-high);
-        border: 1.5px solid var(--md-sys-color-outline-variant);
+        background-color: var(--md-sys-color-surface-container);
+        border: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background-color 0.15s, transform 0.1s, border-color 0.15s;
+        transition: background-color 0.15s, transform 0.1s;
     }
     body.dark-mode .keypad-btn.calc-rate-btn {
-        background-color: #212930;
-        border-color: rgba(255, 255, 255, 0.14);
+        background-color: var(--md-sys-color-surface-container);
+        border: none;
     }
     .keypad-btn.calc-rate-btn:active {
-        background-color: var(--md-sys-color-surface-container-highest);
+        background-color: var(--md-sys-color-surface-container-high);
         transform: scale(0.95);
     }
 
@@ -2976,6 +2976,16 @@
         object-fit: contain;
         pointer-events: none;
         transition: transform 0.15s ease;
+    }
+    .calc-picker-icon[src*="bcv.svg"] {
+        border-radius: 50%;
+    }
+
+    /* OKX transparente: blanco en dark mode, negro en light mode */
+    body:not(.dark-mode) .calc-picker-icon[src*="okx.svg"],
+    body:not(.dark-mode) .rate-platform-logo[src*="okx.svg"],
+    body:not(.dark-mode) .calc-rate-option-logo[src*="okx.svg"] {
+        filter: invert(1);
     }
     .keypad-btn:active .calc-picker-icon {
         transform: scale(0.9);
