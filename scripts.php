@@ -10,6 +10,7 @@
     let selectedRateType = "usd";
     let isTopUsd = true; // Estado para saber el sentido de la conversión
     let isResultPendingClear = false; // Control para limpiar el input tras un resultado
+    let isInitialDefault = true; // Control para sobreescribir el 1 inicial al primer toque
     let caretTimer = null;
 
     const inputTop = document.getElementById('input-top');
@@ -345,6 +346,7 @@
 
         if (target === "top") {
             if (!inputTop) return;
+            isInitialDefault = false;
             inputTop.value = sanitized;
             isResultPendingClear = false;
             formatInputDisplay(inputTop);
@@ -640,7 +642,15 @@
         if (dateOkxUsdt) dateOkxUsdt.innerText = okxTime;
 
         updateRateChipsDisplay();
-        if (inputTop && cleanValue(inputTop.value) !== 0) convert(inputTop);
+        if (inputTop) {
+            if (inputTop.value === '' || isInitialDefault) {
+                inputTop.value = '1';
+                isInitialDefault = true;
+                convert(inputTop);
+            } else if (cleanValue(inputTop.value) !== 0) {
+                convert(inputTop);
+            }
+        }
     }
 
     /**
@@ -890,7 +900,24 @@
     }
 
     if (inputTop) {
+        inputTop.addEventListener('keydown', (e) => {
+            if (isInitialDefault) {
+                if (/^[0-9]$/.test(e.key)) {
+                    inputTop.value = '';
+                    isInitialDefault = false;
+                } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                    inputTop.value = '';
+                    isInitialDefault = false;
+                    e.preventDefault();
+                    if (inputBottom) inputBottom.value = '';
+                    convert(inputTop);
+                } else {
+                    isInitialDefault = false;
+                }
+            }
+        });
         inputTop.addEventListener('input', (e) => {
+            isInitialDefault = false;
             formatInputDisplay(e.target);
             convert(inputTop);
         });
@@ -1044,22 +1071,23 @@
             const key = btn.dataset.key;
             if (!key || key === 'swap') return;
             
-            // Botón C (Clear / Limpiar todo)
+            // Botón C (Clear / Limpiar todo -> vuelve a 1 por defecto con tasa a la vista)
             if (key === 'C') {
-                inputTop.value = '';
-                if (inputBottom) inputBottom.value = '';
+                inputTop.value = '1';
+                isInitialDefault = true;
+                isResultPendingClear = false;
                 const operationResult = document.getElementById('operation-result');
                 if (operationResult) operationResult.innerText = '';
-                isResultPendingClear = false;
                 formatInputDisplay(inputTop);
                 convert(inputTop);
-                updateCaretPosition();
+                if (customCaret) customCaret.style.display = 'none';
                 updateInputColors();
                 return;
             }
 
             // Teclas de navegación
             if (key === 'left' || key === 'right') {
+                isInitialDefault = false;
                 const currentPos = inputTop.selectionStart ?? inputTop.value.length;
                 const newPos = key === 'left' ? currentPos - 1 : currentPos + 1;
                 inputTop.setSelectionRange(newPos, newPos);
@@ -1068,6 +1096,19 @@
             }
 
             if (key === 'backspace') {
+                if (isInitialDefault) {
+                    inputTop.value = '';
+                    if (inputBottom) inputBottom.value = '';
+                    isInitialDefault = false;
+                    isResultPendingClear = false;
+                    const operationResult = document.getElementById('operation-result');
+                    if (operationResult) operationResult.innerText = '';
+                    formatInputDisplay(inputTop);
+                    convert(inputTop);
+                    updateCaretPosition();
+                    updateInputColors();
+                    return;
+                }
                 isResultPendingClear = false;
                 const start = inputTop.selectionStart ?? inputTop.value.length;
                 const end = inputTop.selectionEnd ?? inputTop.value.length;
@@ -1081,6 +1122,7 @@
                     inputTop.setSelectionRange(start, start);
                 }
             } else if (key === '=') {
+                isInitialDefault = false;
                 const operationResult = document.getElementById('operation-result');
                 if (operationResult && operationResult.innerText.startsWith('=')) {
                     const cleanRes = operationResult.innerText.replace(/[^0-9,]/g, '');
@@ -1089,10 +1131,45 @@
                     isResultPendingClear = true;
                 }
             } else {
+                if (isInitialDefault) {
+                    if (/^[0-9]$/.test(key)) {
+                        inputTop.value = key;
+                        inputTop.setSelectionRange(key.length, key.length);
+                        isInitialDefault = false;
+                        isResultPendingClear = false;
+                        formatInputDisplay(inputTop);
+                        convert(inputTop);
+                        updateCaretPosition();
+                        updateInputColors();
+                        return;
+                    } else if (key === ',') {
+                        inputTop.value = '1,';
+                        inputTop.setSelectionRange(2, 2);
+                        isInitialDefault = false;
+                        isResultPendingClear = false;
+                        formatInputDisplay(inputTop);
+                        convert(inputTop);
+                        updateCaretPosition();
+                        updateInputColors();
+                        return;
+                    } else if (['+', '-', 'x', '/'].includes(key)) {
+                        inputTop.value = '1' + key;
+                        inputTop.setSelectionRange(1 + key.length, 1 + key.length);
+                        isInitialDefault = false;
+                        isResultPendingClear = false;
+                        formatInputDisplay(inputTop);
+                        convert(inputTop);
+                        updateCaretPosition();
+                        updateInputColors();
+                        return;
+                    }
+                }
+
                 if (isResultPendingClear && !['+', '-', 'x', '/'].includes(key)) {
                     inputTop.value = '';
                 }
                 isResultPendingClear = false;
+                isInitialDefault = false;
 
                 const start = inputTop.selectionStart ?? inputTop.value.length;
                 const end = inputTop.selectionEnd ?? inputTop.value.length;
@@ -1142,6 +1219,7 @@
     if (swapBtn) {
         swapBtn.onclick = () => {
             isResultPendingClear = false;
+            isInitialDefault = false;
             isTopUsd = !isTopUsd;
 
             swapBtn.style.transform = isTopUsd ? 'rotate(0deg)' : 'rotate(180deg)';
