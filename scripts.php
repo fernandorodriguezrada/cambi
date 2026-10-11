@@ -1211,36 +1211,15 @@
     const tabContents = document.querySelectorAll('.tab-content');
     const swapBtn = document.getElementById('swap-btn');
 
-    const switchTab = (tabId, direction = null) => {
+    const switchTab = (tabId) => {
         const mainContent = document.querySelector('.main-content');
         if (mainContent) mainContent.scrollTop = 0;
-
-        const tabsOrder = ['rates', 'pagomovil', 'calculator'];
-        const activeNav = document.querySelector('.bottom-navigation .nav-item.active');
-        const currentTabId = activeNav ? activeNav.dataset.tab : null;
-
-        if (!direction && currentTabId && currentTabId !== tabId) {
-            const curIdx = tabsOrder.indexOf(currentTabId);
-            const newIdx = tabsOrder.indexOf(tabId);
-            if (curIdx !== -1 && newIdx !== -1) {
-                direction = newIdx > curIdx ? 'left' : 'right';
-            }
-        }
 
         navItems.forEach(nav => {
             nav.classList.toggle('active', nav.dataset.tab === tabId);
         });
         tabContents.forEach(content => {
-            const isActive = content.id === `${tabId}-tab-content`;
-            content.classList.remove('slide-from-left', 'slide-from-right');
-            if (isActive) {
-                if (direction === 'left') {
-                    content.classList.add('slide-from-right');
-                } else if (direction === 'right') {
-                    content.classList.add('slide-from-left');
-                }
-            }
-            content.classList.toggle('active', isActive);
+            content.classList.toggle('active', content.id === `${tabId}-tab-content`);
         });
         if (tabId === 'calculator' && inputTop) convert(inputTop);
         if (tabId === 'pagomovil') {
@@ -2547,7 +2526,7 @@
 
             // Soporte si está en la pestaña de historial
             if (currentTab === 'history') {
-                if (deltaX > 0) switchTab('rates', 'right');
+                if (deltaX > 0) switchTab('rates');
                 return;
             }
 
@@ -2558,13 +2537,13 @@
                 // Swipe a la izquierda -> pestaña siguiente a la derecha
                 if (currentIdx < tabsOrder.length - 1) {
                     const nextTab = tabsOrder[currentIdx + 1];
-                    switchTab(nextTab, 'left');
+                    switchTab(nextTab);
                 }
             } else {
                 // Swipe a la derecha -> pestaña anterior a la izquierda
                 if (currentIdx > 0) {
                     const prevTab = tabsOrder[currentIdx - 1];
-                    switchTab(prevTab, 'right');
+                    switchTab(prevTab);
                 }
             }
         }, { passive: true });

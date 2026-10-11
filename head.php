@@ -768,48 +768,18 @@
         display: flex;
         position: relative;
         z-index: 1;
-        animation: tabFadeIn 0.2s cubic-bezier(0.2, 0, 0, 1) forwards;
+        animation: tabFadeThrough 0.16s cubic-bezier(0.2, 0, 0, 1) forwards;
     }
 
-    @keyframes tabFadeIn {
+    @keyframes tabFadeThrough {
         from {
             opacity: 0;
-            transform: scale(0.98);
+            transform: scale(0.985);
         }
         to {
             opacity: 1;
             transform: scale(1);
         }
-    }
-
-    @keyframes tabSlideFromRight {
-        from {
-            opacity: 0.35;
-            transform: translateX(36px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    @keyframes tabSlideFromLeft {
-        from {
-            opacity: 0.35;
-            transform: translateX(-36px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    .tab-content.slide-from-right {
-        animation: tabSlideFromRight 0.22s cubic-bezier(0.2, 0, 0, 1) forwards !important;
-    }
-
-    .tab-content.slide-from-left {
-        animation: tabSlideFromLeft 0.22s cubic-bezier(0.2, 0, 0, 1) forwards !important;
     }
 
     /* Centrado vertical equilibrado para la pestaña de calculadora (CERO SCROLL) */
