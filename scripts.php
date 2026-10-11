@@ -1224,40 +1224,57 @@
 
     const BANK_OFFICIAL_LOGOS = {
         "0102": "public/banks/0102.svg",
-        "0104": "public/banks/0104.png",
+        "0104": "public/banks/0104.webp",
         "0105": "public/banks/0105.svg",
         "0108": "public/banks/0108.svg",
-        "0114": "public/banks/0114.png",
-        "0115": "public/banks/0115.png",
-        "0128": "public/banks/0128.png",
+        "0114": "public/banks/0114.webp",
+        "0115": "public/banks/0115.webp",
+        "0128": "public/banks/0128.webp",
         "0134": "public/banks/0134.svg",
-        "0137": "public/banks/0137.png",
-        "0138": "public/banks/0138.png",
-        "0146": "public/banks/0146.png",
-        "0151": "public/banks/0151.png",
-        "0156": "public/banks/0156.png",
-        "0157": "public/banks/0157.png",
-        "0163": "public/banks/0163.png",
-        "0166": "public/banks/0166.png",
-        "0168": "public/banks/0168.png",
-        "0169": "public/banks/0169.png",
-        "0171": "public/banks/0171.png",
-        "0172": "public/banks/0172.png",
-        "0174": "public/banks/0174.png",
-        "0175": "public/banks/0175.png",
-        "0177": "public/banks/0177.png",
-        "0191": "public/banks/0191.png"
+        "0137": "public/banks/0137.webp",
+        "0138": "public/banks/0138.webp",
+        "0146": "public/banks/0146.webp",
+        "0151": "public/banks/0151.webp",
+        "0156": "public/banks/0156.webp",
+        "0157": "public/banks/0157.webp",
+        "0163": "public/banks/0163.webp",
+        "0166": "public/banks/0166.webp",
+        "0168": "public/banks/0168.webp",
+        "0169": "public/banks/0169.webp",
+        "0171": "public/banks/0171.webp",
+        "0172": "public/banks/0172.webp",
+        "0174": "public/banks/0174.webp",
+        "0175": "public/banks/0175.webp",
+        "0177": "public/banks/0177.webp",
+        "0191": "public/banks/0191.webp"
     };
 
     const getBankLogoHtml = (bankCode) => {
         const logoUrl = BANK_OFFICIAL_LOGOS[bankCode];
         const name = BANK_NAMES[bankCode] || "Banco";
         if (logoUrl) {
-            return `<img src="${logoUrl}" alt="${name}" loading="lazy" />`;
+            return `<img src="${logoUrl}" alt="${name}" loading="eager" decoding="async" />`;
         }
         return `<span class="material-symbols-rounded">account_balance</span>`;
     };
     window.getBankLogoHtml = getBankLogoHtml;
+    // Pre-cargar logos de bancos en memoria caché del navegador en background
+    function preloadBankLogos() {
+        if (window._bankLogosPreloaded) return;
+        window._bankLogosPreloaded = true;
+        Object.values(BANK_OFFICIAL_LOGOS).forEach(url => {
+            const img = new Image();
+            img.decoding = "async";
+            img.src = url;
+        });
+    }
+
+    if (window.requestIdleCallback) {
+        requestIdleCallback(preloadBankLogos, { timeout: 2000 });
+    } else {
+        setTimeout(preloadBankLogos, 800);
+    }
+
 
     const renderPmView = () => {
         const profile = getPmProfile();
