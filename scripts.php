@@ -1867,12 +1867,19 @@
         if (clearBtn) clearBtn.style.display = "none";
         renderBankSearchResults("");
         if (modal) modal.classList.add("active");
-        setTimeout(() => input?.focus(), 150);
+        
+        // En mobile/touch evitamos autofoco para que no levante el teclado virtual cubriendo la lista de bancos
+        const isMobile = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches || ('ontouchstart' in window);
+        if (!isMobile) {
+            setTimeout(() => input?.focus(), 150);
+        }
     };
     window.openAddBankModal = openAddBankModal;
 
     const closeAddBankModal = () => {
         const modal = document.getElementById("pm-modal-add-bank");
+        const input = document.getElementById("pm-bank-search-input");
+        if (input) input.blur();
         if (modal) modal.classList.remove("active");
     };
     window.closeAddBankModal = closeAddBankModal;
