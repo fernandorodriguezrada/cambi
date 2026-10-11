@@ -1920,12 +1920,11 @@
         if (!profile || !profile.selectedBank) return;
 
         const bankCode = profile.selectedBank;
-        const bankName = BANK_NAMES[bankCode] || "Banco";
-        const phoneFormatted = `${profile.phonePrefix}-${profile.phoneNum}`;
-        const doc = `${profile.docType}-${profile.docNum}`;
-        const holder = profile.holder;
+        const bankName = BANK_SHORT[bankCode] || BANK_NAMES[bankCode] || "Banco";
+        const phone = `${profile.phonePrefix}${profile.phoneNum}`;
+        const docNum = profile.docNum;
 
-        const textToCopy = `Pago Móvil:\nBanco: ${bankName} (${bankCode})\nTeléfono: ${phoneFormatted}\nCédula: ${doc}\nTitular: ${holder}`;
+        const textToCopy = `${bankName} (${bankCode})\n${phone}\n${docNum}`;
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(textToCopy).then(() => {
