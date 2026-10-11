@@ -2282,6 +2282,8 @@
         box-sizing: border-box;
         scrollbar-width: none;
         -ms-overflow-style: none;
+        overscroll-behavior-y: contain;
+        will-change: transform;
     }
 
     .pm-modal-sheet::-webkit-scrollbar {
@@ -2293,12 +2295,30 @@
     }
 
     .pm-modal-handle {
-        width: 36px;
-        height: 4px;
-        border-radius: 2px;
+        width: 40px;
+        height: 5px;
+        border-radius: 3px;
         background-color: var(--md-sys-color-outline);
-        opacity: 0.35;
-        margin: 0 auto 10px;
+        opacity: 0.45;
+        margin: 0 auto 12px;
+        position: relative;
+        cursor: grab;
+        touch-action: none;
+        transition: opacity 0.2s, background-color 0.2s;
+    }
+
+    .pm-modal-handle::after {
+        content: '';
+        position: absolute;
+        top: -12px;
+        bottom: -12px;
+        left: -24px;
+        right: -24px;
+    }
+
+    .pm-modal-handle:active {
+        opacity: 0.75;
+        cursor: grabbing;
     }
 
     .pm-modal-header {

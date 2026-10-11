@@ -2284,12 +2284,170 @@
     const initPmFabScroll = () => {};
     window.initPmFabScroll = initPmFabScroll;
 
+    /**
+     * Navegación por gestos: Deslizar hacia abajo (swipe down) para cerrar modales/bottom sheets.
+     * Proporciona respuesta táctil fluida 1:1, soporte de inercia/velocidad y snap back.
+     */
+    function initModalSwipeToDismiss() {
+        document.querySelectorAll('.pm-modal-overlay').forEach(overlay => {
+            const sheet = overlay.querySelector('.pm-modal-sheet');
+            if (!sheet) return;
+
+            let startY = 0;
+            let startX = 0;
+            let currentY = 0;
+            let startTime = 0;
+            let isDragging = false;
+            let isHandleOrHeaderTouch = false;
+            let canSwipe = false;
+            let initialScrollTop = 0;
+
+            const handle = sheet.querySelector('.pm-modal-handle');
+            const header = sheet.querySelector('.pm-modal-header');
+
+            const onTouchStart = (e) => {
+                if (!overlay.classList.contains('active')) return;
+                const point = e.touches ? e.touches[0] : e;
+                if (e.touches && e.touches.length !== 1) return;
+
+                startY = point.clientY;
+                startX = point.clientX;
+                currentY = startY;
+                startTime = Date.now();
+                initialScrollTop = sheet.scrollTop;
+
+                const target = e.target;
+                const sheetRect = sheet.getBoundingClientRect();
+                isHandleOrHeaderTouch = (handle && handle.contains(target)) ||
+                                        (header && header.contains(target)) ||
+                                        (startY - sheetRect.top < 65);
+
+                canSwipe = isHandleOrHeaderTouch || initialScrollTop <= 0;
+                isDragging = false;
+
+                if (!e.touches) {
+                    window.addEventListener('mousemove', onTouchMove);
+                    window.addEventListener('mouseup', onTouchEnd);
+                }
+            };
+
+            const onTouchMove = (e) => {
+                if (!canSwipe || !overlay.classList.contains('active')) return;
+                const point = e.touches ? e.touches[0] : e;
+
+                const deltaY = point.clientY - startY;
+                const deltaX = point.clientX - startX;
+
+                if (!isDragging) {
+                    const isVertical = Math.abs(deltaY) > Math.abs(deltaX);
+                    const isDownward = deltaY > 6;
+
+                    // Si se toca en el cuerpo del modal y hay scroll interno, se permite scroll nativo
+                    if (!isHandleOrHeaderTouch && sheet.scrollTop > 0) {
+                        canSwipe = false;
+                        return;
+                    }
+
+                    if (isVertical && isDownward) {
+                        isDragging = true;
+                        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                            document.activeElement.blur();
+                        }
+                        sheet.style.transition = 'none';
+                        overlay.style.transition = 'none';
+                    }
+                }
+
+                if (isDragging) {
+                    if (e.cancelable) e.preventDefault();
+                    currentY = point.clientY;
+
+                    // Movimiento 1:1 hacia abajo, amortiguación si empuja hacia arriba
+                    const translateY = deltaY > 0 ? deltaY : deltaY * 0.2;
+                    sheet.style.transform = `translateY(${translateY}px)`;
+
+                    // Atenuación suave del fondo
+                    const sheetH = sheet.offsetHeight || 350;
+                    const progress = Math.min(1, Math.max(0, deltaY / sheetH));
+                    const alpha = Math.max(0.08, 0.55 * (1 - progress * 0.75));
+                    overlay.style.backgroundColor = `rgba(0, 0, 0, ${alpha})`;
+                }
+            };
+
+            const onTouchEnd = () => {
+                window.removeEventListener('mousemove', onTouchMove);
+                window.removeEventListener('mouseup', onTouchEnd);
+
+                if (!isDragging) {
+                    canSwipe = false;
+                    return;
+                }
+
+                isDragging = false;
+                canSwipe = false;
+
+                const deltaY = currentY - startY;
+                const elapsed = Math.max(1, Date.now() - startTime);
+                const velocity = deltaY / elapsed;
+                const sheetH = sheet.offsetHeight || 350;
+
+                // Umbral de descarte: >110px de recorrido, >25% de la tarjeta o flick veloz hacia abajo
+                const shouldDismiss = deltaY > 110 || (deltaY > sheetH * 0.25) || (deltaY > 40 && velocity > 0.35);
+
+                if (shouldDismiss) {
+                    sheet.style.transition = 'transform 0.22s cubic-bezier(0.25, 1, 0.5, 1)';
+                    overlay.style.transition = 'opacity 0.22s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.22s ease';
+                    sheet.style.transform = 'translateY(100%)';
+                    overlay.style.opacity = '0';
+
+                    setTimeout(() => {
+                        sheet.style.transform = '';
+                        sheet.style.transition = '';
+                        overlay.style.opacity = '';
+                        overlay.style.transition = '';
+                        overlay.style.backgroundColor = '';
+
+                        const closeBtn = overlay.querySelector('.pm-modal-close, .pm-modal-close-btn');
+                        if (closeBtn) {
+                            closeBtn.click();
+                        } else {
+                            overlay.classList.remove('active');
+                        }
+                    }, 220);
+                } else {
+                    // Rebote suave a la posición abierta
+                    sheet.style.transition = 'transform 0.26s cubic-bezier(0.2, 0.9, 0.3, 1)';
+                    overlay.style.transition = 'background-color 0.26s ease';
+                    sheet.style.transform = '';
+                    overlay.style.backgroundColor = '';
+
+                    setTimeout(() => {
+                        sheet.style.transition = '';
+                        overlay.style.transition = '';
+                    }, 260);
+                }
+            };
+
+            sheet.addEventListener('touchstart', onTouchStart, { passive: true });
+            sheet.addEventListener('touchmove', onTouchMove, { passive: false });
+            sheet.addEventListener('touchend', endDrag = onTouchEnd, { passive: true });
+            sheet.addEventListener('touchcancel', onTouchEnd, { passive: true });
+
+            // Soporte mouse drag en el handle para desktop
+            if (handle) {
+                handle.addEventListener('mousedown', onTouchStart);
+            }
+        });
+    }
+    window.initModalSwipeToDismiss = initModalSwipeToDismiss;
+
 
 
     initCustomSelects();
     syncAllCustomSelects();
     renderPmView();
     initPmFabScroll();
+    initModalSwipeToDismiss();
 
     navItems.forEach(item => {
         item.addEventListener('click', () => {
