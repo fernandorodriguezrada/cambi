@@ -662,7 +662,11 @@
         updateRateChipsDisplay();
         if (inputTop) {
             if (inputTop.value === '' || isInitialDefault) {
-                inputTop.value = '1,00';
+                if (isTopUsd) {
+                    inputTop.value = '1,00';
+                } else {
+                    inputTop.value = currentRate ? formatRAE(currentRate) : '1,00';
+                }
                 isInitialDefault = true;
                 convert(inputTop);
             } else if (cleanValue(inputTop.value) !== 0) {
@@ -871,7 +875,16 @@
             combinedCard.style.setProperty('--calc-foreign-color', type === 'eur' ? 'var(--rate-eur-color)' : 'var(--rate-usd-color)');
         }
 
-        if (inputTop) convert(inputTop);
+        if (inputTop) {
+            if (isInitialDefault) {
+                if (isTopUsd) {
+                    inputTop.value = '1,00';
+                } else {
+                    inputTop.value = currentRate ? formatRAE(currentRate) : '1,00';
+                }
+            }
+            convert(inputTop);
+        }
     }
     window.setCalcRateType = setCalcRateType;
 
@@ -1094,9 +1107,13 @@
             const key = btn.dataset.key;
             if (!key || key === 'swap') return;
             
-            // Botón C (Clear / Limpiar todo -> vuelve a 1,00 por defecto con tasa a la vista)
+            // Botón C (Clear / Limpiar todo -> vuelve al valor base por defecto según la divisa activa)
             if (key === 'C') {
-                inputTop.value = '1,00';
+                if (isTopUsd) {
+                    inputTop.value = '1,00';
+                } else {
+                    inputTop.value = currentRate ? formatRAE(currentRate) : '1,00';
+                }
                 isInitialDefault = true;
                 isResultPendingClear = false;
                 const operationResult = document.getElementById('operation-result');
@@ -1166,8 +1183,13 @@
                         updateInputColors();
                         return;
                     } else if (key === ',') {
-                        inputTop.value = '1,';
-                        inputTop.setSelectionRange(2, 2);
+                        if (isTopUsd) {
+                            inputTop.value = '1,';
+                            inputTop.setSelectionRange(2, 2);
+                        } else {
+                            inputTop.value = '0,';
+                            inputTop.setSelectionRange(2, 2);
+                        }
                         isInitialDefault = false;
                         isResultPendingClear = false;
                         formatInputDisplay(inputTop);
@@ -1264,9 +1286,14 @@
                 inputTop.value = valBottom;
                 inputBottom.value = valTop;
 
+                // Al invertir divisas, activamos el reemplazo automático para que el nuevo monto
+                // se sobreescriba directamente al presionar cualquier número
+                isInitialDefault = true;
+
                 formatInputDisplay(inputTop);
                 convert(inputTop);
                 updateInputColors();
+                if (customCaret) customCaret.style.display = 'none';
             }
         };
     }
