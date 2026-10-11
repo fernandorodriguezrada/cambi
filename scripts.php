@@ -1280,7 +1280,7 @@
         "0166": "public/banks/0166.webp",
         "0168": "public/banks/0168.webp",
         "0169": "public/banks/0169.webp",
-        "0171": "public/banks/0171.webp",
+        "0171": "public/banks/0171.svg",
         "0172": "public/banks/0172.webp",
         "0174": "public/banks/0174.webp",
         "0175": "public/banks/0175.webp",

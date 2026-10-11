@@ -1,4 +1,4 @@
-const CACHE_NAME = "cambi-v51";
+const CACHE_NAME = "cambi-v52";
 const urlsToCache = [
   "public/logo.webp",
   "public/logo.ico",
@@ -27,7 +27,7 @@ const urlsToCache = [
   "public/banks/0166.webp",
   "public/banks/0168.webp",
   "public/banks/0169.webp",
-  "public/banks/0171.webp",
+  "public/banks/0171.svg",
   "public/banks/0172.webp",
   "public/banks/0174.webp",
   "public/banks/0175.webp",
