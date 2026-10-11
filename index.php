@@ -10,9 +10,14 @@ $componentsDir = __DIR__ . '/';
 </head>
 <body>
     <script>
-        if (window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true)) {
-            document.documentElement.classList.add('pwa-standalone');
-        }
+        (function() {
+            if (document.documentElement.classList.contains('dark-mode')) {
+                document.body.classList.add('dark-mode');
+            }
+            if (window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true)) {
+                document.documentElement.classList.add('pwa-standalone');
+            }
+        })();
     </script>
     <!-- Pantalla de Carga (Splash Screen) -->
     <div id="splash-screen" class="splash-screen">

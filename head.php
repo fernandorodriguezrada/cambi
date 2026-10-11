@@ -9,6 +9,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Product+Sans:wght@400;700&family=Inter:wght@800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<script>
+    (function() {
+        try {
+            var saved = localStorage.getItem('darkMode');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'enabled' || (saved !== 'disabled' && prefersDark)) {
+                document.documentElement.classList.add('dark-mode');
+            }
+        } catch(e) {}
+    })();
+</script>
 <style>
     * {
         box-sizing: border-box;
@@ -68,6 +79,7 @@
     }
 
     /* Modo Oscuro basado en Oscuro Eléctrico Azul */
+    html.dark-mode,
     body.dark-mode {
         --md-sys-color-surface: #262C33; /* Una variante profunda del azul eléctrico */
         --md-sys-color-on-surface: #F4F4F4;
@@ -94,7 +106,6 @@
     html {
         /* Evita que se vea un color distinto en los bordes de la pantalla */
         background-color: var(--md-sys-color-surface-container);
-        transition: background-color var(--transition-speed);
     }
 
     body {
@@ -108,9 +119,15 @@
         width: 100%;
         position: fixed; /* Evita el scroll elástico del sistema que causa líneas */
         overflow: hidden;
-        transition: background-color var(--transition-speed), color var(--transition-speed);
         /* Evita que el usuario seleccione texto de la interfaz, lo cual se siente muy "web" */
         user-select: none;
+    }
+
+    body.theme-transitioning,
+    body.theme-transitioning html,
+    body.theme-transitioning header,
+    body.theme-transitioning .bottom-navigation {
+        transition: background-color var(--transition-speed), color var(--transition-speed);
     }
 
     button, input, select, textarea {

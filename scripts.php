@@ -1014,19 +1014,24 @@
     if (darkModeToggle) {
         darkModeToggle.addEventListener('change', () => {
             const isDark = darkModeToggle.checked;
-            if (darkModeToggle.checked) {
+            document.body.classList.add('theme-transitioning');
+            if (isDark) {
+                document.documentElement.classList.add('dark-mode');
                 document.body.classList.add('dark-mode');
                 localStorage.setItem('darkMode', 'enabled');
             } else {
+                document.documentElement.classList.remove('dark-mode');
                 document.body.classList.remove('dark-mode');
                 localStorage.setItem('darkMode', 'disabled');
             }
             updateThemeColor(isDark);
+            setTimeout(() => document.body.classList.remove('theme-transitioning'), 350);
         });
     }
 
-    const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+    const isDarkModeEnabled = document.documentElement.classList.contains('dark-mode') || localStorage.getItem('darkMode') === 'enabled';
     if (isDarkModeEnabled) {
+        document.documentElement.classList.add('dark-mode');
         document.body.classList.add('dark-mode');
         if (darkModeToggle) darkModeToggle.checked = true;
     }
