@@ -3,7 +3,7 @@
         <div class="combined-card">
             <span class="operation-result" id="operation-result"></span>
             
-            <div class="input-row" id="calc-row-top">
+            <div class="input-row row-foreign" id="calc-row-top">
                 <span class="currency-prefix" id="label-top">USD</span>
                 <div class="input-field-wrapper">
                     <input type="text" id="input-top" placeholder="0,00" value="1,00" readonly inputmode="none">
@@ -13,7 +13,7 @@
             
             <div class="input-divider"></div>
             
-            <div class="input-row" id="calc-row-bottom">
+            <div class="input-row row-local" id="calc-row-bottom">
                 <span class="currency-prefix" id="label-bottom">VES</span>
                 <div class="input-field-wrapper">
                     <input type="text" id="input-bottom" placeholder="0,00" value="" readonly inputmode="none">

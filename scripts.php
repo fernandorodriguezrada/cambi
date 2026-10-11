@@ -148,7 +148,9 @@
     };
 
     /**
-     * Cambia el color del texto a gris cuando el valor es 0,00 o está vacío.
+     * Cambia el color del texto a gris cuando el valor es 0,00 o está vacío,
+     * y sincroniza las clases cromáticas de las filas (Verde menta/azul para divisa extranjera,
+     * Blanco/neutro para VES) según el sentido de la conversión (isTopUsd).
      */
     const updateInputColors = () => {
         [inputTop, inputBottom].forEach(el => {
@@ -156,6 +158,21 @@
             const isMuted = el.value === '0,00' || el.value === '';
             el.classList.toggle('value-zero', isMuted);
         });
+
+        const rowTop = document.getElementById('calc-row-top');
+        const rowBottom = document.getElementById('calc-row-bottom');
+        if (rowTop && rowBottom) {
+            rowTop.classList.toggle('row-foreign', isTopUsd);
+            rowTop.classList.toggle('row-local', !isTopUsd);
+            rowBottom.classList.toggle('row-foreign', !isTopUsd);
+            rowBottom.classList.toggle('row-local', isTopUsd);
+        }
+
+        const operationResult = document.getElementById('operation-result');
+        if (operationResult) {
+            const foreignColor = selectedRateType === 'eur' ? 'var(--rate-eur-color)' : 'var(--rate-usd-color)';
+            operationResult.style.color = isTopUsd ? foreignColor : 'var(--md-sys-color-on-surface)';
+        }
     };
 
     /**
@@ -847,6 +864,11 @@
                 labelTop.innerText = "VES";
                 labelBottom.innerText = cur;
             }
+        }
+
+        const combinedCard = document.querySelector('.combined-card');
+        if (combinedCard) {
+            combinedCard.style.setProperty('--calc-foreign-color', type === 'eur' ? 'var(--rate-eur-color)' : 'var(--rate-usd-color)');
         }
 
         if (inputTop) convert(inputTop);

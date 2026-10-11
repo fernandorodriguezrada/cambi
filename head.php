@@ -474,10 +474,10 @@
     .currency-prefix {
         font-family: var(--font-google-sans);
         font-weight: 700;
-        color: var(--md-sys-color-primary);
         min-width: 45px;
         font-size: 1.2rem;
         user-select: none;
+        transition: color 0.2s ease;
     }
 
     .input-field-wrapper {
@@ -502,6 +502,28 @@
         font-weight: 500;
         caret-color: transparent; /* Ocultamos el cursor nativo */
         cursor: text;
+        transition: color 0.2s ease;
+    }
+
+    /* Filas según divisa: Extranjera (Verde Menta / Azul EUR) vs Local (VES Blanco/Neutro) */
+    .row-foreign .currency-prefix {
+        color: var(--calc-foreign-color, var(--rate-usd-color));
+    }
+    .row-foreign input:not(.value-zero) {
+        color: var(--calc-foreign-color, var(--rate-usd-color));
+    }
+    .row-foreign .custom-caret {
+        background-color: var(--calc-foreign-color, var(--rate-usd-color));
+    }
+
+    .row-local .currency-prefix {
+        color: var(--md-sys-color-on-surface);
+    }
+    .row-local input:not(.value-zero) {
+        color: var(--md-sys-color-on-surface);
+    }
+    .row-local .custom-caret {
+        background-color: var(--md-sys-color-on-surface);
     }
 
     /* Menú contextual estilo burbuja iOS / Material 3 */
@@ -610,9 +632,7 @@
         border-top: 1px solid rgba(255, 255, 255, 0.15);
     }
 
-    #input-bottom:not(.value-zero) {
-        color: var(--cambi-magic-mint);
-    }
+    /* #input-bottom:not(.value-zero) reemplazado por .row-foreign / .row-local */
 
     .input-divider {
         height: 1px;
