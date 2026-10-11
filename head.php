@@ -782,6 +782,36 @@
         }
     }
 
+    @keyframes tabSlideFromRight {
+        from {
+            opacity: 0.35;
+            transform: translateX(36px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes tabSlideFromLeft {
+        from {
+            opacity: 0.35;
+            transform: translateX(-36px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .tab-content.slide-from-right {
+        animation: tabSlideFromRight 0.22s cubic-bezier(0.2, 0, 0, 1) forwards !important;
+    }
+
+    .tab-content.slide-from-left {
+        animation: tabSlideFromLeft 0.22s cubic-bezier(0.2, 0, 0, 1) forwards !important;
+    }
+
     /* Centrado vertical equilibrado para la pestaña de calculadora (CERO SCROLL) */
     #calculator-tab-content.active {
         justify-content: center;
