@@ -1333,7 +1333,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v86",
+                version: "v87",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -2474,7 +2474,11 @@
         const profile = getPmProfile();
         if (!profile || !profile.selectedBank) return;
 
-        profile.banks = profile.banks.filter(b => b !== profile.selectedBank);
+        const deletedBank = profile.selectedBank;
+        profile.banks = profile.banks.filter(b => b !== deletedBank);
+        if (profile.bankQrs && profile.bankQrs[deletedBank]) {
+            delete profile.bankQrs[deletedBank];
+        }
         closePmConfirmDeleteModal();
         closePmDetailModal();
 
@@ -2547,57 +2551,6 @@
         document.body.removeChild(textArea);
     };
 
-    // Algoritmo CRC-16/CCITT-FALSE requerido por la especificación EMVCo (Tag 63)
-    const crc16Ccitt = (str) => {
-        let crc = 0xFFFF;
-        for (let i = 0; i < str.length; i++) {
-            crc ^= str.charCodeAt(i) << 8;
-            for (let j = 0; j < 8; j++) {
-                crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) & 0xFFFF : (crc << 1) & 0xFFFF;
-            }
-        }
-        return crc.toString(16).toUpperCase().padStart(4, "0");
-    };
-
-    // Generador de Payload EMVCo MPM para Pago Móvil Interbancario (Suiche 7B / BDVApp / Conexus)
-    const buildSuiche7bQr = (bankCode, docType, docNum, phonePrefix, phoneNum, holder) => {
-        const docClean = `${docType}${docNum}`.replace(/[^A-Z0-9]/gi, "").toUpperCase();
-        const phoneClean = `${phonePrefix}${phoneNum}`.replace(/[^0-9]/g, "");
-        const bankClean = String(bankCode).padStart(4, "0");
-
-        let nameClean = (holder || "PAGO MOVIL")
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/[^a-zA-Z0-9 ]/g, "")
-            .trim()
-            .toUpperCase()
-            .slice(0, 25);
-        if (!nameClean) nameClean = "PAGO MOVIL";
-
-        const pad2 = (n) => String(n).padStart(2, "0");
-
-        // Subtags de Tag 26 (Merchant Account Information bajo el esquema Suiche 7B)
-        const s00 = "0015ve.com.suiche7b";
-        const s01 = `01${pad2(bankClean.length)}${bankClean}`;
-        const s02 = `02${pad2(phoneClean.length)}${phoneClean}`;
-        const s03 = `03${pad2(docClean.length)}${docClean}`;
-
-        const tag26Val = s00 + s01 + s02 + s03;
-        const tag26 = `26${pad2(tag26Val.length)}${tag26Val}`;
-
-        const tag00 = "000201";     // Versión EMVCo 01
-        const tag01 = "010211";     // QR Estático (el pagador indica el monto)
-        const tag52 = "52040000";   // Merchant Category Code general
-        const tag53 = "5303928";    // Moneda: 928 (VES - Bolívares)
-        const tag58 = "5802VE";     // País: VE (Venezuela)
-        const tag59 = `59${pad2(nameClean.length)}${nameClean}`; // Titular
-        const tag60 = "6007CARACAS"; // Ciudad
-
-        const payloadNoCrc = tag00 + tag01 + tag26 + tag52 + tag53 + tag58 + tag59 + tag60 + "6304";
-        const crc = crc16Ccitt(payloadNoCrc);
-        return payloadNoCrc + crc;
-    };
-
     const showPmQR = () => {
         const profile = getPmProfile();
         if (!profile || !profile.selectedBank) return;
@@ -2621,17 +2574,8 @@
         if (qrTitle) qrTitle.innerText = `${bankName} (${bankCode})`;
         if (qrSubtitle) qrSubtitle.innerText = holder;
 
-        let officialPayload = null;
-        if (profile.bankQrs && profile.bankQrs[bankCode]) {
-            officialPayload = profile.bankQrs[bankCode];
-        } else if (bankCode === "0134" && profile.phoneNum === "7040141") {
-            officialPayload = "YRbMTpNdhtuGfRPPR6kYwwTiW7AMphcmue2HwIns4rUqgAcVLUU5PEL+ifxENwOVvy7Y00EKMnv9osiaIGZzsf91O5S+4tgY1z2D8L6+NEvmhoQFKjG6BKhYNGj7GAK8PNSTgnUM5kBbVvvp9AoO/p2+b2uDfTxvjzBHY7qR9dDgF8PhhPRFgYAIh394Ke1T?merchantId=0134&strong_id=1790656181";
-            profile.bankQrs = profile.bankQrs || {};
-            profile.bankQrs[bankCode] = officialPayload;
-            setPmProfile(profile);
-        } else {
-            officialPayload = buildSuiche7bQr(bankCode, profile.docType, profile.docNum, profile.phonePrefix, profile.phoneNum, profile.holder);
-        }
+        // Solo usar el QR oficial si el usuario realmente importó una captura de Mi QR para este banco específico
+        const officialPayload = (profile.bankQrs && profile.bankQrs[bankCode]) ? profile.bankQrs[bankCode] : null;
 
         if (officialPayload) {
             if (activeView) activeView.style.display = "block";
@@ -2670,6 +2614,7 @@
             if (activeView) activeView.style.display = "none";
             if (emptyView) emptyView.style.display = "block";
             if (emptyTitle) emptyTitle.innerText = `Sincroniza el QR de ${bankName}`;
+            if (qrContainer) qrContainer.innerHTML = "";
         }
 
         if (modal) modal.classList.add("active");
