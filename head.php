@@ -3220,6 +3220,25 @@
         transform: scale(1);
     }
 
+    /* Fila de acciones de tasas (Historial y Actualizar) */
+    .rates-actions-row {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        width: 100%;
+        margin: 16px 0 20px 0;
+    }
+    .rates-history-btn {
+        background-color: var(--md-sys-color-surface-container);
+        color: var(--md-sys-color-primary);
+        flex: 1;
+        max-width: 160px;
+    }
+    .rates-refresh-btn {
+        flex: 1;
+        max-width: 160px;
+    }
+
     /* ===================================================
        ADAPTACIONES Y DISEÑO RESPONSIVO EXCLUSIVO DESKTOP (>= 900px)
        =================================================== */
@@ -3330,16 +3349,16 @@
 
         .tabs-track {
             width: 100% !important;
-            max-width: 1140px;
+            max-width: 1180px;
             margin: 0 auto;
             transform: none !important;
             transition: none !important;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
             height: auto;
             min-height: auto;
-            gap: 36px;
+            gap: 40px;
         }
 
         /* =======================================================
@@ -3347,9 +3366,9 @@
            ======================================================= */
         body.desktop-view-dashboard #rates-tab-content {
             display: flex !important;
-            flex: 1 1 640px;
-            width: 640px;
-            max-width: 660px;
+            flex: 1 1 680px;
+            width: 680px;
+            max-width: 700px;
             height: auto;
             max-height: none;
             overflow: visible;
@@ -3358,49 +3377,57 @@
 
         body.desktop-view-dashboard #calculator-tab-content {
             display: flex !important;
-            flex: 0 0 420px;
-            width: 420px;
-            max-width: 420px;
+            flex: 0 0 430px;
+            width: 430px;
+            max-width: 430px;
             height: auto;
             max-height: none;
             overflow: visible;
             padding: 0 !important;
             justify-content: center;
-            align-items: center;
+            align-items: stretch;
         }
 
         body.desktop-view-dashboard #rates-tab-content .container {
             width: 100%;
             max-width: 100%;
+            height: 100%;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Bloques de tasas */
+        .rates-block {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
         }
 
         /* Encabezados de sección de tasas */
         .rates-section-header {
-            margin-bottom: 8px;
+            margin: 0 0 10px !important;
         }
         .rates-section-label {
-            font-size: 0.82rem !important;
-            font-weight: 700;
+            font-size: 0.86rem !important;
+            font-weight: 800;
             letter-spacing: 0.05em;
-        }
-        .rates-p2p-header {
-            margin-top: 16px !important;
         }
 
         /* Cuadrículas de tasas en escritorio: proporciones generosas */
         .rates-official-grid {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
-            gap: 14px !important;
+            gap: 16px !important;
             margin-bottom: 0 !important;
         }
 
         .rates-p2p-grid {
             display: grid !important;
             grid-template-columns: repeat(3, 1fr) !important;
-            gap: 12px !important;
+            gap: 14px !important;
             margin-bottom: 0 !important;
         }
 
@@ -3408,86 +3435,97 @@
             margin-bottom: 0 !important;
             text-align: left;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
         }
         .rates-cards-grid .card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
         }
         body.dark-mode .rates-cards-grid .card:hover {
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.32);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.36);
+            transform: translateY(-2px);
         }
 
-        /* Tarjetas Oficiales (BCV Dólar y Euro) */
+        /* Tarjetas Oficiales (BCV Dólar y Euro) - Escala mayor y presencia sólida */
         .rates-official-grid .card {
-            padding: 18px 20px !important;
-            border-radius: 22px !important;
+            padding: 24px 24px !important;
+            border-radius: 26px !important;
+            min-height: 154px !important;
+            box-sizing: border-box;
         }
         .rates-official-grid .rate-card-title {
             justify-content: flex-start;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 6px;
         }
         .rates-official-grid .rate-platform-logo {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
         }
         .rates-official-grid .rate-card-title .label {
-            font-size: 0.88rem;
+            font-size: 0.94rem;
             font-weight: 600;
         }
         .rates-official-grid .rate-amount-row {
             justify-content: space-between;
             width: 100%;
-            margin: 4px 0;
+            margin: 6px 0;
         }
         .rates-official-grid .rate-display {
-            font-size: 2.25rem !important;
-            letter-spacing: -0.02em;
+            font-size: 2.75rem !important;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
         }
         .rates-official-grid .rate-copy-btn {
             position: static;
             transform: none;
-            width: 34px;
-            height: 34px;
+            width: 38px;
+            height: 38px;
             margin-left: auto;
         }
         .rates-official-grid .footer-info {
             text-align: left;
             margin-top: 6px;
-            font-size: 0.72rem !important;
+            font-size: 0.74rem !important;
         }
 
-        /* Tarjetas P2P (Binance y OKX) */
+        /* Tarjetas P2P (Binance y OKX) - Más amplias y legibles */
         .rates-p2p-grid .card {
-            padding: 14px 16px !important;
-            border-radius: 20px !important;
+            padding: 18px 18px !important;
+            border-radius: 22px !important;
+            min-height: 124px !important;
+            box-sizing: border-box;
         }
         .rates-p2p-grid .rate-card-title {
             justify-content: flex-start;
-            gap: 6px;
+            gap: 8px;
             margin-bottom: 4px;
         }
         .rates-p2p-grid .rate-platform-logo {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
         }
         .rates-p2p-grid .rate-card-title .label {
-            font-size: 0.8rem;
+            font-size: 0.84rem;
             font-weight: 600;
         }
         .rates-p2p-grid .rate-amount-row {
             justify-content: space-between;
             width: 100%;
-            margin: 3px 0;
+            margin: 4px 0;
         }
         .rates-p2p-grid .rate-display {
-            font-size: 1.65rem !important;
+            font-size: 1.85rem !important;
             letter-spacing: -0.02em;
+            line-height: 1.15;
         }
         .rates-p2p-grid .rate-copy-btn {
             position: static;
             transform: none;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             margin-left: auto;
         }
         .rates-p2p-grid .footer-info {
@@ -3496,12 +3534,13 @@
             font-size: 0.68rem !important;
         }
 
-        /* Fila de acciones: Historial y Actualizar juntos */
+        /* Fila de acciones: Historial y Actualizar alineados al fondo */
         .rates-actions-row {
-            margin: 16px 0 0 !important;
+            margin: 0 !important;
             justify-content: flex-start !important;
             display: flex !important;
-            gap: 12px !important;
+            gap: 14px !important;
+            width: 100% !important;
         }
         .rates-history-btn,
         .rates-refresh-btn {
@@ -3509,10 +3548,12 @@
             flex: 0 0 auto !important;
             max-width: none !important;
             width: auto !important;
-            padding: 10px 22px !important;
-            font-size: 0.88rem !important;
-            border-radius: 18px !important;
+            padding: 13px 28px !important;
+            font-size: 0.94rem !important;
+            font-weight: 600 !important;
+            border-radius: 20px !important;
             margin: 0 !important;
+            height: 48px;
         }
 
         /* =======================================================
@@ -3520,68 +3561,70 @@
            ======================================================= */
         #calculator-tab-content .container {
             width: 100% !important;
-            max-width: 420px !important;
+            max-width: 430px !important;
+            height: 100%;
             margin: 0 auto !important;
             padding: 0 !important;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
 
         .combined-card {
             width: 100% !important;
-            max-width: 420px !important;
-            border-radius: 24px !important;
+            max-width: 430px !important;
+            border-radius: 26px !important;
             box-sizing: border-box;
-            padding: 6px 18px !important;
+            padding: 8px 20px !important;
             margin-bottom: 0 !important;
         }
         .operation-result {
-            min-height: 22px;
-            font-size: 0.82rem;
+            min-height: 24px;
+            font-size: 0.84rem;
             padding: 6px 12px 0;
         }
         .input-row {
-            height: 58px !important;
+            height: 60px !important;
             padding: 2px 10px !important;
         }
         .currency-prefix {
-            font-size: 1.25rem !important;
-            min-width: 46px;
+            font-size: 1.3rem !important;
+            min-width: 48px;
         }
         .combined-card input {
-            font-size: 1.85rem !important;
+            font-size: 1.95rem !important;
             padding: 0 6px !important;
         }
         .input-divider {
             margin: 0 10px !important;
         }
 
-        /* Teclado exactamente de 420px de ancho a la par de la tarjeta */
+        /* Teclado exactamente de 430px de ancho a la par de la tarjeta */
         .keypad {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
             gap: 10px !important;
-            margin: 12px auto 0 !important;
+            margin: 0 auto !important;
             width: 100% !important;
-            max-width: 420px !important;
+            max-width: 430px !important;
             box-sizing: border-box;
         }
         .keypad-btn {
-            height: 52px !important;
-            border-radius: 16px !important;
-            font-size: 1.25rem !important;
+            height: 54px !important;
+            border-radius: 18px !important;
+            font-size: 1.3rem !important;
             aspect-ratio: auto !important;
         }
         .keypad-btn.key-zero {
-            height: 52px !important;
+            height: 54px !important;
         }
         .keypad-btn .material-symbols-rounded {
-            font-size: 1.45rem !important;
+            font-size: 1.5rem !important;
         }
         .calc-picker-icon {
-            width: 26px !important;
-            height: 26px !important;
+            width: 28px !important;
+            height: 28px !important;
         }
         .keypad-btn:hover {
             background-color: var(--md-sys-color-surface-container-high);
