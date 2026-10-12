@@ -3401,7 +3401,7 @@
         position: fixed;
         bottom: calc(90px + env(safe-area-inset-bottom, 0px));
         left: 50%;
-        transform: translateX(-50%) translateY(30px);
+        transform: translateX(-50%) translateY(24px) scale(0.95);
         background-color: #1e293b;
         color: #ffffff;
         padding: 12px 20px;
@@ -3415,17 +3415,25 @@
         z-index: 10000 !important;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+        transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1), transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+        will-change: transform, opacity;
     }
 
     .pm-toast.active {
         opacity: 1;
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    .pm-toast.toast-replacing {
+        transition: opacity 0.11s cubic-bezier(0.4, 0, 1, 1), transform 0.11s cubic-bezier(0.4, 0, 1, 1) !important;
+        opacity: 0 !important;
+        transform: translateX(-50%) translateY(14px) scale(0.94) !important;
     }
 
     .pm-toast .material-symbols-rounded {
         color: var(--branding-color);
         font-size: 20px;
+        transition: color 0.2s;
     }
 
     /* ==========================================

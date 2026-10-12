@@ -182,9 +182,29 @@
         const toast = document.getElementById("pm-toast");
         const toastMsg = document.getElementById("pm-toast-msg");
         if (!toast) return;
+
+        clearTimeout(toast._timeout);
+        clearTimeout(toast._retriggerTimeout);
+
+        // Si ya está visible o en transición, reemplazamos con una micro-animación fluida de salida/entrada
+        if (toast.classList.contains("active") || toast.classList.contains("toast-replacing")) {
+            toast.classList.remove("active");
+            toast.classList.add("toast-replacing");
+
+            toast._retriggerTimeout = setTimeout(() => {
+                toast.classList.remove("toast-replacing");
+                if (toastMsg) toastMsg.innerText = message;
+                void toast.offsetWidth; // Forzar reflow para reiniciar la animación
+                toast.classList.add("active");
+                toast._timeout = setTimeout(() => {
+                    toast.classList.remove("active");
+                }, 2600);
+            }, 110);
+            return;
+        }
+
         if (toastMsg) toastMsg.innerText = message;
         toast.classList.add("active");
-        clearTimeout(toast._timeout);
         toast._timeout = setTimeout(() => {
             toast.classList.remove("active");
         }, 2600);
@@ -1223,7 +1243,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v83",
+                version: "v84",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
