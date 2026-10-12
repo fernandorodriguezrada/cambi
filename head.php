@@ -1437,6 +1437,7 @@
     .splash-logo {
         width: min(52.5vw, 220px);
         height: auto;
+        aspect-ratio: 2066 / 1679;
         max-width: 240px;
         user-select: none;
         -webkit-user-select: none;
