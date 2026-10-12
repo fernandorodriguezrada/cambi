@@ -1843,6 +1843,10 @@
         padding-right: 2px;
     }
 
+    .pm-add-bank-desktop-btn {
+        display: none;
+    }
+
     .pm-grid-toggle-btn {
         display: inline-flex;
         align-items: center;
@@ -4098,114 +4102,165 @@
         }
 
         /* =======================================================
-           VISTA 2: PAGO MÓVIL 100% RESPONSIVE EN DESKTOP
+           VISTA 2: PAGO MÓVIL CON CALCULADORA PERSISTENTE EN DESKTOP
            ======================================================= */
         body.desktop-view-pagomovil .main-content {
             align-items: flex-start !important;
-            padding: 36px 32px 64px !important;
+            padding: 32px 32px 56px !important;
+        }
+
+        body.desktop-view-pagomovil .tabs-track {
+            align-items: flex-start !important;
         }
 
         body.desktop-view-pagomovil #rates-tab-content,
-        body.desktop-view-pagomovil #calculator-tab-content,
         body.desktop-view-pagomovil #history-tab-content {
             display: none !important;
         }
 
         body.desktop-view-pagomovil #pagomovil-tab-content {
             display: flex !important;
-            flex: 1 1 100%;
-            width: 100%;
-            max-width: 960px;
+            flex: 1 1 680px;
+            width: 680px;
+            max-width: 700px;
             height: auto;
             max-height: none;
             overflow-y: visible;
             padding: 0 !important;
-            margin: 0 auto;
+            margin: 0;
+        }
+
+        body.desktop-view-pagomovil #calculator-tab-content {
+            display: flex !important;
+            flex: 0 0 430px;
+            width: 430px;
+            max-width: 430px;
+            height: auto;
+            max-height: none;
+            overflow: visible;
+            padding: 0 !important;
+            justify-content: center;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         /* Anular límite de 440px en desktop para Pago Móvil */
         .pm-container {
-            max-width: 960px !important;
+            max-width: 700px !important;
             width: 100% !important;
             padding: 0 !important;
+            margin: 0 !important;
         }
 
-        /* Header del perfil activo amplio */
+        /* Header del perfil activo en Pago Móvil */
         body.desktop-view-pagomovil .pm-profile-header {
-            padding: 22px 28px !important;
-            border-radius: 26px !important;
-            margin-bottom: 24px !important;
+            padding: 18px 22px !important;
+            border-radius: 22px !important;
+            margin-bottom: 20px !important;
             width: 100% !important;
         }
         body.desktop-view-pagomovil .pm-user-name {
-            font-size: 1.55rem !important;
+            font-size: 1.35rem !important;
             margin-top: 4px;
         }
         body.desktop-view-pagomovil .pm-user-tag {
-            font-size: 0.78rem !important;
+            font-size: 0.75rem !important;
         }
         body.desktop-view-pagomovil .pm-user-submeta {
-            font-size: 0.95rem !important;
+            font-size: 0.90rem !important;
             margin-top: 4px;
         }
         body.desktop-view-pagomovil .pm-icon-btn {
-            width: 46px !important;
-            height: 46px !important;
+            width: 42px !important;
+            height: 42px !important;
         }
 
-        /* Sección y Cuadrícula de Bancos en Desktop (Tarjetas amplias en 2-3 columnas) */
+        /* Botón de Añadir Banco en cabecera desktop */
+        .pm-add-bank-desktop-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            border-radius: 9999px;
+            padding: 7px 16px;
+            font-family: var(--font-google-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+        .pm-add-bank-desktop-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+        }
+        .pm-add-bank-desktop-btn:active {
+            transform: scale(0.96);
+        }
+        .pm-add-bank-desktop-btn .material-symbols-rounded {
+            font-size: 18px;
+        }
+
+        /* Ocultar selector de 1 col y botón FAB en desktop */
         .pm-grid-toggle-btn,
-        body.desktop-view-pagomovil .pm-grid-toggle-btn {
+        body.desktop-view-pagomovil .pm-grid-toggle-btn,
+        #pm-fab-container,
+        .pm-fab-container {
             display: none !important;
         }
+
         body.desktop-view-pagomovil .pm-blocks-header {
-            margin-bottom: 16px !important;
+            margin-bottom: 14px !important;
         }
         body.desktop-view-pagomovil .pm-section-label {
-            font-size: 1.05rem !important;
+            font-size: 0.95rem !important;
             font-weight: 700 !important;
         }
         body.desktop-view-pagomovil .pm-count-badge {
-            font-size: 0.85rem !important;
-            padding: 2px 10px !important;
-            border-radius: 12px !important;
+            font-size: 0.80rem !important;
+            padding: 2px 8px !important;
+            border-radius: 10px !important;
         }
         body.desktop-view-pagomovil .pm-banks-grid {
             display: grid !important;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
-            gap: 18px !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 14px !important;
             width: 100% !important;
         }
         body.desktop-view-pagomovil .pm-bank-block {
-            padding: 20px 22px !important;
-            border-radius: 22px !important;
-            min-height: 120px !important;
+            padding: 16px 18px !important;
+            border-radius: 20px !important;
+            min-height: 110px !important;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease !important;
         }
         body.desktop-view-pagomovil .pm-bank-block:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14) !important;
         }
         body.desktop-view-pagomovil .pm-block-code {
-            font-size: 0.85rem !important;
+            font-size: 0.82rem !important;
         }
         body.desktop-view-pagomovil .pm-block-name {
-            font-size: 1.15rem !important;
+            font-size: 1.05rem !important;
             margin: 4px 0 2px 0 !important;
         }
         body.desktop-view-pagomovil .pm-block-sub {
-            font-size: 0.88rem !important;
+            font-size: 0.84rem !important;
         }
 
         /* Vista de Bienvenida / Tour Onboarding amplia en desktop */
         body.desktop-view-pagomovil .pm-tour-card {
-            max-width: 920px !important;
+            max-width: 680px !important;
             width: 100% !important;
-            padding: 36px 32px !important;
-            margin: 20px auto !important;
+            padding: 32px 28px !important;
+            margin: 0 !important;
             background-color: var(--md-sys-color-surface-container) !important;
-            border-radius: 28px !important;
+            border-radius: 26px !important;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
         body.desktop-view-pagomovil .pm-carousel-wrapper {
@@ -4213,9 +4268,9 @@
             width: 100% !important;
         }
         body.desktop-view-pagomovil .pm-carousel {
-            display: grid !important;
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 24px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 16px !important;
             transform: none !important;
             width: 100% !important;
             height: auto !important;
@@ -4223,24 +4278,24 @@
         body.desktop-view-pagomovil .pm-slide {
             min-width: 0 !important;
             width: 100% !important;
-            padding: 18px 12px !important;
+            padding: 12px 8px !important;
             height: auto !important;
         }
         body.desktop-view-pagomovil .pm-slide-icon-wrap {
-            width: 72px !important;
-            height: 72px !important;
-            border-radius: 24px !important;
-            margin-bottom: 18px !important;
+            width: 56px !important;
+            height: 56px !important;
+            border-radius: 18px !important;
+            margin-bottom: 12px !important;
         }
         body.desktop-view-pagomovil .pm-slide-icon-wrap .material-symbols-rounded {
-            font-size: 38px !important;
+            font-size: 28px !important;
         }
         body.desktop-view-pagomovil .pm-slide-title {
-            font-size: 1.2rem !important;
-            margin-bottom: 8px !important;
+            font-size: 1.1rem !important;
+            margin-bottom: 6px !important;
         }
         body.desktop-view-pagomovil .pm-slide-desc {
-            font-size: 0.92rem !important;
+            font-size: 0.88rem !important;
             max-width: 100% !important;
             line-height: 1.45;
         }
@@ -4248,16 +4303,11 @@
             display: none !important;
         }
         body.desktop-view-pagomovil #pm-btn-start {
-            max-width: 360px !important;
-            margin: 28px auto 0 !important;
-            padding: 16px 24px !important;
-            font-size: 1.05rem !important;
-            border-radius: 22px !important;
-        }
-
-        body.desktop-view-pagomovil .pm-fab-container {
-            bottom: 36px;
-            right: max(36px, calc(50% - 480px));
+            max-width: 320px !important;
+            margin: 20px auto 0 !important;
+            padding: 14px 20px !important;
+            font-size: 0.95rem !important;
+            border-radius: 20px !important;
         }
 
         /* =======================================================

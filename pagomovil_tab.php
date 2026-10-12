@@ -72,9 +72,15 @@
                         <span class="pm-section-label">Bancos Registrados</span>
                         <span id="pm-banks-count-badge" class="pm-count-badge">0</span>
                     </div>
-                    <button type="button" id="pm-grid-toggle-btn" class="pm-grid-toggle-btn" onclick="togglePmGridLayout()" title="Cambiar a vista de 1 columna" aria-label="Cambiar vista de columnas">
-                        <span id="pm-grid-toggle-icon" class="material-symbols-rounded">view_agenda</span>
-                    </button>
+                    <div class="pm-blocks-header-actions" style="display: flex; align-items: center; gap: 8px;">
+                        <button type="button" id="pm-add-bank-desktop-btn" class="pm-add-bank-desktop-btn" onclick="openAddBankModal()">
+                            <span class="material-symbols-rounded">add</span>
+                            <span>Añadir Banco</span>
+                        </button>
+                        <button type="button" id="pm-grid-toggle-btn" class="pm-grid-toggle-btn" onclick="togglePmGridLayout()" title="Cambiar a vista de 1 columna" aria-label="Cambiar vista de columnas">
+                            <span id="pm-grid-toggle-icon" class="material-symbols-rounded">view_agenda</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Grid de bloques de bancos agregados -->
