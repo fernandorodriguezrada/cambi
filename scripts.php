@@ -1333,7 +1333,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v97",
+                version: "v98",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -1975,6 +1975,7 @@
         const grid = document.getElementById("pm-banks-grid");
         const toggleBtn = document.getElementById("pm-grid-toggle-btn");
         const toggleIcon = document.getElementById("pm-grid-toggle-icon");
+        if (toggleBtn) toggleBtn.blur();
         if (!grid) return;
 
         if (layout === "1-col") {
@@ -1989,6 +1990,8 @@
     };
 
     const togglePmGridLayout = () => {
+        const toggleBtn = document.getElementById("pm-grid-toggle-btn");
+        if (toggleBtn) toggleBtn.blur();
         const current = getPmGridLayout();
         const next = current === "1-col" ? "2-col" : "1-col";
         localStorage.setItem("pm_grid_layout", next);

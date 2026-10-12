@@ -1860,14 +1860,24 @@
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
         padding: 0;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        -webkit-user-select: none;
     }
-    .pm-grid-toggle-btn:hover {
-        background-color: var(--md-sys-color-surface-container-high);
-        color: var(--md-sys-color-on-surface);
-        border-color: var(--md-sys-color-outline);
+    @media (hover: hover) and (pointer: fine) {
+        .pm-grid-toggle-btn:hover {
+            background-color: var(--md-sys-color-surface-container-high);
+            color: var(--md-sys-color-on-surface);
+            border-color: var(--md-sys-color-outline);
+        }
     }
     .pm-grid-toggle-btn:active {
         transform: scale(0.92);
+        background-color: var(--md-sys-color-surface-container-high);
+    }
+    .pm-grid-toggle-btn:focus-visible {
+        outline: 2px solid var(--md-sys-color-primary);
     }
     .pm-grid-toggle-btn span {
         font-size: 19px;
