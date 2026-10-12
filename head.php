@@ -1431,7 +1431,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transform: translateY(-2.27vh);
+        transform: translateZ(0);
     }
 
     .splash-logo {
