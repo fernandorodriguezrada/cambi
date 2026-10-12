@@ -3354,7 +3354,7 @@
             transform: none !important;
             transition: none !important;
             display: flex;
-            align-items: stretch;
+            align-items: center;
             justify-content: center;
             height: auto;
             min-height: auto;
@@ -3385,18 +3385,19 @@
             overflow: visible;
             padding: 0 !important;
             justify-content: center;
-            align-items: stretch;
+            align-items: center;
         }
 
         body.desktop-view-dashboard #rates-tab-content .container {
             width: 100%;
             max-width: 100%;
-            height: 100%;
+            height: auto;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
+            gap: 24px;
         }
 
         /* Bloques de tasas */
@@ -3562,12 +3563,12 @@
         #calculator-tab-content .container {
             width: 100% !important;
             max-width: 430px !important;
-            height: 100%;
+            height: auto !important;
             margin: 0 auto !important;
             padding: 0 !important;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
         }
 
@@ -3577,7 +3578,7 @@
             border-radius: 26px !important;
             box-sizing: border-box;
             padding: 8px 20px !important;
-            margin-bottom: 0 !important;
+            margin-bottom: 18px !important;
         }
         .operation-result {
             min-height: 24px;
