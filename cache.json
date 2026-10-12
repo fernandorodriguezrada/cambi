@@ -1,7 +1,7 @@
 {
     "usd": 876.7976,
     "eur": 982.00454402,
-    "last_update": "12/10/2026, 05:00 PM",
+    "last_update": "12/10/2026, 05:35 PM",
     "source": "Directo BCV",
     "history": [
         {
@@ -45,6 +45,6 @@
             "eur": 982.00454402
         }
     ],
-    "timestamp": 1791838812,
+    "timestamp": 1791840952,
     "is_cached": true
 }
