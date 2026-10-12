@@ -32,6 +32,60 @@
         outline: none !important;
     }
 
+    /* =======================================================
+       MATERIAL YOU 3 CUSTOM SCROLLBARS (GLOBAL)
+       ======================================================= */
+    /* Soporte estándar (Firefox) */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(121, 116, 126, 0.35) transparent;
+    }
+
+    html.dark-mode,
+    body.dark-mode,
+    html.dark-mode *,
+    body.dark-mode * {
+        scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+    }
+
+    /* Soporte WebKit & Blink (Chrome, Safari, Edge, Brave, Opera) */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(121, 116, 126, 0.32);
+        border-radius: 9999px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        transition: background-color 0.2s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--md-sys-color-primary);
+    }
+
+    html.dark-mode ::-webkit-scrollbar-thumb,
+    body.dark-mode ::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.24);
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+
+    html.dark-mode ::-webkit-scrollbar-thumb:hover,
+    body.dark-mode ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--cambi-magic-mint);
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
     :root {
         /* Tipografía estilo Google Sans / Pixel / Material You */
         --font-google-sans: 'Google Sans', 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -1018,29 +1072,54 @@
     }
 
     /* Estilos para el Historial */
-    .history-item {
-        font-family: var(--font-google-sans);
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        padding: 14px 0;
-        border-bottom: 1px solid var(--md-sys-color-surface-container);
-        font-size: 0.95rem;
+    #history-list {
+        max-height: 60vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 14px;
+        margin-right: -4px;
+        scrollbar-gutter: stable;
+        -webkit-overflow-scrolling: touch;
     }
-    .history-item:last-child { border-bottom: none; }
-    .history-item span:first-child { font-weight: 500; color: var(--md-sys-color-outline); }
-    .history-item .usd-val { color: var(--rate-usd-color); text-align: right; font-weight: 700; }
-    .history-item .eur-val { color: var(--rate-eur-color); text-align: right; font-weight: 700; }
+
     .history-header {
         font-family: var(--font-google-sans);
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        padding-bottom: 8px;
+        grid-template-columns: 1.15fr 0.9fr 0.95fr;
+        padding: 8px 12px 10px 4px;
         font-weight: 700;
         font-size: 0.75rem;
         text-transform: uppercase;
         color: var(--md-sys-color-outline);
         border-bottom: 2px solid var(--md-sys-color-surface-container);
+        position: sticky;
+        top: 0;
+        background-color: var(--md-sys-color-surface-container);
+        z-index: 2;
     }
+
+    .history-item {
+        font-family: var(--font-google-sans);
+        display: grid;
+        grid-template-columns: 1.15fr 0.9fr 0.95fr;
+        padding: 13px 12px 13px 4px;
+        border-bottom: 1px solid var(--md-sys-color-surface-container);
+        font-size: 0.95rem;
+        align-items: center;
+        transition: background-color 0.15s ease;
+    }
+    .history-item:hover {
+        background-color: rgba(255, 255, 255, 0.04);
+        border-radius: 8px;
+    }
+    body:not(.dark-mode) .history-item:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 8px;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item span:first-child { font-weight: 500; color: var(--md-sys-color-outline); }
+    .history-item .usd-val { color: var(--rate-usd-color); text-align: right; font-weight: 700; }
+    .history-item .eur-val { color: var(--rate-eur-color); text-align: right; font-weight: 700; }
 
     /* =========================================
        ESTILOS PESTAÑA PAGO MÓVIL
@@ -3689,7 +3768,7 @@
             position: static !important;
             inset: auto !important;
             width: 100%;
-            max-width: 860px;
+            max-width: 660px;
             height: auto;
             max-height: none;
             overflow-y: visible;
@@ -3703,11 +3782,29 @@
         body.desktop-view-history #history-tab-content .container {
             width: 100%;
             max-width: 100%;
+            padding: 0;
+            margin: 0 auto;
         }
 
         body.desktop-view-history #history-tab-content .card {
             border-radius: 26px !important;
             padding: 28px 32px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        body.dark-mode.desktop-view-history #history-tab-content .card {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        body.desktop-view-history #history-list {
+            max-height: 65vh;
+        }
+
+        .pm-modal-sheet {
+            scrollbar-width: thin !important;
+        }
+        .pm-modal-sheet::-webkit-scrollbar {
+            display: block !important;
+            width: 8px !important;
         }
 
         /* =======================================================

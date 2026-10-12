@@ -8,7 +8,7 @@
                 </button>
             </div>
             
-            <div id="history-list" style="max-height: 60vh; overflow-y: auto;">
+            <div id="history-list">
                 <div class="history-header">
                     <span>Fecha / Hora</span><span style="text-align: right">USD</span><span style="text-align: right">EUR</span>
                 </div>
