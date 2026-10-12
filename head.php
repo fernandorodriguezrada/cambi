@@ -3149,126 +3149,358 @@
     }
 
     @media (min-width: 900px) {
-        /* Encabezado Desktop */
+        /* Encabezado Desktop Limpio y Elegante */
         header.app-header {
             position: sticky;
             top: 0;
-            height: 72px;
-            padding: 0 max(28px, calc(50% - 570px));
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            height: 64px;
+            padding: 0 max(28px, calc(50% - 540px));
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
             background-color: var(--md-sys-color-surface-container);
             z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         body.dark-mode header.app-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         }
 
+        /* Navegación Desktop: Pestañas planas integradas, sin cajas ni botones invasivos */
         .desktop-navigation {
             display: flex;
             align-items: center;
-            gap: 6px;
-            background-color: var(--md-sys-color-surface-container-high);
-            padding: 4px;
-            border-radius: 28px;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        body.dark-mode .desktop-navigation {
-            border-color: rgba(255, 255, 255, 0.06);
+            gap: 28px;
+            background: transparent;
+            padding: 0;
+            border: none;
         }
 
         .desktop-nav-item {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 18px;
-            border-radius: 24px;
+            padding: 20px 4px 18px;
             border: none;
             background: transparent;
             color: var(--md-sys-color-on-surface-variant);
             font-family: var(--font-google-sans);
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+            position: relative;
+            transition: color 0.18s ease;
             -webkit-tap-highlight-color: transparent;
+            box-shadow: none !important;
         }
 
         .desktop-nav-item:hover {
             color: var(--md-sys-color-on-surface);
-            background-color: rgba(0, 0, 0, 0.04);
-        }
-        body.dark-mode .desktop-nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+            background: transparent;
         }
 
         .desktop-nav-item.active {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            color: var(--branding-color);
+            font-weight: 700;
+            background: transparent;
+            box-shadow: none !important;
+        }
+
+        /* Línea indicadora sutil para la pestaña activa */
+        .desktop-nav-item::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            background-color: var(--branding-color);
+            opacity: 0;
+            transform: scaleX(0.3);
+            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .desktop-nav-item.active::after {
+            opacity: 1;
+            transform: scaleX(1);
         }
 
         .desktop-nav-item .material-symbols-rounded {
             font-size: 20px;
         }
 
-        /* Ocultar barra inferior en desktop */
+        /* Ocultar barra inferior táctil en desktop */
         .bottom-navigation {
             display: none !important;
         }
 
-        /* Área de contenido principal en desktop */
+        /* Área de contenido principal: Diseñado para llenar la pantalla sin scroll forzado */
         .main-content {
+            height: calc(100vh - 64px);
+            max-height: calc(100vh - 64px);
             overflow-y: auto !important;
             overflow-x: hidden !important;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 36px 24px 64px;
+            align-items: center;
+            padding: 20px 24px;
             box-sizing: border-box;
             background-color: var(--md-sys-color-surface);
-            height: calc(100vh - 72px);
         }
 
         .tabs-track {
             width: 100% !important;
-            max-width: 1140px;
+            max-width: 1040px;
             margin: 0 auto;
             transform: none !important;
             transition: none !important;
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: flex-start;
             height: auto;
             min-height: auto;
-            gap: 32px;
+            gap: 28px;
         }
 
-        /* VISTA 1: DASHBOARD CONSOLA (Tasas en vivo a la izquierda, Calculadora a la derecha) */
-        body.desktop-view-dashboard #rates-tab-content,
-        body.desktop-view-dashboard #calculator-tab-content {
+        /* =======================================================
+           VISTA 1: DASHBOARD CONSOLA (Tasas en cuadrícula + Calculadora simétrica)
+           ======================================================= */
+        body.desktop-view-dashboard #rates-tab-content {
             display: flex !important;
-            flex: 1 1 50%;
-            width: 50%;
-            max-width: 540px;
+            flex: 0 0 580px;
+            width: 580px;
+            max-width: 580px;
             height: auto;
             max-height: none;
-            overflow-y: visible;
+            overflow: visible;
             padding: 0 !important;
         }
 
         body.desktop-view-dashboard #calculator-tab-content {
-            position: sticky;
-            top: 12px;
-            align-self: flex-start;
-            justify-content: flex-start;
+            display: flex !important;
+            flex: 0 0 380px;
+            width: 380px;
+            max-width: 380px;
+            height: auto;
+            max-height: none;
+            overflow: visible;
+            padding: 0 !important;
+            justify-content: center;
+            align-items: center;
         }
 
-        body.desktop-view-dashboard #rates-tab-content .container,
-        body.desktop-view-dashboard #calculator-tab-content .container {
+        body.desktop-view-dashboard #rates-tab-content .container {
             width: 100%;
             max-width: 100%;
             margin: 0;
+            padding: 0;
+        }
+
+        /* Subcuadrículas de tasas en escritorio: compactas y elegantes */
+        .rates-section-header {
+            margin-bottom: 6px;
+        }
+        .rates-section-label {
+            font-size: 0.78rem !important;
+            letter-spacing: 0.05em;
+        }
+        .rates-p2p-header {
+            margin-top: 14px !important;
+        }
+
+        /* 2 tarjetas Oficiales lado a lado */
+        .rates-official-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 12px !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* 3 tarjetas P2P lado a lado */
+        .rates-p2p-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 10px !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Rediseño compacto de las tarjetas de tasas para monitor */
+        .rates-cards-grid .card {
+            margin-bottom: 0 !important;
+            text-align: left;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .rates-cards-grid .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        body.dark-mode .rates-cards-grid .card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+        }
+
+        .rates-official-grid .card {
+            padding: 14px 16px !important;
+            border-radius: 20px !important;
+        }
+        .rates-official-grid .rate-card-title {
+            justify-content: flex-start;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .rates-official-grid .rate-platform-logo {
+            width: 20px;
+            height: 20px;
+        }
+        .rates-official-grid .rate-card-title .label {
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .rates-official-grid .rate-amount-row {
+            justify-content: space-between;
+            width: 100%;
+            margin: 2px 0;
+        }
+        .rates-official-grid .rate-display {
+            font-size: 1.85rem !important;
+            letter-spacing: -0.02em;
+        }
+        .rates-official-grid .rate-copy-btn {
+            position: static;
+            transform: none;
+            width: 32px;
+            height: 32px;
+            margin-left: auto;
+        }
+        .rates-official-grid .footer-info {
+            text-align: left;
+            margin-top: 4px;
+            font-size: 0.68rem !important;
+        }
+
+        .rates-p2p-grid .card {
+            padding: 12px 14px !important;
+            border-radius: 18px !important;
+        }
+        .rates-p2p-grid .rate-card-title {
+            justify-content: flex-start;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .rates-p2p-grid .rate-platform-logo {
+            width: 18px;
+            height: 18px;
+        }
+        .rates-p2p-grid .rate-card-title .label {
+            font-size: 0.76rem;
+            font-weight: 600;
+        }
+        .rates-p2p-grid .rate-amount-row {
+            justify-content: space-between;
+            width: 100%;
+            margin: 2px 0;
+        }
+        .rates-p2p-grid .rate-display {
+            font-size: 1.45rem !important;
+            letter-spacing: -0.02em;
+        }
+        .rates-p2p-grid .rate-copy-btn {
+            position: static;
+            transform: none;
+            width: 28px;
+            height: 28px;
+            margin-left: auto;
+        }
+        .rates-p2p-grid .footer-info {
+            text-align: left;
+            margin-top: 4px;
+            font-size: 0.65rem !important;
+        }
+
+        /* Ocultar botón redundante de Historial en Desktop (acceso limpio en el Header) */
+        .rates-history-btn {
+            display: none !important;
+        }
+        .rates-actions-row {
+            margin: 12px 0 0 !important;
+            justify-content: flex-start !important;
+        }
+        .rates-refresh-btn {
+            max-width: 150px !important;
+            padding: 8px 18px !important;
+            font-size: 0.84rem !important;
+            border-radius: 16px !important;
+        }
+
+        /* =======================================================
+           CALCULADORA: SIMETRÍA PERFECTA Y ESCALA DE ESCRITORIO
+           ======================================================= */
+        #calculator-tab-content .container {
+            width: 100% !important;
+            max-width: 380px !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .combined-card {
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 20px !important;
+            box-sizing: border-box;
+            padding: 4px 14px !important;
+            margin-bottom: 0 !important;
+        }
+        .operation-result {
+            min-height: 20px;
+            font-size: 0.78rem;
+            padding: 4px 10px 0;
+        }
+        .input-row {
+            height: 52px !important;
+            padding: 2px 10px !important;
+        }
+        .currency-prefix {
+            font-size: 1.1rem !important;
+            min-width: 40px;
+        }
+        .combined-card input {
+            font-size: 1.6rem !important;
+            padding: 0 4px !important;
+        }
+        .input-divider {
+            margin: 0 10px !important;
+        }
+
+        /* Teclado exactamente del mismo ancho que la tarjeta combinada (380px) */
+        .keypad {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 8px !important;
+            margin: 10px auto 0 !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            box-sizing: border-box;
+        }
+        .keypad-btn {
+            height: 46px !important;
+            border-radius: 14px !important;
+            font-size: 1.15rem !important;
+            aspect-ratio: auto !important;
+        }
+        .keypad-btn.key-zero {
+            height: 46px !important;
+        }
+        .keypad-btn .material-symbols-rounded {
+            font-size: 1.35rem !important;
+        }
+        .calc-picker-icon {
+            width: 24px !important;
+            height: 24px !important;
+        }
+        .keypad-btn:hover {
+            background-color: var(--md-sys-color-surface-container-high);
         }
 
         body.desktop-view-dashboard #pagomovil-tab-content,
@@ -3276,7 +3508,14 @@
             display: none !important;
         }
 
-        /* VISTA 2: PAGO MÓVIL AMPLIO EN DESKTOP */
+        /* =======================================================
+           VISTA 2: PAGO MÓVIL AMPLIO EN DESKTOP
+           ======================================================= */
+        body.desktop-view-pagomovil .main-content {
+            align-items: flex-start;
+            padding: 32px 24px;
+        }
+
         body.desktop-view-pagomovil #rates-tab-content,
         body.desktop-view-pagomovil #calculator-tab-content,
         body.desktop-view-pagomovil #history-tab-content {
@@ -3306,11 +3545,18 @@
         }
 
         body.desktop-view-pagomovil .pm-fab-container {
-            bottom: 36px;
-            right: max(36px, calc(50% - 430px));
+            bottom: 32px;
+            right: max(32px, calc(50% - 430px));
         }
 
-        /* VISTA 3: HISTORIAL AMPLIO EN DESKTOP */
+        /* =======================================================
+           VISTA 3: HISTORIAL AMPLIO EN DESKTOP
+           ======================================================= */
+        body.desktop-view-history .main-content {
+            align-items: flex-start;
+            padding: 32px 24px;
+        }
+
         body.desktop-view-history .tabs-track {
             display: none !important;
         }
@@ -3320,7 +3566,7 @@
             position: static !important;
             inset: auto !important;
             width: 100%;
-            max-width: 860px;
+            max-width: 820px;
             height: auto;
             max-height: none;
             overflow-y: visible;
@@ -3336,7 +3582,9 @@
             max-width: 100%;
         }
 
-        /* MODALES CENTRADOS FLOTANTES EN DESKTOP */
+        /* =======================================================
+           MODALES CENTRADOS FLOTANTES EN DESKTOP
+           ======================================================= */
         .pm-modal-overlay {
             align-items: center !important;
             justify-content: center !important;
@@ -3368,8 +3616,8 @@
 
         /* PANEL DE AJUSTES LATERAL DESKTOP (Slide-over Drawer) */
         .settings-overlay {
-            width: 380px !important;
-            right: -420px !important;
+            width: 360px !important;
+            right: -400px !important;
             left: auto !important;
             height: 100% !important;
             box-shadow: -10px 0 36px rgba(0, 0, 0, 0.25);
@@ -3382,21 +3630,5 @@
             opacity: 1 !important;
             visibility: visible !important;
         }
-
-        /* Hover sutil en tarjetas interactivas de desktop */
-        .card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color var(--transition-speed);
-        }
-        .card:hover {
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
-        }
-        body.dark-mode .card:hover {
-            box-shadow: 0 4px 22px rgba(0, 0, 0, 0.3);
-        }
-
-        .keypad-btn:hover {
-            background-color: var(--md-sys-color-surface-container-high);
-        }
     }
-
 </style>

@@ -7,8 +7,8 @@
     <!-- Navegación exclusiva para Desktop -->
     <nav class="desktop-navigation" id="desktop-nav" aria-label="Navegación principal">
         <button type="button" class="desktop-nav-item active" data-tab="dashboard">
-            <span class="material-symbols-rounded">dashboard</span>
-            <span>Dashboard</span>
+            <span class="material-symbols-rounded">currency_exchange</span>
+            <span>Tasas & Conversor</span>
         </button>
         <button type="button" class="desktop-nav-item" data-tab="pagomovil">
             <span class="material-symbols-rounded">qr_code_2</span>
