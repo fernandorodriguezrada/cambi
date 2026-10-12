@@ -1413,15 +1413,12 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1), visibility 0.35s;
+        transition: opacity 0.4s cubic-bezier(0.2, 0, 0, 1), visibility 0.4s;
         will-change: opacity;
         contain: strict;
     }
 
-    /* En PWA instalada, el SO ya muestra el splash nativo; omitimos el splash web en el arranque */
-    html.pwa-standalone .splash-screen:not(.manual-refresh) {
-        display: none !important;
-    }
+    /* Splash Screen consistente en web y standalone */
 
     .splash-screen.hidden {
         opacity: 0;

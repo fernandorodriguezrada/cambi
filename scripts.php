@@ -586,18 +586,18 @@
     const updateLoadingProgress = (percent) => {};
 
     const RATES_CACHE_KEY = "cambi_latest_rates_cache";
-    const SPLASH_MIN_DISPLAY_MS = 650; // Duración agradable y fija (0.65s) para web desktop
+    // Duración elegante para la animación de inicio (permite que la UI inicialice, aplique tasas y coloque la pestaña sin parpadeos)
+    const SPLASH_MIN_DISPLAY_MS = 900;
     let splashStartTime = performance.now();
-    let splashIsDismissed = document.documentElement.classList.contains('pwa-standalone');
+    let splashIsDismissed = false;
 
     const hideSplashScreen = (forceImmediate = false) => {
         if (splashIsDismissed) return;
         const splash = document.getElementById('splash-screen');
         if (!splash) return;
 
-        const isStandalone = document.documentElement.classList.contains('pwa-standalone');
         const elapsed = performance.now() - splashStartTime;
-        const delay = (forceImmediate || isStandalone) ? 0 : Math.max(0, SPLASH_MIN_DISPLAY_MS - elapsed);
+        const delay = forceImmediate ? 0 : Math.max(0, SPLASH_MIN_DISPLAY_MS - elapsed);
 
         setTimeout(() => {
             splash.classList.add('hidden');
@@ -705,7 +705,7 @@
                 const cached = JSON.parse(raw);
                 if (cached && (cached.usd || cached.p2p)) {
                     applyRatesToUI(cached);
-                    // Ocultar el splash de inmediato para dar respuesta instantánea al usuario
+                    // Respeta el tiempo mínimo de splash para una experiencia visual libre de parpadeos
                     hideSplashScreen();
                 }
             }
@@ -1333,7 +1333,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v99",
+                version: "v100",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
