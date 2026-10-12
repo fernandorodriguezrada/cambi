@@ -14,6 +14,9 @@ $componentsDir = __DIR__ . '/';
             if (document.documentElement.classList.contains('dark-mode')) {
                 document.body.classList.add('dark-mode');
             }
+            if (document.documentElement.dataset.accent) {
+                document.body.dataset.accent = document.documentElement.dataset.accent;
+            }
             if (window.matchMedia && (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true)) {
                 document.documentElement.classList.add('pwa-standalone');
             }

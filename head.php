@@ -17,6 +17,10 @@
             if (saved === 'enabled' || (saved !== 'disabled' && prefersDark)) {
                 document.documentElement.classList.add('dark-mode');
             }
+            var savedAccent = localStorage.getItem('cambiAccentColor');
+            if (savedAccent) {
+                document.documentElement.dataset.accent = savedAccent;
+            }
         } catch(e) {}
     })();
 </script>
@@ -157,6 +161,35 @@
         --key-mauve-text: var(--md-sys-color-on-primary);
     }
 
+    /* Acentos Dinámicos Material You */
+    html[data-accent="blue"], body[data-accent="blue"] {
+        --branding-color: var(--cambi-baby-blue-on-surface);
+        --md-sys-color-primary: var(--cambi-baby-blue-on-surface);
+    }
+    html.dark-mode[data-accent="blue"], body.dark-mode[data-accent="blue"] {
+        --branding-color: var(--cambi-baby-blue);
+        --md-sys-color-primary: var(--cambi-baby-blue);
+        --cambi-magic-mint: var(--cambi-baby-blue);
+    }
+    html[data-accent="mauve"], body[data-accent="mauve"] {
+        --branding-color: var(--cambi-mauve-on-surface);
+        --md-sys-color-primary: var(--cambi-mauve-on-surface);
+    }
+    html.dark-mode[data-accent="mauve"], body.dark-mode[data-accent="mauve"] {
+        --branding-color: var(--cambi-mauve);
+        --md-sys-color-primary: var(--cambi-mauve);
+        --cambi-magic-mint: var(--cambi-mauve);
+    }
+    html[data-accent="cotton"], body[data-accent="cotton"] {
+        --branding-color: var(--cambi-cotton-candy-on-surface);
+        --md-sys-color-primary: var(--cambi-cotton-candy-on-surface);
+    }
+    html.dark-mode[data-accent="cotton"], body.dark-mode[data-accent="cotton"] {
+        --branding-color: var(--cambi-cotton-candy);
+        --md-sys-color-primary: var(--cambi-cotton-candy);
+        --cambi-magic-mint: var(--cambi-cotton-candy);
+    }
+
     html {
         /* Evita que se vea un color distinto en los bordes de la pantalla */
         background-color: var(--md-sys-color-surface-container);
@@ -252,11 +285,11 @@
         transform: rotate(45deg);
     }
 
-    /* Pantalla de Ajustes Overlay */
+    /* Pantalla de Ajustes Overlay & Estilos Material You 3 */
     .settings-overlay {
         position: fixed;
         top: 0;
-        left: 100%; /* Empieza fuera de pantalla */
+        left: 100%; /* Empieza fuera de pantalla en móvil */
         width: 100%;
         height: 100%;
         background-color: var(--md-sys-color-surface);
@@ -269,6 +302,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        overflow: hidden;
     }
 
     .settings-overlay header {
@@ -276,21 +310,35 @@
         width: 100%;
         padding-top: env(safe-area-inset-top, 0px);
         height: calc(64px + env(safe-area-inset-top, 0px));
-        padding-left: 16px;
-        padding-right: 16px;
+        padding-left: 20px;
+        padding-right: 20px;
         background-color: var(--md-sys-color-surface-container);
         z-index: 10;
         display: flex;
         align-items: center;
-        justify-content: flex-start; /* Align items to the start */
+        justify-content: flex-start;
         box-sizing: border-box;
         transform: translateZ(0);
+        flex-shrink: 0;
     }
 
     .settings-back-btn {
         cursor: pointer;
-        color: var(--branding-color); /* Use branding color for consistency */
-        margin-right: 12px; /* Space between back button and title */
+        color: var(--branding-color);
+        margin-right: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+    }
+    .settings-back-btn:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+    body:not(.dark-mode) .settings-back-btn:hover {
+        background-color: rgba(0, 0, 0, 0.06);
     }
 
     .settings-overlay.active {
@@ -299,16 +347,169 @@
         visibility: visible;
     }
 
-    .settings-item {
+    .settings-scroll-area {
+        width: 100%;
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 18px 0 calc(36px + env(safe-area-inset-bottom, 0px));
+        box-sizing: border-box;
+    }
+
+    .settings-container {
+        width: 90%;
+        max-width: 440px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .settings-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .settings-group-title {
+        font-family: var(--font-google-sans);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--md-sys-color-outline);
+        margin-left: 6px;
+    }
+
+    .settings-card {
+        background-color: var(--md-sys-color-surface-container);
+        border-radius: 24px;
+        padding: 6px 16px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        transition: background-color var(--transition-speed);
+    }
+
+    .settings-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px;
-        background-color: var(--md-sys-color-surface-container);
+        padding: 14px 4px;
+        box-sizing: border-box;
+    }
+
+    .settings-row.flex-column {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .settings-row-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        text-align: left;
+    }
+
+    .settings-title {
+        font-family: var(--font-google-sans);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .settings-subtitle {
+        font-family: var(--font-google-sans);
+        font-size: 0.76rem;
+        color: var(--md-sys-color-outline);
+    }
+
+    .settings-divider {
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.06);
+        margin: 0 4px;
+    }
+    body:not(.dark-mode) .settings-divider {
+        background-color: rgba(0, 0, 0, 0.06);
+    }
+
+    .settings-select {
+        font-family: var(--font-google-sans);
+        font-size: 0.86rem;
+        font-weight: 600;
+        color: var(--md-sys-color-on-surface);
+        background-color: var(--md-sys-color-surface-container-high);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 8px 12px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+    body:not(.dark-mode) .settings-select {
+        border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .settings-btn-action {
+        font-family: var(--font-google-sans);
+        font-size: 0.86rem;
+        font-weight: 600;
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-primary);
+        border: none;
         border-radius: 16px;
-        margin-top: 20px;
-        transition: background-color var(--transition-speed);
-        width: 100%; /* Asegurar que el item de ajuste ocupe todo el ancho del container */
+        padding: 10px 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+    }
+    .settings-btn-action:hover {
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+    .settings-btn-action:active {
+        transform: scale(0.97);
+    }
+    .settings-btn-action .material-symbols-rounded {
+        font-size: 18px;
+    }
+
+    /* Selector de paleta de colores de acento */
+    .accent-palette-picker {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+        margin-top: 4px;
+        margin-bottom: 6px;
+    }
+
+    .accent-color-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--btn-color);
+        border: 2px solid transparent;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .accent-color-btn:hover {
+        transform: scale(1.1);
+    }
+    .accent-color-btn.active {
+        border-color: var(--md-sys-color-on-surface);
+        transform: scale(1.08);
+    }
+    .accent-color-btn.active::after {
+        content: "✓";
+        font-size: 16px;
+        font-weight: 800;
+        color: #262C33;
     }
 
     /* Material Switch Styles */
@@ -3885,8 +4086,8 @@
 
         /* PANEL DE AJUSTES LATERAL DESKTOP (Slide-over Drawer) */
         .settings-overlay {
-            width: 360px !important;
-            right: -400px !important;
+            width: 420px !important;
+            right: -460px !important;
             left: auto !important;
             height: 100% !important;
             box-shadow: -10px 0 36px rgba(0, 0, 0, 0.25);

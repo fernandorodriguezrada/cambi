@@ -7,7 +7,7 @@
         binance_usdc: 0,
         okx_usdt: 0
     };
-    let selectedRateType = "usd";
+    let selectedRateType = localStorage.getItem("defaultRateType") || "usd";
     let isTopUsd = true; // Estado para saber el sentido de la conversión
     let isResultPendingClear = false; // Control para limpiar el input tras un resultado
     let isInitialDefault = true; // Control para sobreescribir el 1,00 inicial al primer toque
@@ -1046,63 +1046,264 @@
         });
     }
 
-    // Lógica de la Pantalla de Ajustes
-    const settingsScreen = document.getElementById('settings-screen');
-    const openSettings = document.getElementById('open-settings');
-    const closeSettings = document.getElementById('close-settings');
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    // =======================================================
+    // MÓDULO DE AJUSTES & PREFERENCIAS (MATERIAL YOU 3)
+    // =======================================================
+    const settingsScreen = document.getElementById("settings-screen");
+    const openSettings = document.getElementById("open-settings");
+    const closeSettings = document.getElementById("close-settings");
+    const darkModeToggle = document.getElementById("dark-mode-toggle");
 
     const updateThemeColor = (isDark) => {
-        const color = isDark ? '#3B454E' : '#F3EDF7';
-        const themeColorMeta = document.querySelector('meta[name=\"theme-color\"]');
+        const color = isDark ? "#3B454E" : "#F3EDF7";
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
         if (themeColorMeta) {
-            themeColorMeta.setAttribute('content', color);
+            themeColorMeta.setAttribute("content", color);
         }
         document.documentElement.style.backgroundColor = color;
         document.body.style.backgroundColor = color;
-        document.querySelectorAll('header').forEach(h => {
+        document.querySelectorAll("header").forEach(h => {
             h.style.backgroundColor = color;
         });
-        document.querySelectorAll('.bottom-navigation').forEach(n => {
+        document.querySelectorAll(".bottom-navigation").forEach(n => {
             n.style.backgroundColor = color;
         });
-        const settings = document.getElementById('settings-screen');
-        if (settings) settings.style.backgroundColor = isDark ? '#262C33' : '#FEF7FF';
+        const settings = document.getElementById("settings-screen");
+        if (settings) settings.style.backgroundColor = isDark ? "#262C33" : "#FEF7FF";
     };
 
-    if (openSettings && settingsScreen) openSettings.onclick = () => settingsScreen.classList.add('active');
-    if (closeSettings && settingsScreen) closeSettings.onclick = () => settingsScreen.classList.remove('active');
+    if (openSettings && settingsScreen) {
+        openSettings.onclick = (e) => {
+            e.stopPropagation();
+            settingsScreen.classList.add("active");
+        };
+    }
+    if (closeSettings && settingsScreen) {
+        closeSettings.onclick = () => settingsScreen.classList.remove("active");
+    }
 
-    // Lógica de Modo Oscuro
+    // Cerrar ajustes al hacer clic afuera en desktop
+    document.addEventListener("click", (e) => {
+        if (settingsScreen && settingsScreen.classList.contains("active") && window.innerWidth >= 900) {
+            if (!settingsScreen.contains(e.target) && !openSettings.contains(e.target)) {
+                settingsScreen.classList.remove("active");
+            }
+        }
+    });
+
+    // 1. Modo Oscuro
     if (darkModeToggle) {
-        darkModeToggle.addEventListener('change', () => {
+        darkModeToggle.addEventListener("change", () => {
             const isDark = darkModeToggle.checked;
-            document.body.classList.add('theme-transitioning');
+            document.body.classList.add("theme-transitioning");
             if (isDark) {
-                document.documentElement.classList.add('dark-mode');
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('darkMode', 'enabled');
+                document.documentElement.classList.add("dark-mode");
+                document.body.classList.add("dark-mode");
+                localStorage.setItem("darkMode", "enabled");
             } else {
-                document.documentElement.classList.remove('dark-mode');
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('darkMode', 'disabled');
+                document.documentElement.classList.remove("dark-mode");
+                document.body.classList.remove("dark-mode");
+                localStorage.setItem("darkMode", "disabled");
             }
             updateThemeColor(isDark);
-            setTimeout(() => document.body.classList.remove('theme-transitioning'), 350);
+            setTimeout(() => document.body.classList.remove("theme-transitioning"), 350);
         });
     }
 
-    const isDarkModeEnabled = document.documentElement.classList.contains('dark-mode') || localStorage.getItem('darkMode') === 'enabled';
+    const isDarkModeEnabled = document.documentElement.classList.contains("dark-mode") || localStorage.getItem("darkMode") === "enabled";
     if (isDarkModeEnabled) {
-        document.documentElement.classList.add('dark-mode');
-        document.body.classList.add('dark-mode');
+        document.documentElement.classList.add("dark-mode");
+        document.body.classList.add("dark-mode");
         if (darkModeToggle) darkModeToggle.checked = true;
     }
     updateThemeColor(isDarkModeEnabled);
 
+    // 2. Color de Acento Material You
+    const savedAccent = localStorage.getItem("cambiAccentColor") || "mint";
+    const applyAccentColor = (accent) => {
+        document.documentElement.dataset.accent = accent;
+        document.body.dataset.accent = accent;
+        localStorage.setItem("cambiAccentColor", accent);
+        document.querySelectorAll(".accent-color-btn").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.color === accent);
+        });
+    };
+    applyAccentColor(savedAccent);
+
+    document.querySelectorAll(".accent-color-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            applyAccentColor(btn.dataset.color);
+            showToast("Color de acento actualizado");
+        });
+    });
+
+    // 3. Tasa por Defecto en la Calculadora
+    const defaultRateSelect = document.getElementById("settings-default-rate");
+    if (defaultRateSelect) {
+        const currentSavedRate = localStorage.getItem("defaultRateType") || "usd";
+        defaultRateSelect.value = currentSavedRate;
+        defaultRateSelect.addEventListener("change", (e) => {
+            const newRateType = e.target.value;
+            localStorage.setItem("defaultRateType", newRateType);
+            setCalcRateType(newRateType);
+            showToast("Tasa por defecto actualizada");
+        });
+    }
+
+    // 4. Vibración Háptica
+    const hapticToggle = document.getElementById("haptic-toggle");
+    if (hapticToggle) {
+        hapticToggle.checked = localStorage.getItem("hapticFeedback") !== "disabled";
+        hapticToggle.addEventListener("change", () => {
+            const isEnabled = hapticToggle.checked;
+            localStorage.setItem("hapticFeedback", isEnabled ? "enabled" : "disabled");
+            if (isEnabled && navigator.vibrate) navigator.vibrate(12);
+        });
+    }
+
+    // 5. Pantalla de Inicio (Dashboard vs Pago Móvil)
+    const startTabSelect = document.getElementById("settings-start-tab");
+    if (startTabSelect) {
+        startTabSelect.value = localStorage.getItem("startTab") || "dashboard";
+        startTabSelect.addEventListener("change", (e) => {
+            localStorage.setItem("startTab", e.target.value);
+            showToast("Pantalla de inicio guardada");
+        });
+    }
+
+    // 6. Formato de Copiado de Pago Móvil
+    const copyFormatSelect = document.getElementById("settings-copy-format");
+    const copyFormatDesc = document.getElementById("settings-copy-format-desc");
+    const updateCopyDesc = (fmt) => {
+        if (!copyFormatDesc) return;
+        if (fmt === "complete") {
+            copyFormatDesc.textContent = "Titular, cédula, banco y teléfono";
+        } else if (fmt === "compact") {
+            copyFormatDesc.textContent = "Una sola línea: Banco • Tel • CI • Titular";
+        } else {
+            copyFormatDesc.textContent = "Banco, teléfono y cédula (Formato Simple)";
+        }
+    };
+    if (copyFormatSelect) {
+        const savedFormat = localStorage.getItem("pmCopyFormat") || "simple";
+        copyFormatSelect.value = savedFormat;
+        updateCopyDesc(savedFormat);
+        copyFormatSelect.addEventListener("change", (e) => {
+            const fmt = e.target.value;
+            localStorage.setItem("pmCopyFormat", fmt);
+            updateCopyDesc(fmt);
+            showToast("Formato de copiado actualizado");
+        });
+    }
+
+    // 7. Copia de Seguridad (Exportar / Importar)
+    const btnExport = document.getElementById("btn-export-backup");
+    if (btnExport) {
+        btnExport.addEventListener("click", () => {
+            const profile = getPmProfile();
+            if (!profile || !profile.banks || profile.banks.length === 0) {
+                showToast("No hay bancos guardados para exportar");
+                return;
+            }
+            const backupData = {
+                appName: "Cambi",
+                version: "v80",
+                exportedAt: new Date().toISOString(),
+                pmProfile: profile,
+                settings: {
+                    darkMode: localStorage.getItem("darkMode"),
+                    cambiAccentColor: localStorage.getItem("cambiAccentColor"),
+                    defaultRateType: localStorage.getItem("defaultRateType"),
+                    hapticFeedback: localStorage.getItem("hapticFeedback"),
+                    startTab: localStorage.getItem("startTab"),
+                    pmCopyFormat: localStorage.getItem("pmCopyFormat")
+                }
+            };
+            const jsonBlob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(jsonBlob);
+            const a = document.createElement("a");
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `cambi-respaldo-${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            showToast("¡Respaldo exportado con éxito!");
+        });
+    }
+
+    const btnImport = document.getElementById("btn-import-backup");
+    const backupInput = document.getElementById("backup-file-input");
+    if (btnImport && backupInput) {
+        btnImport.addEventListener("click", () => {
+            backupInput.value = "";
+            backupInput.click();
+        });
+        backupInput.addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const parsed = JSON.parse(event.target.result);
+                    if (parsed && parsed.pmProfile && parsed.pmProfile.phoneNum) {
+                        setPmProfile(parsed.pmProfile);
+                        if (parsed.settings) {
+                            if (parsed.settings.cambiAccentColor) {
+                                applyAccentColor(parsed.settings.cambiAccentColor);
+                            }
+                            if (parsed.settings.defaultRateType) {
+                                localStorage.setItem("defaultRateType", parsed.settings.defaultRateType);
+                                if (defaultRateSelect) defaultRateSelect.value = parsed.settings.defaultRateType;
+                            }
+                            if (parsed.settings.startTab) {
+                                localStorage.setItem("startTab", parsed.settings.startTab);
+                                if (startTabSelect) startTabSelect.value = parsed.settings.startTab;
+                            }
+                            if (parsed.settings.pmCopyFormat) {
+                                localStorage.setItem("pmCopyFormat", parsed.settings.pmCopyFormat);
+                                if (copyFormatSelect) copyFormatSelect.value = parsed.settings.pmCopyFormat;
+                                updateCopyDesc(parsed.settings.pmCopyFormat);
+                            }
+                        }
+                        renderPmView();
+                        showToast("¡Bancos y datos restaurados!");
+                    } else {
+                        alert("El archivo seleccionado no tiene una estructura de respaldo válida de Cambi.");
+                    }
+                } catch (err) {
+                    alert("Error al procesar el respaldo: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+    }
+
+    // 8. Actualizar / Limpiar Caché
+    const btnCheckUpdate = document.getElementById("btn-check-update");
+    if (btnCheckUpdate) {
+        btnCheckUpdate.addEventListener("click", () => {
+            showToast("Comprobando actualizaciones...");
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    for (let r of regs) r.update();
+                    setTimeout(() => window.location.reload(true), 600);
+                });
+            } else {
+                setTimeout(() => window.location.reload(true), 600);
+            }
+        });
+    }
+
     // Lógica del Teclado Numérico
     document.querySelectorAll('.keypad-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+            // Respuesta háptica opcional
+            if (localStorage.getItem("hapticFeedback") !== "disabled" && navigator.vibrate) {
+                try { navigator.vibrate(10); } catch(e) {}
+            }
+
             if (!inputTop) return;
             const key = btn.dataset.key;
             if (!key || key === 'swap') return;
@@ -2108,8 +2309,24 @@
         const bankName = BANK_SHORT[bankCode] || BANK_NAMES[bankCode] || "Banco";
         const phone = `${profile.phonePrefix}${profile.phoneNum}`;
         const docNum = profile.docNum;
+        const docType = profile.docType || "V";
+        const holder = profile.holder || "";
 
-        const textToCopy = `${bankName} (${bankCode})\n${phone}\n${docNum}`;
+        const format = localStorage.getItem("pmCopyFormat") || "simple";
+        let textToCopy = "";
+
+        if (format === "complete") {
+            // Formato Completo: Titular, Cédula, Banco y Teléfono
+            const holderLine = holder ? `${holder}\n` : "";
+            textToCopy = `${holderLine}${docType}-${docNum}\n${bankName} (${bankCode})\n${phone}`;
+        } else if (format === "compact") {
+            // Formato Compacto: todo en una sola línea
+            const holderPart = holder ? ` • ${holder}` : "";
+            textToCopy = `${bankName} (${bankCode}) • ${phone} • ${docType}-${docNum}${holderPart}`;
+        } else {
+            // Formato Simple (el actual de Cambi)
+            textToCopy = `${bankName} (${bankCode})\n${phone}\n${docNum}`;
+        }
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(textToCopy).then(() => {
@@ -2751,8 +2968,13 @@
         document.body.classList.add('desktop-view-dashboard');
     }
 
-    const ratesTabEl = document.getElementById('rates-tab-content');
-    if (ratesTabEl) ratesTabEl.classList.add('active');
+    const startTabPref = localStorage.getItem("startTab");
+    if (startTabPref === "pagomovil") {
+        switchTab("pagomovil", false);
+    } else {
+        const ratesTabEl = document.getElementById('rates-tab-content');
+        if (ratesTabEl) ratesTabEl.classList.add('active');
+    }
     // Mostrar de inmediato los datos locales si existen para arranque instantáneo (0ms)
     loadInitialCachedRates();
     // Consultar tasas frescas del servidor y plataformas en segundo plano
