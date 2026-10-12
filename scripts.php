@@ -1333,7 +1333,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v92",
+                version: "v93",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -1691,26 +1691,6 @@
     const swapBtn = document.getElementById('swap-btn');
     const TABS_ORDER = ['rates', 'pagomovil', 'calculator'];
 
-    const updateDesktopNavGlider = (immediate = false) => {
-        const glider = document.getElementById('desktop-nav-glider');
-        if (!glider) return;
-        const activeBtn = document.querySelector('.desktop-nav-item.active');
-        if (activeBtn && activeBtn.offsetWidth > 0) {
-            if (immediate || !glider.classList.contains('ready')) {
-                glider.style.transition = 'none';
-                glider.style.width = activeBtn.offsetWidth + 'px';
-                glider.style.transform = 'translateX(' + activeBtn.offsetLeft + 'px)';
-                void glider.offsetWidth;
-                glider.style.transition = '';
-                glider.classList.add('ready');
-            } else {
-                glider.style.width = activeBtn.offsetWidth + 'px';
-                glider.style.transform = 'translateX(' + activeBtn.offsetLeft + 'px)';
-            }
-        }
-    };
-    window.updateDesktopNavGlider = updateDesktopNavGlider;
-
     const switchTab = (tabId, animate = true) => {
         let normalizedTabId = tabId;
         if (tabId === 'dashboard') {
@@ -1729,6 +1709,10 @@
         }
 
         // Sincronizar botones de navegación desktop en el header
+        const desktopNav = document.getElementById('desktop-nav');
+        if (desktopNav) {
+            desktopNav.dataset.active = (tabId === 'pagomovil') ? 'pagomovil' : 'dashboard';
+        }
         const desktopNavItems = document.querySelectorAll('.desktop-nav-item');
         desktopNavItems.forEach(item => {
             const itemTab = item.dataset.tab;
@@ -1736,7 +1720,6 @@
                             (itemTab === tabId);
             item.classList.toggle('active', isMatch);
         });
-        updateDesktopNavGlider(!animate);
 
         const historyTab = document.getElementById('history-tab-content');
         if (tabId === 'history') {
@@ -3086,7 +3069,6 @@
 
     // Control de redimensionamiento responsivo
     window.addEventListener('resize', () => {
-        updateDesktopNavGlider(true);
         const tabsTrack = document.getElementById('tabs-track');
         if (!tabsTrack) return;
         if (window.innerWidth >= 900) {
@@ -3137,5 +3119,4 @@
     // Consultar tasas frescas del servidor y plataformas en segundo plano
     fetchRate();
     updateInputColors();
-    requestAnimationFrame(() => updateDesktopNavGlider(true));
 </script>

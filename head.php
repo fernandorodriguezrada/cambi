@@ -3704,12 +3704,14 @@
             transform: translate(-50%, -50%);
             display: inline-flex;
             align-items: center;
+            width: 356px;
             background-color: var(--md-sys-color-surface-container-high);
             padding: 4px;
             border-radius: 9999px;
             border: 1px solid var(--md-sys-color-outline-variant);
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
             z-index: 10;
+            box-sizing: border-box;
         }
 
         body.dark-mode .desktop-navigation {
@@ -3718,42 +3720,44 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
         }
 
-        /* Indicador deslizante / Glider animado ultra fluido */
+        /* Indicador deslizante / Glider simétrico en CSS puro (cero bugs de layout en refresh) */
         .desktop-nav-glider {
             position: absolute;
             top: 4px;
             bottom: 4px;
-            left: 0;
-            width: 0;
+            left: 4px;
+            width: calc(50% - 4px);
             background-color: var(--md-sys-color-primary);
             border-radius: 9999px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
-            transition: transform 0.32s cubic-bezier(0.2, 0, 0, 1), width 0.32s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
+            transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1);
             pointer-events: none;
             z-index: 1;
-            opacity: 0;
+            transform: translateX(0);
         }
 
-        .desktop-nav-glider.ready {
-            opacity: 1;
+        .desktop-navigation[data-active="pagomovil"] .desktop-nav-glider {
+            transform: translateX(100%);
         }
 
         .desktop-nav-item {
+            flex: 1 1 0;
             position: relative;
             z-index: 2;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            padding: 7px 18px;
+            padding: 8px 12px;
             border-radius: 9999px;
             border: none;
             background: transparent !important;
             color: var(--md-sys-color-on-surface-variant);
             font-family: var(--font-google-sans);
-            font-size: 0.90rem;
+            font-size: 0.88rem;
             font-weight: 500;
             cursor: pointer;
-            transition: color 0.24s cubic-bezier(0.2, 0, 0, 1);
+            transition: color 0.22s cubic-bezier(0.2, 0, 0, 1);
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             white-space: nowrap;
@@ -3775,7 +3779,7 @@
 
         .desktop-nav-item .material-symbols-rounded {
             font-size: 20px;
-            transition: font-variation-settings 0.28s cubic-bezier(0.2, 0, 0, 1), transform 0.28s cubic-bezier(0.2, 0, 0, 1), color 0.24s cubic-bezier(0.2, 0, 0, 1);
+            transition: font-variation-settings 0.26s cubic-bezier(0.2, 0, 0, 1), transform 0.26s cubic-bezier(0.2, 0, 0, 1), color 0.22s cubic-bezier(0.2, 0, 0, 1);
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
