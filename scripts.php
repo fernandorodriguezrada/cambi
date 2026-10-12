@@ -1221,7 +1221,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v80",
+                version: "v82",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -1309,6 +1309,136 @@
             }
         });
     }
+
+    // =======================================================
+    // MOTOR DE SELECTORES PERSONALIZADOS M3 (AJUSTES)
+    // =======================================================
+    const closeAllSettingsCustomSelects = () => {
+        document.querySelectorAll(".settings-custom-select-wrap.open").forEach(w => {
+            w.classList.remove("open");
+            w.classList.remove("dropup");
+            const btn = w.querySelector(".settings-custom-select-trigger");
+            if (btn) btn.setAttribute("aria-expanded", "false");
+        });
+    };
+    window.closeAllSettingsCustomSelects = closeAllSettingsCustomSelects;
+
+    const syncSettingsCustomSelect = (selectId) => {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        const wrap = document.getElementById(`wrap-${selectId}`);
+        if (!wrap) return;
+        const textSpan = wrap.querySelector(".settings-custom-select-text");
+        const items = wrap.querySelectorAll(".settings-custom-select-item");
+        
+        items.forEach(item => {
+            const isSelected = item.dataset.value === select.value;
+            item.classList.toggle("selected", isSelected);
+            if (isSelected && textSpan) {
+                const label = item.querySelector("span");
+                if (label) textSpan.textContent = label.textContent;
+            }
+        });
+    };
+    window.syncSettingsCustomSelect = syncSettingsCustomSelect;
+
+    const initSettingsCustomSelects = () => {
+        const selects = document.querySelectorAll("select.settings-select");
+        selects.forEach(select => {
+            if (select.dataset.customized === "true") return;
+            select.dataset.customized = "true";
+
+            const wrap = document.createElement("div");
+            wrap.className = "settings-custom-select-wrap";
+            wrap.id = `wrap-${select.id}`;
+
+            const trigger = document.createElement("button");
+            trigger.type = "button";
+            trigger.className = "settings-custom-select-trigger";
+            trigger.id = `trigger-${select.id}`;
+            trigger.setAttribute("aria-haspopup", "listbox");
+            trigger.setAttribute("aria-expanded", "false");
+
+            const textSpan = document.createElement("span");
+            textSpan.className = "settings-custom-select-text";
+
+            const arrowSpan = document.createElement("span");
+            arrowSpan.className = "material-symbols-rounded settings-custom-select-arrow";
+            arrowSpan.textContent = "keyboard_arrow_down";
+
+            trigger.appendChild(textSpan);
+            trigger.appendChild(arrowSpan);
+
+            const dropdown = document.createElement("div");
+            dropdown.className = "settings-custom-select-dropdown";
+            dropdown.setAttribute("role", "listbox");
+
+            Array.from(select.options).forEach(opt => {
+                const item = document.createElement("div");
+                item.className = "settings-custom-select-item";
+                item.dataset.value = opt.value;
+
+                const label = document.createElement("span");
+                label.textContent = opt.text;
+                item.appendChild(label);
+
+                const check = document.createElement("span");
+                check.className = "material-symbols-rounded settings-item-check";
+                check.textContent = "check";
+                item.appendChild(check);
+
+                if (opt.value === select.value) {
+                    item.classList.add("selected");
+                    textSpan.textContent = opt.text;
+                }
+
+                item.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    select.value = opt.value;
+                    select.dispatchEvent(new Event("change"));
+                    syncSettingsCustomSelect(select.id);
+                    closeAllSettingsCustomSelects();
+                });
+
+                dropdown.appendChild(item);
+            });
+
+            if (!textSpan.textContent) {
+                const cur = select.options[select.selectedIndex];
+                textSpan.textContent = cur ? cur.text : "";
+            }
+
+            trigger.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const wasOpen = wrap.classList.contains("open");
+                closeAllSettingsCustomSelects();
+                if (!wasOpen) {
+                    const rect = trigger.getBoundingClientRect();
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    if (spaceBelow < 220 && rect.top > 220) {
+                        wrap.classList.add("dropup");
+                    } else {
+                        wrap.classList.remove("dropup");
+                    }
+                    wrap.classList.add("open");
+                    trigger.setAttribute("aria-expanded", "true");
+                }
+            });
+
+            select.parentNode.insertBefore(wrap, select);
+            wrap.appendChild(select);
+            wrap.appendChild(trigger);
+            wrap.appendChild(dropdown);
+        });
+    };
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".settings-custom-select-wrap")) {
+            closeAllSettingsCustomSelects();
+        }
+    });
+
+    initSettingsCustomSelects();
 
     // Lógica del Teclado Numérico
     document.querySelectorAll('.keypad-btn').forEach(btn => {
@@ -2967,6 +3097,7 @@
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeSettingsDrawer();
+            if (typeof closeAllSettingsCustomSelects === 'function') closeAllSettingsCustomSelects();
             if (typeof closeCalcRateModal === 'function') closeCalcRateModal();
             if (typeof closePmModal === 'function') closePmModal();
             if (typeof closePmDetailModal === 'function') closePmDetailModal();

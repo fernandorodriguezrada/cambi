@@ -451,6 +451,7 @@
         background-color: rgba(0, 0, 0, 0.06);
     }
 
+    /* Estilos base / fallback para native select */
     .settings-select {
         font-family: var(--font-google-sans);
         font-size: 0.86rem;
@@ -463,9 +464,158 @@
         outline: none;
         cursor: pointer;
         transition: border-color 0.2s;
+        color-scheme: dark;
     }
     body:not(.dark-mode) .settings-select {
         border-color: rgba(0, 0, 0, 0.1);
+        color-scheme: light;
+    }
+    .settings-select option {
+        background-color: #2F3740;
+        color: #E6E1E5;
+        padding: 10px 14px;
+    }
+    body:not(.dark-mode) .settings-select option {
+        background-color: #FEF7FF;
+        color: #1D1B20;
+    }
+
+    /* Custom Material You 3 Select Dropdowns para Ajustes */
+    .settings-custom-select-wrap {
+        position: relative;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    .settings-custom-select-wrap select.settings-select {
+        display: none !important;
+    }
+
+    .settings-custom-select-trigger {
+        font-family: var(--font-google-sans);
+        font-size: 0.86rem;
+        font-weight: 600;
+        color: var(--md-sys-color-on-surface);
+        background-color: var(--md-sys-color-surface-container-high);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 7px 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        user-select: none;
+        -webkit-user-select: none;
+        box-sizing: border-box;
+    }
+    body:not(.dark-mode) .settings-custom-select-trigger {
+        border-color: rgba(0, 0, 0, 0.08);
+    }
+    .settings-custom-select-trigger:hover {
+        background-color: var(--md-sys-color-surface-container-highest);
+    }
+    .settings-custom-select-wrap.open .settings-custom-select-trigger {
+        border-color: var(--branding-color);
+    }
+
+    .settings-custom-select-text {
+        white-space: nowrap;
+        color: var(--md-sys-color-on-surface);
+    }
+
+    .settings-custom-select-arrow {
+        font-size: 18px;
+        color: var(--md-sys-color-outline);
+        transition: transform 0.22s cubic-bezier(0.2, 0, 0, 1), color 0.2s;
+        flex-shrink: 0;
+    }
+    .settings-custom-select-wrap.open .settings-custom-select-arrow {
+        transform: rotate(180deg);
+        color: var(--branding-color);
+    }
+
+    .settings-custom-select-dropdown {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        min-width: 175px;
+        max-height: 220px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background-color: #2b333c;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 6px;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+        z-index: 2100;
+        box-sizing: border-box;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px) scale(0.96);
+        transform-origin: top right;
+        transition: opacity 0.2s cubic-bezier(0.2, 0, 0, 1), transform 0.2s cubic-bezier(0.2, 0, 0, 1), visibility 0.2s;
+        pointer-events: none;
+        scrollbar-width: thin;
+    }
+    body:not(.dark-mode) .settings-custom-select-dropdown {
+        background-color: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+    }
+
+    .settings-custom-select-wrap.open .settings-custom-select-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
+
+    .settings-custom-select-wrap.dropup .settings-custom-select-dropdown {
+        top: auto;
+        bottom: calc(100% + 6px);
+        transform-origin: bottom right;
+        transform: translateY(6px) scale(0.96);
+    }
+    .settings-custom-select-wrap.dropup.open .settings-custom-select-dropdown {
+        transform: translateY(0) scale(1);
+    }
+
+    .settings-custom-select-item {
+        font-family: var(--font-google-sans);
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: var(--md-sys-color-on-surface);
+        padding: 9px 12px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        cursor: pointer;
+        transition: background-color 0.15s, color 0.15s;
+        box-sizing: border-box;
+        user-select: none;
+    }
+    .settings-custom-select-item:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+    body:not(.dark-mode) .settings-custom-select-item:hover {
+        background-color: rgba(0, 0, 0, 0.06);
+    }
+    .settings-custom-select-item.selected {
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
+        font-weight: 600;
+    }
+    .settings-item-check {
+        font-size: 16px;
+        opacity: 0;
+        color: var(--md-sys-color-on-primary-container);
+    }
+    .settings-custom-select-item.selected .settings-item-check {
+        opacity: 1;
     }
 
     .settings-btn-action {
