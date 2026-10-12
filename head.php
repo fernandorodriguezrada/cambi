@@ -692,15 +692,15 @@
     /* Selector de paleta de colores de acento */
     .accent-palette-picker {
         display: flex;
-        gap: 12px;
-        width: 100%;
-        margin-top: 4px;
-        margin-bottom: 6px;
+        gap: 8px;
+        width: auto;
+        align-items: center;
+        flex-shrink: 0;
     }
 
     .accent-color-btn {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background-color: var(--btn-color);
         border: 2px solid transparent;

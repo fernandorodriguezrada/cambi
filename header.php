@@ -37,21 +37,15 @@
                 <div class="settings-group-title">Apariencia</div>
                 <div class="settings-card">
                     <div class="settings-row">
-                        <div class="settings-row-text">
-                            <span class="settings-title">Modo Oscuro</span>
-                            <span class="settings-subtitle">Tema visual oscuro profundo</span>
-                        </div>
+                        <span class="settings-title">Modo Oscuro</span>
                         <label class="md-switch">
                             <input type="checkbox" id="dark-mode-toggle">
                             <span class="md-slider"></span>
                         </label>
                     </div>
                     <div class="settings-divider"></div>
-                    <div class="settings-row flex-column">
-                        <div class="settings-row-text" style="width: 100%; margin-bottom: 8px;">
-                            <span class="settings-title">Color de Acento</span>
-                            <span class="settings-subtitle">Paleta Material You personalizada</span>
-                        </div>
+                    <div class="settings-row">
+                        <span class="settings-title">Color de Acento</span>
                         <div class="accent-palette-picker" id="accent-palette-picker">
                             <button type="button" class="accent-color-btn active" data-color="mint" title="Magic Mint" style="--btn-color: #A3F1CB;"></button>
                             <button type="button" class="accent-color-btn" data-color="blue" title="Baby Blue" style="--btn-color: #B1D3FE;"></button>
@@ -155,7 +149,7 @@
                     <div class="settings-row">
                         <div class="settings-row-text">
                             <span class="settings-title">Versión de Cambi</span>
-                            <span class="settings-subtitle" id="settings-version-label">v88</span>
+                            <span class="settings-subtitle" id="settings-version-label">v89</span>
                         </div>
                         <button type="button" class="settings-btn-action" id="btn-check-update" style="padding: 8px 14px;">
                             <span class="material-symbols-rounded">refresh</span> Actualizar
