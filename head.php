@@ -1434,8 +1434,9 @@
     }
 
     .splash-logo {
-        height: 80px;
-        width: auto;
+        width: min(52.5vw, 220px);
+        height: auto;
+        max-width: 240px;
         user-select: none;
         -webkit-user-select: none;
         transform: translateZ(0);
