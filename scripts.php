@@ -1235,18 +1235,43 @@
     const TABS_ORDER = ['rates', 'pagomovil', 'calculator'];
 
     const switchTab = (tabId, animate = true) => {
+        let normalizedTabId = tabId;
+        if (tabId === 'dashboard') {
+            normalizedTabId = 'rates';
+        }
+
+        // Sincronizar clases de vista en desktop
+        document.body.classList.remove('desktop-view-dashboard', 'desktop-view-pagomovil', 'desktop-view-history');
+        if (tabId === 'pagomovil') {
+            document.body.classList.add('desktop-view-pagomovil');
+        } else if (tabId === 'history') {
+            document.body.classList.add('desktop-view-history');
+        } else {
+            // 'dashboard', 'rates', 'calculator' activan la vista combinada de dashboard en desktop
+            document.body.classList.add('desktop-view-dashboard');
+        }
+
+        // Sincronizar botones de navegación desktop en el header
+        const desktopNavItems = document.querySelectorAll('.desktop-nav-item');
+        desktopNavItems.forEach(item => {
+            const itemTab = item.dataset.tab;
+            const isMatch = (itemTab === 'dashboard' && (tabId === 'dashboard' || tabId === 'rates' || tabId === 'calculator')) ||
+                            (itemTab === tabId);
+            item.classList.toggle('active', isMatch);
+        });
+
         const historyTab = document.getElementById('history-tab-content');
         if (tabId === 'history') {
             if (historyTab) historyTab.classList.add('active');
-            return;
+            if (window.innerWidth < 900) return;
         } else {
             if (historyTab) historyTab.classList.remove('active');
         }
 
-        const targetIdx = TABS_ORDER.indexOf(tabId);
+        const targetIdx = TABS_ORDER.indexOf(normalizedTabId);
         if (targetIdx !== -1) {
             const tabsTrack = document.getElementById('tabs-track');
-            if (tabsTrack) {
+            if (tabsTrack && window.innerWidth < 900) {
                 if (animate) {
                     tabsTrack.style.transition = 'transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)';
                     void tabsTrack.offsetWidth;
@@ -1257,14 +1282,14 @@
             }
 
             navItems.forEach(nav => {
-                nav.classList.toggle('active', nav.dataset.tab === tabId);
+                nav.classList.toggle('active', nav.dataset.tab === normalizedTabId);
             });
             tabContents.forEach(content => {
-                content.classList.toggle('active', content.id === `${tabId}-tab-content`);
+                content.classList.toggle('active', content.id === `${normalizedTabId}-tab-content`);
             });
         }
 
-        if (tabId === 'calculator' && inputTop) convert(inputTop);
+        if (inputTop) convert(inputTop);
         if (tabId === 'pagomovil') {
             document.querySelectorAll(".pm-modal-overlay").forEach(overlay => {
                 overlay.addEventListener("click", (e) => {
@@ -2354,6 +2379,7 @@
             const header = sheet.querySelector('.pm-modal-header');
 
             const onTouchStart = (e) => {
+                if (window.innerWidth >= 900) return;
                 if (!overlay.classList.contains('active')) return;
                 const point = e.touches ? e.touches[0] : e;
                 if (e.touches && e.touches.length !== 1) return;
@@ -2509,6 +2535,7 @@
         let currentPercent = 0;
 
         mainContent.addEventListener('touchstart', (e) => {
+            if (window.innerWidth >= 900) return;
             if (document.querySelector('.pm-modal-overlay.active')) return;
             if (document.getElementById('history-tab-content')?.classList.contains('active')) return;
             if (e.touches.length !== 1) return;
@@ -2676,6 +2703,53 @@
             switchTab(item.dataset.tab);
         });
     });
+
+    // Navegación en Desktop (Header)
+    document.querySelectorAll('.desktop-nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            switchTab(item.dataset.tab);
+        });
+    });
+
+    // Control de redimensionamiento responsivo
+    window.addEventListener('resize', () => {
+        const tabsTrack = document.getElementById('tabs-track');
+        if (!tabsTrack) return;
+        if (window.innerWidth >= 900) {
+            tabsTrack.style.transform = '';
+            tabsTrack.style.transition = '';
+            if (!document.body.classList.contains('desktop-view-pagomovil') &&
+                !document.body.classList.contains('desktop-view-history')) {
+                document.body.classList.add('desktop-view-dashboard');
+            }
+        } else {
+            const activeNav = document.querySelector('.bottom-navigation .nav-item.active');
+            const activeTabId = activeNav ? activeNav.dataset.tab : 'rates';
+            const idx = TABS_ORDER.indexOf(activeTabId);
+            if (idx !== -1) {
+                tabsTrack.style.transform = `translate3d(-${idx * (100 / 3)}%, 0, 0)`;
+            }
+        }
+    });
+
+    // Soporte tecla Escape para cerrar modales y ajustes en desktop
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const settings = document.getElementById('settings-screen');
+            if (settings && settings.classList.contains('active')) {
+                settings.classList.remove('active');
+            }
+            if (typeof closeCalcRateModal === 'function') closeCalcRateModal();
+            if (typeof closePmModal === 'function') closePmModal();
+            if (typeof closePmDetailModal === 'function') closePmDetailModal();
+            if (typeof closePmQR === 'function') closePmQR();
+            if (typeof closePmConfirmDeleteModal === 'function') closePmConfirmDeleteModal();
+        }
+    });
+
+    if (window.innerWidth >= 900) {
+        document.body.classList.add('desktop-view-dashboard');
+    }
 
     const ratesTabEl = document.getElementById('rates-tab-content');
     if (ratesTabEl) ratesTabEl.classList.add('active');
