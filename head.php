@@ -3704,7 +3704,6 @@
             transform: translate(-50%, -50%);
             display: inline-flex;
             align-items: center;
-            gap: 4px;
             background-color: var(--md-sys-color-surface-container-high);
             padding: 4px;
             border-radius: 9999px;
@@ -3714,26 +3713,47 @@
         }
 
         body.dark-mode .desktop-navigation {
-            background-color: var(--md-sys-color-surface-container-low);
-            border-color: rgba(255, 255, 255, 0.09);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            background-color: var(--md-sys-color-surface-container-high);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Indicador deslizante / Glider animado ultra fluido */
+        .desktop-nav-glider {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 0;
+            width: 0;
+            background-color: var(--md-sys-color-primary);
+            border-radius: 9999px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+            transition: transform 0.32s cubic-bezier(0.2, 0, 0, 1), width 0.32s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .desktop-nav-glider.ready {
+            opacity: 1;
         }
 
         .desktop-nav-item {
+            position: relative;
+            z-index: 2;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             padding: 7px 18px;
             border-radius: 9999px;
             border: none;
-            background: transparent;
+            background: transparent !important;
             color: var(--md-sys-color-on-surface-variant);
             font-family: var(--font-google-sans);
             font-size: 0.90rem;
             font-weight: 500;
             cursor: pointer;
-            position: relative;
-            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+            transition: color 0.24s cubic-bezier(0.2, 0, 0, 1);
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             white-space: nowrap;
@@ -3742,29 +3762,20 @@
 
         .desktop-nav-item:hover {
             color: var(--md-sys-color-on-surface);
-            background-color: rgba(0, 0, 0, 0.04);
         }
 
         body.dark-mode .desktop-nav-item:hover {
             color: var(--md-sys-color-on-surface);
-            background-color: rgba(255, 255, 255, 0.06);
         }
 
         .desktop-nav-item.active {
             color: var(--md-sys-color-on-primary) !important;
-            background-color: var(--md-sys-color-primary) !important;
             font-weight: 600;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14) !important;
-        }
-
-        .desktop-nav-item.active:hover {
-            background-color: var(--md-sys-color-primary) !important;
-            color: var(--md-sys-color-on-primary) !important;
         }
 
         .desktop-nav-item .material-symbols-rounded {
             font-size: 20px;
-            transition: font-variation-settings 0.2s cubic-bezier(0.2, 0, 0, 1), transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+            transition: font-variation-settings 0.28s cubic-bezier(0.2, 0, 0, 1), transform 0.28s cubic-bezier(0.2, 0, 0, 1), color 0.24s cubic-bezier(0.2, 0, 0, 1);
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 

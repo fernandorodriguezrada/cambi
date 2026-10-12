@@ -6,6 +6,7 @@
 
     <!-- Navegación exclusiva para Desktop -->
     <nav class="desktop-navigation" id="desktop-nav" aria-label="Navegación principal">
+        <div class="desktop-nav-glider" id="desktop-nav-glider"></div>
         <button type="button" class="desktop-nav-item active" data-tab="dashboard">
             <span class="material-symbols-rounded">currency_exchange</span>
             <span>Tasas & Conversor</span>
@@ -149,7 +150,7 @@
                     <div class="settings-row">
                         <div class="settings-row-text">
                             <span class="settings-title">Versión de Cambi</span>
-                            <span class="settings-subtitle" id="settings-version-label">v91</span>
+                            <span class="settings-subtitle" id="settings-version-label">v92</span>
                         </div>
                         <button type="button" class="settings-btn-action" id="btn-check-update" style="padding: 8px 14px;">
                             <span class="material-symbols-rounded">refresh</span> Actualizar
