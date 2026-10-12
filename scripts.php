@@ -1175,10 +1175,12 @@
         });
     }
 
-    // 5. Pantalla de Inicio (Dashboard vs Pago Móvil)
+    // 5. Pantalla de Inicio (Tasas vs Calculadora vs Pago Móvil)
     const startTabSelect = document.getElementById("settings-start-tab");
     if (startTabSelect) {
-        startTabSelect.value = localStorage.getItem("startTab") || "dashboard";
+        let savedStartTab = localStorage.getItem("startTab") || "rates";
+        if (savedStartTab === "dashboard") savedStartTab = "rates";
+        startTabSelect.value = savedStartTab;
         startTabSelect.addEventListener("change", (e) => {
             localStorage.setItem("startTab", e.target.value);
             showToast("Pantalla de inicio guardada");
@@ -1221,7 +1223,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v82",
+                version: "v83",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -3110,12 +3112,14 @@
         document.body.classList.add('desktop-view-dashboard');
     }
 
-    const startTabPref = localStorage.getItem("startTab");
+    let startTabPref = localStorage.getItem("startTab") || "rates";
+    if (startTabPref === "dashboard") startTabPref = "rates";
     if (startTabPref === "pagomovil") {
         switchTab("pagomovil", false);
+    } else if (startTabPref === "calculator") {
+        switchTab("calculator", false);
     } else {
-        const ratesTabEl = document.getElementById('rates-tab-content');
-        if (ratesTabEl) ratesTabEl.classList.add('active');
+        switchTab("rates", false);
     }
     // Mostrar de inmediato los datos locales si existen para arranque instantáneo (0ms)
     loadInitialCachedRates();

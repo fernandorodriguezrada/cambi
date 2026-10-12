@@ -3412,7 +3412,7 @@
         font-size: 0.9rem;
         font-weight: 600;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-        z-index: 350;
+        z-index: 10000 !important;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), transform 0.3s cubic-bezier(0.2, 0, 0, 1);
@@ -3424,7 +3424,7 @@
     }
 
     .pm-toast .material-symbols-rounded {
-        color: var(--cambi-magic-mint);
+        color: var(--branding-color);
         font-size: 20px;
     }
 
@@ -4267,6 +4267,11 @@
             left: auto !important;
             opacity: 1 !important;
             visibility: visible !important;
+        }
+
+        .pm-toast {
+            bottom: 32px !important;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4) !important;
         }
     }
 </style>

@@ -103,7 +103,8 @@
                             <span class="settings-subtitle">Pestaña activa al iniciar Cambi</span>
                         </div>
                         <select id="settings-start-tab" class="settings-select">
-                            <option value="dashboard">Tasas & Conversor</option>
+                            <option value="rates">Tasas de Cambio</option>
+                            <option value="calculator">Calculadora</option>
                             <option value="pagomovil">Pago Móvil</option>
                         </select>
                     </div>
@@ -145,7 +146,7 @@
                     <div class="settings-row">
                         <div class="settings-row-text">
                             <span class="settings-title">Versión de Cambi</span>
-                            <span class="settings-subtitle" id="settings-version-label">v82 • PWA Instalada</span>
+                            <span class="settings-subtitle" id="settings-version-label">v83 • PWA Instalada</span>
                         </div>
                         <button type="button" class="settings-btn-action" id="btn-check-update" style="padding: 8px 14px;">
                             <span class="material-symbols-rounded">refresh</span> Actualizar
