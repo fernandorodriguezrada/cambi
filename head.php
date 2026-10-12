@@ -3798,7 +3798,7 @@
             display: none !important;
         }
 
-        /* Área de contenido principal: Llenado equilibrado sin scrolls innecesarios */
+        /* Área de contenido principal: Llenado equilibrado y consistente */
         .main-content {
             height: calc(100vh - 68px);
             max-height: calc(100vh - 68px);
@@ -3806,8 +3806,8 @@
             overflow-x: hidden !important;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 24px 32px;
+            align-items: flex-start !important;
+            padding: 32px 32px 56px !important;
             box-sizing: border-box;
             background-color: var(--md-sys-color-surface);
         }
@@ -3819,7 +3819,7 @@
             transform: none !important;
             transition: none !important;
             display: flex;
-            align-items: center;
+            align-items: flex-start !important;
             justify-content: center;
             height: auto;
             min-height: auto;
@@ -3838,6 +3838,8 @@
             max-height: none;
             overflow: visible;
             padding: 0 !important;
+            margin: 0;
+            align-self: flex-start !important;
         }
 
         body.desktop-view-dashboard #calculator-tab-content {
@@ -3850,7 +3852,11 @@
             overflow: visible;
             padding: 0 !important;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start !important;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            align-self: flex-start !important;
         }
 
         body.desktop-view-dashboard #rates-tab-content .container {
@@ -4140,10 +4146,11 @@
             overflow: visible;
             padding: 0 !important;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start !important;
             position: sticky;
             top: 0;
             z-index: 10;
+            align-self: flex-start !important;
         }
 
         /* Anular límite de 440px en desktop para Pago Móvil */
@@ -4158,6 +4165,7 @@
         body.desktop-view-pagomovil .pm-profile-header {
             padding: 18px 22px !important;
             border-radius: 22px !important;
+            margin-top: 0 !important;
             margin-bottom: 20px !important;
             width: 100% !important;
         }
