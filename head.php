@@ -286,6 +286,24 @@
     }
 
     /* Pantalla de Ajustes Overlay & Estilos Material You 3 */
+    .settings-scrim {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 1999;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .settings-scrim.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
     .settings-overlay {
         position: fixed;
         top: 0;
@@ -293,7 +311,7 @@
         width: 100%;
         height: 100%;
         background-color: var(--md-sys-color-surface);
-        z-index: 100;
+        z-index: 2000;
         opacity: 0;
         visibility: hidden;
         transition: left var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1),

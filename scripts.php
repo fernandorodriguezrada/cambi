@@ -1050,9 +1050,20 @@
     // MÓDULO DE AJUSTES & PREFERENCIAS (MATERIAL YOU 3)
     // =======================================================
     const settingsScreen = document.getElementById("settings-screen");
+    const settingsScrim = document.getElementById("settings-scrim");
     const openSettings = document.getElementById("open-settings");
     const closeSettings = document.getElementById("close-settings");
     const darkModeToggle = document.getElementById("dark-mode-toggle");
+
+    const openSettingsDrawer = () => {
+        if (settingsScreen) settingsScreen.classList.add("active");
+        if (settingsScrim) settingsScrim.classList.add("active");
+    };
+
+    const closeSettingsDrawer = () => {
+        if (settingsScreen) settingsScreen.classList.remove("active");
+        if (settingsScrim) settingsScrim.classList.remove("active");
+    };
 
     const updateThemeColor = (isDark) => {
         const color = isDark ? "#3B454E" : "#F3EDF7";
@@ -1072,21 +1083,24 @@
         if (settings) settings.style.backgroundColor = isDark ? "#262C33" : "#FEF7FF";
     };
 
-    if (openSettings && settingsScreen) {
+    if (openSettings) {
         openSettings.onclick = (e) => {
             e.stopPropagation();
-            settingsScreen.classList.add("active");
+            openSettingsDrawer();
         };
     }
-    if (closeSettings && settingsScreen) {
-        closeSettings.onclick = () => settingsScreen.classList.remove("active");
+    if (closeSettings) {
+        closeSettings.onclick = () => closeSettingsDrawer();
+    }
+    if (settingsScrim) {
+        settingsScrim.onclick = () => closeSettingsDrawer();
     }
 
     // Cerrar ajustes al hacer clic afuera en desktop
     document.addEventListener("click", (e) => {
         if (settingsScreen && settingsScreen.classList.contains("active") && window.innerWidth >= 900) {
             if (!settingsScreen.contains(e.target) && !openSettings.contains(e.target)) {
-                settingsScreen.classList.remove("active");
+                closeSettingsDrawer();
             }
         }
     });
@@ -2952,10 +2966,7 @@
     // Soporte tecla Escape para cerrar modales y ajustes en desktop
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            const settings = document.getElementById('settings-screen');
-            if (settings && settings.classList.contains('active')) {
-                settings.classList.remove('active');
-            }
+            closeSettingsDrawer();
             if (typeof closeCalcRateModal === 'function') closeCalcRateModal();
             if (typeof closePmModal === 'function') closePmModal();
             if (typeof closePmDetailModal === 'function') closePmDetailModal();
