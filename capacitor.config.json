@@ -1,5 +1,14 @@
 {
   "appId": "com.cambi.app",
   "appName": "Cambi",
-  "webDir": "www"
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "StatusBar": {
+      "backgroundColor": "#262C33",
+      "style": "DARK"
+    }
+  }
 }
