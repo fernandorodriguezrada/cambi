@@ -1441,21 +1441,15 @@
         user-select: none;
         -webkit-user-select: none;
         transform: translateZ(0);
-        will-change: transform, opacity;
+        will-change: opacity, transform;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
-        animation: splash-logo-appear 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1), opacity 0.4s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    @keyframes splash-logo-appear {
-        0% {
-            opacity: 0;
-            transform: scale(0.92) translateZ(0);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1) translateZ(0);
-        }
+    .splash-screen.hidden .splash-logo {
+        opacity: 0;
+        transform: scale(0.96) translateZ(0);
     }
 
     /* Custom Caret (Cursor) */
