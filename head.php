@@ -4301,6 +4301,28 @@
             opacity: 1 !important;
         }
 
+        /* Visor QR en Desktop: sin scroll y con proporciones óptimas */
+        #pm-modal-qr .pm-modal-sheet {
+            max-width: 440px !important;
+            max-height: 90vh !important;
+            padding: 22px 26px 24px 26px !important;
+            overflow-y: auto !important;
+            scrollbar-width: none !important;
+        }
+        #pm-modal-qr .pm-modal-sheet::-webkit-scrollbar {
+            display: none !important;
+        }
+        #pm-modal-qr .pm-qr-canvas-wrapper {
+            margin: 10px 0 !important;
+        }
+        #pm-modal-qr .pm-qr-info-box {
+            margin-top: 8px !important;
+            padding: 8px 12px !important;
+        }
+        #pm-modal-qr .pm-qr-helper-text {
+            margin: 8px 10px 10px 10px !important;
+        }
+
         .pm-modal-handle {
             display: none !important;
         }

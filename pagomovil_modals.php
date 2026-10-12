@@ -225,19 +225,15 @@
                 <div id="pm-qr-info-text" style="font-size: 0.88rem; line-height: 1.45;">--</div>
             </div>
 
-            <p style="font-size: 0.78rem; color: var(--md-sys-color-outline); margin: 10px 10px 14px 10px; line-height: 1.35;">
+            <p class="pm-qr-helper-text" style="font-size: 0.78rem; color: var(--md-sys-color-outline); margin: 10px 10px 14px 10px; line-height: 1.35;">
                 Listo para ser escaneado directamente desde la app de cualquier banco (BDV, Banesco, Bancamiga, etc.).
             </p>
 
-            <div style="margin-top: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <div style="margin-top: 10px; margin-bottom: 6px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
                 <button type="button" class="pm-btn-secondary" style="font-size: 0.8rem; padding: 7px 16px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;" onclick="document.getElementById('pm-qr-file-input').click()">
                     <span class="material-symbols-rounded" style="font-size: 1.1rem;">photo_camera</span>
                     <span>Reemplazar captura de Mi QR</span>
                 </button>
-            </div>
-
-            <div class="pm-modal-actions" style="justify-content: center; margin-top: 14px;">
-                <button type="button" class="pm-btn-secondary" onclick="closePmQR()">Cerrar</button>
             </div>
         </div>
 
@@ -251,14 +247,10 @@
                 Para que otra persona te pague escaneando directamente desde la app de su banco (Banesco, BDVApp, Bancamiga, etc.), importa una captura de <strong>"Mi QR"</strong> de tu banco.
             </p>
 
-            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: 280px; margin: 0 auto;">
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: 280px; margin: 0 auto 6px auto;">
                 <button type="button" class="pm-btn-primary" style="width: 100%; justify-content: center; padding: 12px 18px; font-size: 0.88rem;" onclick="document.getElementById('pm-qr-file-input').click()">
                     <span class="material-symbols-rounded">photo_camera</span>
                     <span>Importar captura de Mi QR</span>
-                </button>
-
-                <button type="button" class="pm-btn-secondary" style="font-size: 0.82rem; padding: 6px 14px; margin-top: 4px;" onclick="closePmQR()">
-                    <span>Cerrar</span>
                 </button>
             </div>
         </div>
