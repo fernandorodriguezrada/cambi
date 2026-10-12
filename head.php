@@ -1894,40 +1894,42 @@
         transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .pm-banks-grid.single-col {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
+    @media (max-width: 899px) {
+        .pm-banks-grid.single-col {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
 
-    .pm-banks-grid.single-col .pm-bank-block {
-        min-height: 114px;
-        padding: 16px 16px;
-        border-radius: 22px;
-    }
+        .pm-banks-grid.single-col .pm-bank-block {
+            min-height: 114px;
+            padding: 16px 16px;
+            border-radius: 22px;
+        }
 
-    .pm-banks-grid.single-col .pm-block-logo {
-        width: 78px;
-        height: 32px;
-        padding: 3px 6px;
-        border-radius: 9px;
-    }
+        .pm-banks-grid.single-col .pm-block-logo {
+            width: 78px;
+            height: 32px;
+            padding: 3px 6px;
+            border-radius: 9px;
+        }
 
-    .pm-banks-grid.single-col .pm-block-code {
-        font-size: 0.76rem;
-        padding: 2px 7px;
-    }
+        .pm-banks-grid.single-col .pm-block-code {
+            font-size: 0.76rem;
+            padding: 2px 7px;
+        }
 
-    .pm-banks-grid.single-col .pm-block-name {
-        font-size: 1.05rem;
-        margin-bottom: 3px;
-    }
+        .pm-banks-grid.single-col .pm-block-name {
+            font-size: 1.05rem;
+            margin-bottom: 3px;
+        }
 
-    .pm-banks-grid.single-col .pm-block-sub {
-        font-size: 0.82rem;
-    }
+        .pm-banks-grid.single-col .pm-block-sub {
+            font-size: 0.82rem;
+        }
 
-    .pm-banks-grid.single-col .pm-block-chevron {
-        font-size: 24px;
+        .pm-banks-grid.single-col .pm-block-chevron {
+            font-size: 24px;
+        }
     }
 
     @media (max-width: 320px) {
@@ -4115,6 +4117,10 @@
         }
 
         /* Sección y Cuadrícula de Bancos en Desktop (Tarjetas amplias en 2-3 columnas) */
+        .pm-grid-toggle-btn,
+        body.desktop-view-pagomovil .pm-grid-toggle-btn {
+            display: none !important;
+        }
         body.desktop-view-pagomovil .pm-blocks-header {
             margin-bottom: 16px !important;
         }
