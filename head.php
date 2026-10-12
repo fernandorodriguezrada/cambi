@@ -1406,16 +1406,39 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 100%;
         background-color: var(--md-sys-color-surface);
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
+        z-index: 99999;
         transition: opacity 0.4s cubic-bezier(0.2, 0, 0, 1), visibility 0.4s;
         will-change: opacity;
-        contain: strict;
+    }
+
+    /* Cobertura total hermética de insets y bordes inferiores */
+    .splash-screen::after {
+        content: "";
+        position: absolute;
+        top: -100px;
+        bottom: -200px;
+        left: -100px;
+        right: -100px;
+        background-color: inherit;
+        z-index: -1;
+    }
+
+    /* Ocultar barra inferior de navegación mientras el splash esté en pantalla */
+    .splash-screen:not(.hidden) ~ .bottom-navigation,
+    body:has(.splash-screen:not(.hidden)) .bottom-navigation {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
     }
 
     /* Splash Screen consistente en web y standalone */
