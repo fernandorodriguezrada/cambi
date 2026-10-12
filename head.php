@@ -422,6 +422,51 @@
         align-items: flex-start;
     }
 
+    /* Vista previa del formato de copiado de Pago Móvil */
+    .settings-copy-preview-box {
+        width: 100%;
+        background-color: var(--md-sys-color-surface-container-high);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 12px 14px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+    body:not(.dark-mode) .settings-copy-preview-box {
+        background-color: rgba(0, 0, 0, 0.03);
+        border-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .settings-copy-preview-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-google-sans);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--md-sys-color-outline);
+    }
+    .settings-copy-preview-header .material-symbols-rounded {
+        font-size: 14px;
+        color: var(--branding-color);
+    }
+
+    .settings-copy-preview {
+        font-family: var(--font-google-sans);
+        font-size: 0.84rem;
+        line-height: 1.45;
+        color: var(--md-sys-color-on-surface);
+        white-space: pre-line;
+        user-select: text;
+        -webkit-user-select: text;
+        word-break: break-word;
+    }
+
     .settings-row-text {
         display: flex;
         flex-direction: column;

@@ -1066,6 +1066,78 @@
         });
     }
 
+    /* =========================================
+       CONSTANTES & UTILIDADES PAGO MÓVIL
+       ========================================= */
+    const PM_STORAGE_KEY = "cambi_pagomovil_profile";
+
+    const BANK_NAMES = {
+        "0102": "Banco de Venezuela",
+        "0104": "Venezolano de Crédito",
+        "0105": "Mercantil Banco",
+        "0108": "BBVA Banco Provincial",
+        "0114": "Bancaribe",
+        "0115": "Banco Exterior",
+        "0128": "Banco Caroní",
+        "0134": "Banesco Banco Universal",
+        "0137": "Banco Sofitasa",
+        "0138": "Banco Plaza",
+        "0146": "Bangente",
+        "0151": "BFC Banco Fondo Común",
+        "0156": "100% Banco",
+        "0157": "DelSur Banco Universal",
+        "0163": "Banco del Tesoro",
+        "0166": "Banco Agrícola de Venezuela",
+        "0168": "Bancrecer",
+        "0169": "Mi Banco",
+        "0171": "Banco Activo",
+        "0172": "Bancamiga Banco Universal",
+        "0174": "Banplus Banco Universal",
+        "0175": "Banco Bicentenario",
+        "0177": "BANFANB",
+        "0191": "Banco Nacional de Crédito (BNC)"
+    };
+
+    const BANK_SHORT = {
+        "0102": "Venezuela",
+        "0104": "Ven. Crédito",
+        "0105": "Mercantil",
+        "0108": "Provincial",
+        "0114": "Bancaribe",
+        "0115": "Exterior",
+        "0128": "Caroní",
+        "0134": "Banesco",
+        "0137": "Sofitasa",
+        "0138": "Plaza",
+        "0146": "Bangente",
+        "0151": "BFC",
+        "0156": "100% Banco",
+        "0157": "DelSur",
+        "0163": "Tesoro",
+        "0166": "Agrícola",
+        "0168": "Bancrecer",
+        "0169": "Mi Banco",
+        "0171": "Activo",
+        "0172": "Bancamiga",
+        "0174": "Banplus",
+        "0175": "Bicentenario",
+        "0177": "BANFANB",
+        "0191": "BNC"
+    };
+
+    const getPmProfile = () => {
+        try {
+            const raw = localStorage.getItem(PM_STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    const setPmProfile = (profile) => {
+        localStorage.setItem(PM_STORAGE_KEY, JSON.stringify(profile));
+    };
+
     // =======================================================
     // MÓDULO DE AJUSTES & PREFERENCIAS (MATERIAL YOU 3)
     // =======================================================
@@ -1209,25 +1281,43 @@
 
     // 6. Formato de Copiado de Pago Móvil
     const copyFormatSelect = document.getElementById("settings-copy-format");
-    const copyFormatDesc = document.getElementById("settings-copy-format-desc");
-    const updateCopyDesc = (fmt) => {
-        if (!copyFormatDesc) return;
+    const copyPreviewEl = document.getElementById("settings-copy-preview");
+
+    const getSampleOrRealCopyPreview = (fmt) => {
+        const profile = getPmProfile();
+        const hasData = profile && profile.selectedBank && profile.phoneNum && profile.docNum;
+
+        const bankCode = hasData ? profile.selectedBank : "0134";
+        const bankName = hasData ? (BANK_SHORT[bankCode] || BANK_NAMES[bankCode] || "Banesco") : "Banesco";
+        const phone = hasData ? `${profile.phonePrefix}${profile.phoneNum}` : "04121234567";
+        const docNum = hasData ? profile.docNum : "12345678";
+        const docType = hasData ? (profile.docType || "V") : "V";
+        const holder = hasData ? (profile.holder || "Juan Pérez") : "Juan Pérez";
+
         if (fmt === "complete") {
-            copyFormatDesc.textContent = "Titular, cédula, banco y teléfono";
+            const holderLine = holder ? `${holder}\n` : "";
+            return `${holderLine}${docType}-${docNum}\n${bankName} (${bankCode})\n${phone}`;
         } else if (fmt === "compact") {
-            copyFormatDesc.textContent = "Una sola línea: Banco • Tel • CI • Titular";
+            const holderPart = holder ? ` • ${holder}` : "";
+            return `${bankName} (${bankCode}) • ${phone} • ${docType}-${docNum}${holderPart}`;
         } else {
-            copyFormatDesc.textContent = "Banco, teléfono y cédula (Formato Simple)";
+            return `${bankName} (${bankCode})\n${phone}\n${docNum}`;
         }
     };
+
+    const updateCopyPreview = (fmt) => {
+        if (!copyPreviewEl) return;
+        copyPreviewEl.textContent = getSampleOrRealCopyPreview(fmt);
+    };
+
     if (copyFormatSelect) {
         const savedFormat = localStorage.getItem("pmCopyFormat") || "simple";
         copyFormatSelect.value = savedFormat;
-        updateCopyDesc(savedFormat);
+        updateCopyPreview(savedFormat);
         copyFormatSelect.addEventListener("change", (e) => {
             const fmt = e.target.value;
             localStorage.setItem("pmCopyFormat", fmt);
-            updateCopyDesc(fmt);
+            updateCopyPreview(fmt);
             showToast("Formato de copiado actualizado");
         });
     }
@@ -1243,7 +1333,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v84",
+                version: "v85",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -1300,7 +1390,7 @@
                             if (parsed.settings.pmCopyFormat) {
                                 localStorage.setItem("pmCopyFormat", parsed.settings.pmCopyFormat);
                                 if (copyFormatSelect) copyFormatSelect.value = parsed.settings.pmCopyFormat;
-                                updateCopyDesc(parsed.settings.pmCopyFormat);
+                                updateCopyPreview(parsed.settings.pmCopyFormat);
                             }
                         }
                         renderPmView();
@@ -1715,77 +1805,8 @@
     /* =========================================
        LÓGICA PAGO MÓVIL (LOCAL-FIRST)
        ========================================= */
-    const PM_STORAGE_KEY = "cambi_pagomovil_profile";
-
-    const BANK_NAMES = {
-        "0102": "Banco de Venezuela",
-        "0104": "Venezolano de Crédito",
-        "0105": "Mercantil Banco",
-        "0108": "BBVA Banco Provincial",
-        "0114": "Bancaribe",
-        "0115": "Banco Exterior",
-        "0128": "Banco Caroní",
-        "0134": "Banesco Banco Universal",
-        "0137": "Banco Sofitasa",
-        "0138": "Banco Plaza",
-        "0146": "Bangente",
-        "0151": "BFC Banco Fondo Común",
-        "0156": "100% Banco",
-        "0157": "DelSur Banco Universal",
-        "0163": "Banco del Tesoro",
-        "0166": "Banco Agrícola de Venezuela",
-        "0168": "Bancrecer",
-        "0169": "Mi Banco",
-        "0171": "Banco Activo",
-        "0172": "Bancamiga Banco Universal",
-        "0174": "Banplus Banco Universal",
-        "0175": "Banco Bicentenario",
-        "0177": "BANFANB",
-        "0191": "Banco Nacional de Crédito (BNC)"
-    };
-
-    const BANK_SHORT = {
-        "0102": "Venezuela",
-        "0104": "Ven. Crédito",
-        "0105": "Mercantil",
-        "0108": "Provincial",
-        "0114": "Bancaribe",
-        "0115": "Exterior",
-        "0128": "Caroní",
-        "0134": "Banesco",
-        "0137": "Sofitasa",
-        "0138": "Plaza",
-        "0146": "Bangente",
-        "0151": "BFC",
-        "0156": "100% Banco",
-        "0157": "DelSur",
-        "0163": "Tesoro",
-        "0166": "Agrícola",
-        "0168": "Bancrecer",
-        "0169": "Mi Banco",
-        "0171": "Activo",
-        "0172": "Bancamiga",
-        "0174": "Banplus",
-        "0175": "Bicentenario",
-        "0177": "BANFANB",
-        "0191": "BNC"
-    };
-
     let currentPmSlide = 0;
     let pmModalMode = "create";
-
-    const getPmProfile = () => {
-        try {
-            const raw = localStorage.getItem(PM_STORAGE_KEY);
-            return raw ? JSON.parse(raw) : null;
-        } catch (e) {
-            return null;
-        }
-    };
-
-    const setPmProfile = (profile) => {
-        localStorage.setItem(PM_STORAGE_KEY, JSON.stringify(profile));
-    };
 
     const goToPmSlide = (index) => {
         currentPmSlide = index;
@@ -1857,6 +1878,9 @@
 
 
     const renderPmView = () => {
+        if (typeof updateCopyPreview === "function") {
+            updateCopyPreview(localStorage.getItem("pmCopyFormat") || "simple");
+        }
         const profile = getPmProfile();
         const onboardingView = document.getElementById("pm-onboarding-view");
         const activeView = document.getElementById("pm-active-view");

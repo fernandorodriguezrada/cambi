@@ -109,16 +109,25 @@
                         </select>
                     </div>
                     <div class="settings-divider"></div>
-                    <div class="settings-row">
-                        <div class="settings-row-text">
-                            <span class="settings-title">Formato de Copiado</span>
-                            <span class="settings-subtitle" id="settings-copy-format-desc">Banco, teléfono y cédula</span>
+                    <div class="settings-row flex-column" style="gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <div class="settings-row-text">
+                                <span class="settings-title">Formato de Copiado</span>
+                                <span class="settings-subtitle">Estructura del texto al copiar</span>
+                            </div>
+                            <select id="settings-copy-format" class="settings-select">
+                                <option value="simple">Simple</option>
+                                <option value="complete">Completo</option>
+                                <option value="compact">Compacto</option>
+                            </select>
                         </div>
-                        <select id="settings-copy-format" class="settings-select">
-                            <option value="simple">Simple (Actual)</option>
-                            <option value="complete">Completo</option>
-                            <option value="compact">Compacto</option>
-                        </select>
+                        <div class="settings-copy-preview-box">
+                            <div class="settings-copy-preview-header">
+                                <span class="material-symbols-rounded">content_copy</span>
+                                <span>Vista previa</span>
+                            </div>
+                            <div class="settings-copy-preview" id="settings-copy-preview"></div>
+                        </div>
                     </div>
                     <div class="settings-divider"></div>
                     <div class="settings-row flex-column" style="gap: 10px;">
@@ -146,7 +155,7 @@
                     <div class="settings-row">
                         <div class="settings-row-text">
                             <span class="settings-title">Versión de Cambi</span>
-                            <span class="settings-subtitle" id="settings-version-label">v84 • PWA Instalada</span>
+                            <span class="settings-subtitle" id="settings-version-label">v85 • PWA Instalada</span>
                         </div>
                         <button type="button" class="settings-btn-action" id="btn-check-update" style="padding: 8px 14px;">
                             <span class="material-symbols-rounded">refresh</span> Actualizar
