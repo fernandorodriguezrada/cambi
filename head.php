@@ -3827,6 +3827,26 @@
             gap: 40px;
         }
 
+        /* Animación fluida Material 3 Fade Through al alternar vistas en escritorio */
+        @keyframes desktopPanelFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            100% {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body.desktop-view-dashboard #rates-tab-content,
+            body.desktop-view-pagomovil #pagomovil-tab-content,
+            body.desktop-view-history #history-tab-content {
+                animation: none !important;
+            }
+        }
+
         /* =======================================================
            VISTA 1: DASHBOARD CONSOLA (Tasas amplias + Calculadora simétrica)
            ======================================================= */
@@ -3841,6 +3861,7 @@
             padding: 0 !important;
             margin: 0;
             align-self: flex-start !important;
+            animation: desktopPanelFadeIn 0.24s cubic-bezier(0.2, 0, 0, 1) both;
         }
 
         body.desktop-view-dashboard #calculator-tab-content {
@@ -4135,6 +4156,7 @@
             overflow-y: visible;
             padding: 0 !important;
             margin: 0;
+            animation: desktopPanelFadeIn 0.24s cubic-bezier(0.2, 0, 0, 1) both;
         }
 
         body.desktop-view-pagomovil #calculator-tab-content {
@@ -4344,7 +4366,7 @@
             margin: 0 auto;
             background: transparent;
             z-index: 1;
-            animation: none;
+            animation: desktopPanelFadeIn 0.24s cubic-bezier(0.2, 0, 0, 1) both;
         }
 
         body.desktop-view-history #history-tab-content .container {
