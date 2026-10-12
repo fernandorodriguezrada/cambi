@@ -13,3 +13,7 @@ Thumbs.db
 .ddev/.dbimageBuild
 .ddev/.webimageBuild
 .ddev/.homeadditions
+
+node_modules/
+www/
+
