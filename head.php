@@ -113,7 +113,11 @@
         --md-sys-color-surface: #FEF7FF; /* Volvemos al blanco roto Material Design */
         --md-sys-color-on-surface: #313033; /* Gris carbón oscuro en lugar de negro puro */
         --md-sys-color-surface-container: #F3EDF7; /* Volvemos al contenedor de superficie Material Design */
+        --md-sys-color-surface-container-low: #F7F2FA;
+        --md-sys-color-surface-container-high: #ECE6F0;
+        --md-sys-color-surface-container-highest: #E6E0E9;
         --md-sys-color-outline: #79747E;
+        --md-sys-color-outline-variant: #CAC4D0;
         --md-sys-color-on-surface-variant: #49454F;
         --transition-speed: 0.3s;
         
@@ -142,7 +146,11 @@
         --md-sys-color-surface: #262C33; /* Una variante profunda del azul eléctrico */
         --md-sys-color-on-surface: #F4F4F4;
         --md-sys-color-surface-container: #3B454E; /* Tono intermedio */
+        --md-sys-color-surface-container-low: #20262D;
+        --md-sys-color-surface-container-high: #47535E;
+        --md-sys-color-surface-container-highest: #556370;
         --md-sys-color-outline: #617285;
+        --md-sys-color-outline-variant: #49454F;
         --md-sys-color-primary: #A3F1CB; /* Magic Mint para acentos en dark mode */
         --md-sys-color-on-primary: #444746; /* Suavizamos el texto del botón en modo oscuro */
         --md-sys-color-on-surface-variant: #B1D3FE; /* Baby Blue para etiquetas secundarias */
@@ -3688,68 +3696,82 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         }
 
-        /* Navegación Desktop: Solo las 2 secciones principales de la app */
+        /* Navegación Desktop: Material 3 Pill Dock Segmentado y Centrado */
         .desktop-navigation {
-            display: flex;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: inline-flex;
             align-items: center;
-            gap: 32px;
-            background: transparent;
-            padding: 0;
-            border: none;
+            gap: 4px;
+            background-color: var(--md-sys-color-surface-container-high);
+            padding: 4px;
+            border-radius: 9999px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        body.dark-mode .desktop-navigation {
+            background-color: var(--md-sys-color-surface-container-low);
+            border-color: rgba(255, 255, 255, 0.09);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
         }
 
         .desktop-nav-item {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 22px 6px 18px;
+            padding: 7px 18px;
+            border-radius: 9999px;
             border: none;
             background: transparent;
             color: var(--md-sys-color-on-surface-variant);
             font-family: var(--font-google-sans);
-            font-size: 0.98rem;
+            font-size: 0.90rem;
             font-weight: 500;
             cursor: pointer;
             position: relative;
-            transition: color 0.18s ease;
+            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            white-space: nowrap;
             box-shadow: none !important;
         }
 
         .desktop-nav-item:hover {
             color: var(--md-sys-color-on-surface);
-            background: transparent;
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark-mode .desktop-nav-item:hover {
+            color: var(--md-sys-color-on-surface);
+            background-color: rgba(255, 255, 255, 0.06);
         }
 
         .desktop-nav-item.active {
-            color: var(--branding-color);
-            font-weight: 700;
-            background: transparent;
-            box-shadow: none !important;
+            color: var(--md-sys-color-on-primary) !important;
+            background-color: var(--md-sys-color-primary) !important;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14) !important;
         }
 
-        /* Línea indicadora sutil para la pestaña activa */
-        .desktop-nav-item::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            border-radius: 3px 3px 0 0;
-            background-color: var(--branding-color);
-            opacity: 0;
-            transform: scaleX(0.3);
-            transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0, 0, 1);
-        }
-
-        .desktop-nav-item.active::after {
-            opacity: 1;
-            transform: scaleX(1);
+        .desktop-nav-item.active:hover {
+            background-color: var(--md-sys-color-primary) !important;
+            color: var(--md-sys-color-on-primary) !important;
         }
 
         .desktop-nav-item .material-symbols-rounded {
-            font-size: 21px;
+            font-size: 20px;
+            transition: font-variation-settings 0.2s cubic-bezier(0.2, 0, 0, 1), transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .desktop-nav-item.active .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            transform: scale(1.05);
+            color: var(--md-sys-color-on-primary) !important;
         }
 
         /* Ocultar barra inferior táctil en desktop */
