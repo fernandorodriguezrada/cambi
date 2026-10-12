@@ -1854,30 +1854,46 @@
         width: 32px;
         height: 32px;
         border-radius: 10px;
-        border: 1px solid var(--md-sys-color-outline-variant);
-        background-color: var(--md-sys-color-surface-container-low);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background-color: rgba(0, 0, 0, 0.04);
         color: var(--md-sys-color-on-surface-variant);
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
         padding: 0;
-        outline: none;
+        outline: none !important;
+        box-shadow: none !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
         -webkit-user-select: none;
     }
+    body.dark-mode .pm-grid-toggle-btn {
+        border-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(255, 255, 255, 0.06);
+        color: var(--md-sys-color-on-surface);
+    }
+    .pm-grid-toggle-btn:focus,
+    .pm-grid-toggle-btn:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+    }
     @media (hover: hover) and (pointer: fine) {
         .pm-grid-toggle-btn:hover {
-            background-color: var(--md-sys-color-surface-container-high);
+            background-color: rgba(0, 0, 0, 0.08);
             color: var(--md-sys-color-on-surface);
-            border-color: var(--md-sys-color-outline);
+            border-color: rgba(0, 0, 0, 0.16);
+        }
+        body.dark-mode .pm-grid-toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: var(--md-sys-color-on-surface);
+            border-color: rgba(255, 255, 255, 0.2);
         }
     }
     .pm-grid-toggle-btn:active {
         transform: scale(0.92);
-        background-color: var(--md-sys-color-surface-container-high);
+        background-color: rgba(0, 0, 0, 0.1);
     }
-    .pm-grid-toggle-btn:focus-visible {
-        outline: 2px solid var(--md-sys-color-primary);
+    body.dark-mode .pm-grid-toggle-btn:active {
+        background-color: rgba(255, 255, 255, 0.16);
     }
     .pm-grid-toggle-btn span {
         font-size: 19px;

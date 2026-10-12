@@ -77,7 +77,7 @@
                             <span class="material-symbols-rounded">add</span>
                             <span>Añadir Banco</span>
                         </button>
-                        <button type="button" id="pm-grid-toggle-btn" class="pm-grid-toggle-btn" onclick="togglePmGridLayout()" title="Cambiar a vista de 1 columna" aria-label="Cambiar vista de columnas">
+                        <button type="button" id="pm-grid-toggle-btn" class="pm-grid-toggle-btn" tabindex="-1" onclick="togglePmGridLayout()" title="Cambiar a vista de 1 columna" aria-label="Cambiar vista de columnas">
                             <span id="pm-grid-toggle-icon" class="material-symbols-rounded">view_agenda</span>
                         </button>
                     </div>
