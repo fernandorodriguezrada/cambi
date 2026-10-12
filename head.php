@@ -3153,8 +3153,8 @@
         header.app-header {
             position: sticky;
             top: 0;
-            height: 64px;
-            padding: 0 max(28px, calc(50% - 540px));
+            height: 68px;
+            padding: 0 max(32px, calc(50% - 580px));
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
             background-color: var(--md-sys-color-surface-container);
             z-index: 100;
@@ -3166,11 +3166,11 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         }
 
-        /* Navegación Desktop: Pestañas planas integradas, sin cajas ni botones invasivos */
+        /* Navegación Desktop: Solo las 2 secciones principales de la app */
         .desktop-navigation {
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 32px;
             background: transparent;
             padding: 0;
             border: none;
@@ -3180,12 +3180,12 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 20px 4px 18px;
+            padding: 22px 6px 18px;
             border: none;
             background: transparent;
             color: var(--md-sys-color-on-surface-variant);
             font-family: var(--font-google-sans);
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             font-weight: 500;
             cursor: pointer;
             position: relative;
@@ -3227,7 +3227,7 @@
         }
 
         .desktop-nav-item .material-symbols-rounded {
-            font-size: 20px;
+            font-size: 21px;
         }
 
         /* Ocultar barra inferior táctil en desktop */
@@ -3235,23 +3235,23 @@
             display: none !important;
         }
 
-        /* Área de contenido principal: Diseñado para llenar la pantalla sin scroll forzado */
+        /* Área de contenido principal: Llenado equilibrado sin scrolls innecesarios */
         .main-content {
-            height: calc(100vh - 64px);
-            max-height: calc(100vh - 64px);
+            height: calc(100vh - 68px);
+            max-height: calc(100vh - 68px);
             overflow-y: auto !important;
             overflow-x: hidden !important;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px 24px;
+            padding: 24px 32px;
             box-sizing: border-box;
             background-color: var(--md-sys-color-surface);
         }
 
         .tabs-track {
             width: 100% !important;
-            max-width: 1040px;
+            max-width: 1140px;
             margin: 0 auto;
             transform: none !important;
             transition: none !important;
@@ -3260,17 +3260,17 @@
             justify-content: center;
             height: auto;
             min-height: auto;
-            gap: 28px;
+            gap: 36px;
         }
 
         /* =======================================================
-           VISTA 1: DASHBOARD CONSOLA (Tasas en cuadrícula + Calculadora simétrica)
+           VISTA 1: DASHBOARD CONSOLA (Tasas amplias + Calculadora simétrica)
            ======================================================= */
         body.desktop-view-dashboard #rates-tab-content {
             display: flex !important;
-            flex: 0 0 580px;
-            width: 580px;
-            max-width: 580px;
+            flex: 1 1 640px;
+            width: 640px;
+            max-width: 660px;
             height: auto;
             max-height: none;
             overflow: visible;
@@ -3279,9 +3279,9 @@
 
         body.desktop-view-dashboard #calculator-tab-content {
             display: flex !important;
-            flex: 0 0 380px;
-            width: 380px;
-            max-width: 380px;
+            flex: 0 0 420px;
+            width: 420px;
+            max-width: 420px;
             height: auto;
             max-height: none;
             overflow: visible;
@@ -3297,89 +3297,90 @@
             padding: 0;
         }
 
-        /* Subcuadrículas de tasas en escritorio: compactas y elegantes */
+        /* Encabezados de sección de tasas */
         .rates-section-header {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         .rates-section-label {
-            font-size: 0.78rem !important;
+            font-size: 0.82rem !important;
+            font-weight: 700;
             letter-spacing: 0.05em;
         }
         .rates-p2p-header {
-            margin-top: 14px !important;
+            margin-top: 16px !important;
         }
 
-        /* 2 tarjetas Oficiales lado a lado */
+        /* Cuadrículas de tasas en escritorio: proporciones generosas */
         .rates-official-grid {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
+            gap: 14px !important;
+            margin-bottom: 0 !important;
+        }
+
+        .rates-p2p-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
             gap: 12px !important;
             margin-bottom: 0 !important;
         }
 
-        /* 3 tarjetas P2P lado a lado */
-        .rates-p2p-grid {
-            display: grid !important;
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 10px !important;
-            margin-bottom: 0 !important;
-        }
-
-        /* Rediseño compacto de las tarjetas de tasas para monitor */
         .rates-cards-grid .card {
             margin-bottom: 0 !important;
             text-align: left;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .rates-cards-grid .card:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
         }
         body.dark-mode .rates-cards-grid .card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.32);
         }
 
+        /* Tarjetas Oficiales (BCV Dólar y Euro) */
         .rates-official-grid .card {
-            padding: 14px 16px !important;
-            border-radius: 20px !important;
+            padding: 18px 20px !important;
+            border-radius: 22px !important;
         }
         .rates-official-grid .rate-card-title {
             justify-content: flex-start;
             gap: 8px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
         .rates-official-grid .rate-platform-logo {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
         }
         .rates-official-grid .rate-card-title .label {
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             font-weight: 600;
         }
         .rates-official-grid .rate-amount-row {
             justify-content: space-between;
             width: 100%;
-            margin: 2px 0;
+            margin: 4px 0;
         }
         .rates-official-grid .rate-display {
-            font-size: 1.85rem !important;
+            font-size: 2.25rem !important;
             letter-spacing: -0.02em;
         }
         .rates-official-grid .rate-copy-btn {
             position: static;
             transform: none;
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             margin-left: auto;
         }
         .rates-official-grid .footer-info {
             text-align: left;
-            margin-top: 4px;
-            font-size: 0.68rem !important;
+            margin-top: 6px;
+            font-size: 0.72rem !important;
         }
 
+        /* Tarjetas P2P (Binance y OKX) */
         .rates-p2p-grid .card {
-            padding: 12px 14px !important;
-            border-radius: 18px !important;
+            padding: 14px 16px !important;
+            border-radius: 20px !important;
         }
         .rates-p2p-grid .rate-card-title {
             justify-content: flex-start;
@@ -3387,20 +3388,20 @@
             margin-bottom: 4px;
         }
         .rates-p2p-grid .rate-platform-logo {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
         }
         .rates-p2p-grid .rate-card-title .label {
-            font-size: 0.76rem;
+            font-size: 0.8rem;
             font-weight: 600;
         }
         .rates-p2p-grid .rate-amount-row {
             justify-content: space-between;
             width: 100%;
-            margin: 2px 0;
+            margin: 3px 0;
         }
         .rates-p2p-grid .rate-display {
-            font-size: 1.45rem !important;
+            font-size: 1.65rem !important;
             letter-spacing: -0.02em;
         }
         .rates-p2p-grid .rate-copy-btn {
@@ -3412,31 +3413,35 @@
         }
         .rates-p2p-grid .footer-info {
             text-align: left;
-            margin-top: 4px;
-            font-size: 0.65rem !important;
+            margin-top: 5px;
+            font-size: 0.68rem !important;
         }
 
-        /* Ocultar botón redundante de Historial en Desktop (acceso limpio en el Header) */
-        .rates-history-btn {
-            display: none !important;
-        }
+        /* Fila de acciones: Historial y Actualizar juntos */
         .rates-actions-row {
-            margin: 12px 0 0 !important;
+            margin: 16px 0 0 !important;
             justify-content: flex-start !important;
+            display: flex !important;
+            gap: 12px !important;
         }
+        .rates-history-btn,
         .rates-refresh-btn {
-            max-width: 150px !important;
-            padding: 8px 18px !important;
-            font-size: 0.84rem !important;
-            border-radius: 16px !important;
+            display: inline-flex !important;
+            flex: 0 0 auto !important;
+            max-width: none !important;
+            width: auto !important;
+            padding: 10px 22px !important;
+            font-size: 0.88rem !important;
+            border-radius: 18px !important;
+            margin: 0 !important;
         }
 
         /* =======================================================
-           CALCULADORA: SIMETRÍA PERFECTA Y ESCALA DE ESCRITORIO
+           CALCULADORA: SIMETRÍA Y PRESENCIA ROBUSTA EN DESKTOP
            ======================================================= */
         #calculator-tab-content .container {
             width: 100% !important;
-            max-width: 380px !important;
+            max-width: 420px !important;
             margin: 0 auto !important;
             padding: 0 !important;
             display: flex;
@@ -3446,58 +3451,58 @@
 
         .combined-card {
             width: 100% !important;
-            max-width: 380px !important;
-            border-radius: 20px !important;
+            max-width: 420px !important;
+            border-radius: 24px !important;
             box-sizing: border-box;
-            padding: 4px 14px !important;
+            padding: 6px 18px !important;
             margin-bottom: 0 !important;
         }
         .operation-result {
-            min-height: 20px;
-            font-size: 0.78rem;
-            padding: 4px 10px 0;
+            min-height: 22px;
+            font-size: 0.82rem;
+            padding: 6px 12px 0;
         }
         .input-row {
-            height: 52px !important;
+            height: 58px !important;
             padding: 2px 10px !important;
         }
         .currency-prefix {
-            font-size: 1.1rem !important;
-            min-width: 40px;
+            font-size: 1.25rem !important;
+            min-width: 46px;
         }
         .combined-card input {
-            font-size: 1.6rem !important;
-            padding: 0 4px !important;
+            font-size: 1.85rem !important;
+            padding: 0 6px !important;
         }
         .input-divider {
             margin: 0 10px !important;
         }
 
-        /* Teclado exactamente del mismo ancho que la tarjeta combinada (380px) */
+        /* Teclado exactamente de 420px de ancho a la par de la tarjeta */
         .keypad {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
-            gap: 8px !important;
-            margin: 10px auto 0 !important;
+            gap: 10px !important;
+            margin: 12px auto 0 !important;
             width: 100% !important;
-            max-width: 380px !important;
+            max-width: 420px !important;
             box-sizing: border-box;
         }
         .keypad-btn {
-            height: 46px !important;
-            border-radius: 14px !important;
-            font-size: 1.15rem !important;
+            height: 52px !important;
+            border-radius: 16px !important;
+            font-size: 1.25rem !important;
             aspect-ratio: auto !important;
         }
         .keypad-btn.key-zero {
-            height: 46px !important;
+            height: 52px !important;
         }
         .keypad-btn .material-symbols-rounded {
-            font-size: 1.35rem !important;
+            font-size: 1.45rem !important;
         }
         .calc-picker-icon {
-            width: 24px !important;
-            height: 24px !important;
+            width: 26px !important;
+            height: 26px !important;
         }
         .keypad-btn:hover {
             background-color: var(--md-sys-color-surface-container-high);
@@ -3509,11 +3514,11 @@
         }
 
         /* =======================================================
-           VISTA 2: PAGO MÓVIL AMPLIO EN DESKTOP
+           VISTA 2: PAGO MÓVIL 100% RESPONSIVE EN DESKTOP
            ======================================================= */
         body.desktop-view-pagomovil .main-content {
-            align-items: flex-start;
-            padding: 32px 24px;
+            align-items: flex-start !important;
+            padding: 36px 32px 64px !important;
         }
 
         body.desktop-view-pagomovil #rates-tab-content,
@@ -3526,7 +3531,7 @@
             display: flex !important;
             flex: 1 1 100%;
             width: 100%;
-            max-width: 860px;
+            max-width: 960px;
             height: auto;
             max-height: none;
             overflow-y: visible;
@@ -3534,27 +3539,145 @@
             margin: 0 auto;
         }
 
-        body.desktop-view-pagomovil #pagomovil-tab-content .container {
-            width: 100%;
-            max-width: 100%;
+        /* Anular límite de 440px en desktop para Pago Móvil */
+        .pm-container {
+            max-width: 960px !important;
+            width: 100% !important;
+            padding: 0 !important;
         }
 
+        /* Header del perfil activo amplio */
+        body.desktop-view-pagomovil .pm-profile-header {
+            padding: 22px 28px !important;
+            border-radius: 26px !important;
+            margin-bottom: 24px !important;
+            width: 100% !important;
+        }
+        body.desktop-view-pagomovil .pm-user-name {
+            font-size: 1.55rem !important;
+            margin-top: 4px;
+        }
+        body.desktop-view-pagomovil .pm-user-tag {
+            font-size: 0.78rem !important;
+        }
+        body.desktop-view-pagomovil .pm-user-submeta {
+            font-size: 0.95rem !important;
+            margin-top: 4px;
+        }
+        body.desktop-view-pagomovil .pm-icon-btn {
+            width: 46px !important;
+            height: 46px !important;
+        }
+
+        /* Sección y Cuadrícula de Bancos en Desktop (Tarjetas amplias en 2-3 columnas) */
+        body.desktop-view-pagomovil .pm-blocks-header {
+            margin-bottom: 16px !important;
+        }
+        body.desktop-view-pagomovil .pm-section-label {
+            font-size: 1.05rem !important;
+            font-weight: 700 !important;
+        }
+        body.desktop-view-pagomovil .pm-count-badge {
+            font-size: 0.85rem !important;
+            padding: 2px 10px !important;
+            border-radius: 12px !important;
+        }
         body.desktop-view-pagomovil .pm-banks-grid {
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
-            gap: 16px;
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+            gap: 18px !important;
+            width: 100% !important;
+        }
+        body.desktop-view-pagomovil .pm-bank-block {
+            padding: 20px 22px !important;
+            border-radius: 22px !important;
+            min-height: 120px !important;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        }
+        body.desktop-view-pagomovil .pm-bank-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16) !important;
+        }
+        body.desktop-view-pagomovil .pm-block-code {
+            font-size: 0.85rem !important;
+        }
+        body.desktop-view-pagomovil .pm-block-name {
+            font-size: 1.15rem !important;
+            margin: 4px 0 2px 0 !important;
+        }
+        body.desktop-view-pagomovil .pm-block-sub {
+            font-size: 0.88rem !important;
+        }
+
+        /* Vista de Bienvenida / Tour Onboarding amplia en desktop */
+        body.desktop-view-pagomovil .pm-tour-card {
+            max-width: 920px !important;
+            width: 100% !important;
+            padding: 36px 32px !important;
+            margin: 20px auto !important;
+            background-color: var(--md-sys-color-surface-container) !important;
+            border-radius: 28px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+        body.desktop-view-pagomovil .pm-carousel-wrapper {
+            overflow: visible !important;
+            width: 100% !important;
+        }
+        body.desktop-view-pagomovil .pm-carousel {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 24px !important;
+            transform: none !important;
+            width: 100% !important;
+            height: auto !important;
+        }
+        body.desktop-view-pagomovil .pm-slide {
+            min-width: 0 !important;
+            width: 100% !important;
+            padding: 18px 12px !important;
+            height: auto !important;
+        }
+        body.desktop-view-pagomovil .pm-slide-icon-wrap {
+            width: 72px !important;
+            height: 72px !important;
+            border-radius: 24px !important;
+            margin-bottom: 18px !important;
+        }
+        body.desktop-view-pagomovil .pm-slide-icon-wrap .material-symbols-rounded {
+            font-size: 38px !important;
+        }
+        body.desktop-view-pagomovil .pm-slide-title {
+            font-size: 1.2rem !important;
+            margin-bottom: 8px !important;
+        }
+        body.desktop-view-pagomovil .pm-slide-desc {
+            font-size: 0.92rem !important;
+            max-width: 100% !important;
+            line-height: 1.45;
+        }
+        body.desktop-view-pagomovil .pm-indicators {
+            display: none !important;
+        }
+        body.desktop-view-pagomovil #pm-btn-start {
+            max-width: 360px !important;
+            margin: 28px auto 0 !important;
+            padding: 16px 24px !important;
+            font-size: 1.05rem !important;
+            border-radius: 22px !important;
         }
 
         body.desktop-view-pagomovil .pm-fab-container {
-            bottom: 32px;
-            right: max(32px, calc(50% - 430px));
+            bottom: 36px;
+            right: max(36px, calc(50% - 480px));
         }
 
         /* =======================================================
            VISTA 3: HISTORIAL AMPLIO EN DESKTOP
            ======================================================= */
         body.desktop-view-history .main-content {
-            align-items: flex-start;
-            padding: 32px 24px;
+            align-items: flex-start !important;
+            padding: 36px 32px 64px !important;
         }
 
         body.desktop-view-history .tabs-track {
@@ -3566,7 +3689,7 @@
             position: static !important;
             inset: auto !important;
             width: 100%;
-            max-width: 820px;
+            max-width: 860px;
             height: auto;
             max-height: none;
             overflow-y: visible;
@@ -3580,6 +3703,11 @@
         body.desktop-view-history #history-tab-content .container {
             width: 100%;
             max-width: 100%;
+        }
+
+        body.desktop-view-history #history-tab-content .card {
+            border-radius: 26px !important;
+            padding: 28px 32px !important;
         }
 
         /* =======================================================

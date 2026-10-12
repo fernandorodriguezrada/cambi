@@ -14,10 +14,6 @@
             <span class="material-symbols-rounded">qr_code_2</span>
             <span>Pago Móvil</span>
         </button>
-        <button type="button" class="desktop-nav-item" data-tab="history">
-            <span class="material-symbols-rounded">history</span>
-            <span>Historial</span>
-        </button>
     </nav>
 
     <div class="header-actions">
