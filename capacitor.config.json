@@ -6,6 +6,9 @@
     "androidScheme": "https"
   },
   "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    },
     "StatusBar": {
       "backgroundColor": "#262C33",
       "style": "DARK"
