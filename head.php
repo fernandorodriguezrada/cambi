@@ -3802,8 +3802,9 @@
         .main-content {
             height: calc(100vh - 68px);
             max-height: calc(100vh - 68px);
-            overflow-y: auto !important;
+            overflow-y: scroll !important;
             overflow-x: hidden !important;
+            scrollbar-gutter: stable;
             display: flex;
             justify-content: center;
             align-items: flex-start !important;
