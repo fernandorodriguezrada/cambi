@@ -212,6 +212,52 @@
     window.showToast = showToast;
 
     /**
+     * Gestión del estado de conexión (En línea / Modo sin conexión)
+     */
+    function updateNetworkStatus() {
+        const isOnline = navigator.onLine;
+        const btn = document.getElementById("network-status-btn");
+        const icon = document.getElementById("network-status-icon");
+        if (!btn || !icon) return;
+
+        if (isOnline) {
+            btn.classList.remove("offline");
+            btn.title = "Conectado a internet";
+            btn.setAttribute("aria-label", "Conectado a internet");
+            icon.innerText = "cloud";
+        } else {
+            btn.classList.add("offline");
+            btn.title = "Modo sin conexión";
+            btn.setAttribute("aria-label", "Modo sin conexión");
+            icon.innerText = "cloud_off";
+        }
+    }
+    window.updateNetworkStatus = updateNetworkStatus;
+
+    window.addEventListener("online", () => {
+        updateNetworkStatus();
+        showToast("Conectado a internet");
+        if (typeof fetchRate === "function") {
+            fetchRate();
+        }
+    });
+
+    window.addEventListener("offline", () => {
+        updateNetworkStatus();
+        showToast("Modo sin conexión");
+    });
+
+    const netStatusBtn = document.getElementById("network-status-btn");
+    if (netStatusBtn) {
+        netStatusBtn.addEventListener("click", () => {
+            showToast(navigator.onLine ? "Conectado a internet" : "Modo sin conexión");
+        });
+    }
+
+    // Inicializar estado inmediatamente
+    updateNetworkStatus();
+
+    /**
      * Utilidad universal para copiar al portapapeles con fallback robusto
      */
     function copyTextToClipboard(text, successCallback) {
@@ -751,7 +797,7 @@
                 if (rateEurDisplay) rateEurDisplay.innerText = "Error de Red";
             } else {
                 if (typeof showToast === "function") {
-                    showToast(navigator.onLine ? "Servidor sin conexión saliente. Mostrando última tasa." : "Sin conexión a internet. Mostrando última tasa.");
+                    showToast(navigator.onLine ? "Servidor sin conexión saliente. Mostrando última tasa." : "Modo sin conexión");
                 }
             }
         } finally {
@@ -1333,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v104",
+                version: "v105",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {

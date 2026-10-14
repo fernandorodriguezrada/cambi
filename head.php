@@ -283,10 +283,83 @@
         transition: color var(--transition-speed);
     }
 
-   .settings-btn {
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .network-status-btn {
+        background: transparent;
+        border: none;
+        outline: none;
+        padding: 4px;
+        margin: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: var(--branding-color);
+        transition: color var(--transition-speed), opacity var(--transition-speed), transform 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .network-status-btn:hover {
+        opacity: 0.85;
+    }
+
+    .network-status-btn:active {
+        transform: scale(0.9);
+    }
+
+    .network-status-btn .status-icon {
+        font-size: 24px;
+        line-height: 1;
+        transition: transform 0.25s ease, color var(--transition-speed);
+        display: block;
+    }
+
+    .network-status-btn:not(.offline) {
+        opacity: 0.85;
+    }
+
+    .network-status-btn:not(.offline):hover {
+        opacity: 1;
+    }
+
+    .network-status-btn.offline {
+        color: #e53935;
+    }
+
+    html.dark-mode .network-status-btn.offline,
+    body.dark-mode .network-status-btn.offline {
+        color: #ff6e6e;
+    }
+
+    .network-status-btn.offline .status-icon {
+        animation: pulse-offline 2.2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-offline {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.55;
+            transform: scale(0.94);
+        }
+    }
+
+    .settings-btn {
         cursor: pointer;
         color: var(--branding-color);
         transition: transform var(--transition-speed);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
     }
 
     .settings-btn:hover {
