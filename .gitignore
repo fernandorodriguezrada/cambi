@@ -13,3 +13,9 @@ Thumbs.db
 .ddev/.dbimageBuild
 .ddev/.webimageBuild
 .ddev/.homeadditions
+
+# Android y artefactos locales
+node_modules/
+android/
+www/
+Cambi.apk

@@ -751,7 +751,7 @@
                 if (rateEurDisplay) rateEurDisplay.innerText = "Error de Red";
             } else {
                 if (typeof showToast === "function") {
-                    showToast("Servidor sin conexión saliente. Mostrando última tasa.");
+                    showToast(navigator.onLine ? "Servidor sin conexión saliente. Mostrando última tasa." : "Sin conexión a internet. Mostrando última tasa.");
                 }
             }
         } finally {
@@ -1333,7 +1333,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v103",
+                version: "v104",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
