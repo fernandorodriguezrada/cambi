@@ -4826,7 +4826,6 @@
     }
 
     .gw-contactless-icon {
-        transform: rotate(90deg);
         opacity: 0.9;
         color: #ffffff;
     }
@@ -4852,39 +4851,32 @@
 
     /* 2. WALLY TECH CARD (Google Wallet Exact) */
     .gw-card-wally {
-        background: #36008D !important;
+        background-color: #3F0099 !important;
+        position: relative;
+        overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        color: #ffffff;
+        padding: 0 !important;
     }
-    .gw-wally-brand {
-        font-family: var(--font-google-sans);
-        font-weight: 800;
-        font-size: 1.3rem;
-        letter-spacing: -0.5px;
-        color: #ffffff;
-    }
-    .gw-wally-center {
+    .gw-wally-bg-img {
         position: absolute;
         inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         pointer-events: none;
+        display: block;
     }
-    .gw-wally-w-svg {
-        width: 125px;
-        height: 75px;
-    }
-    .gw-wally-prepaid {
+    .gw-wally-digits {
         position: absolute;
-        right: 22px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-family: var(--font-google-sans);
-        font-size: 0.72rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.85);
-        letter-spacing: 0.3px;
+        left: 5%;
+        bottom: 8.8%;
+        font-family: var(--font-google-sans), -apple-system, sans-serif;
+        font-size: 1.15rem;
+        font-weight: 500;
+        letter-spacing: 1.2px;
+        color: #ffffff;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        z-index: 2;
     }
 
     /* 3. BANCO DE VENEZUELA (BDV) DÓLAR CARD (Google Wallet Exact) */

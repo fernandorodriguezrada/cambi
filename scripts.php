@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v120",
+                version: "v121",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -2987,36 +2987,8 @@
         if (issuer === "wally") {
             return `
                 <div class="wallet-card-art gw-card-wally" ${previewIdAttr}>
-                    <div class="gw-card-top-row">
-                        <span class="gw-wally-brand">wally</span>
-                        <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20">
-                            <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
-                            <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
-                            <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
-                        </svg>
-                    </div>
-                    <div class="gw-wally-center">
-                        <svg class="gw-wally-w-svg" viewBox="0 0 140 85" fill="none">
-                            <defs>
-                                <linearGradient id="gwWallyGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#FF9E00" stop-opacity="0.95"/>
-                                    <stop offset="100%" stop-color="#FF5400" stop-opacity="0.8"/>
-                                </linearGradient>
-                                <linearGradient id="gwWallyGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#FFB703" stop-opacity="0.9"/>
-                                    <stop offset="100%" stop-color="#FB8500" stop-opacity="0.85"/>
-                                </linearGradient>
-                            </defs>
-                            <rect x="25" y="10" width="18" height="65" rx="9" transform="rotate(-32 34 42)" fill="url(#gwWallyGrad1)"/>
-                            <rect x="58" y="10" width="18" height="65" rx="9" transform="rotate(-32 67 42)" fill="url(#gwWallyGrad2)" style="mix-blend-mode: screen;"/>
-                            <rect x="91" y="10" width="18" height="65" rx="9" transform="rotate(-32 100 42)" fill="url(#gwWallyGrad1)"/>
-                        </svg>
-                        <span class="gw-wally-prepaid">prepaid</span>
-                    </div>
-                    <div class="gw-card-bottom-row">
-                        <div class="gw-card-digits">•&bull;${last4}</div>
-                        <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, "light")}</div>
-                    </div>
+                    <img src="public/banks/wally_card_bg.webp" alt="Wally Card" class="gw-wally-bg-img">
+                    <span class="gw-wally-digits">•&bull;${last4}</span>
                 </div>
             `;
         }
@@ -3143,10 +3115,10 @@
             <div class="wallet-card-art ${themeClass}" ${previewIdAttr}>
                 <div class="gw-card-top-row">
                     ${brandHtml}
-                    <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20">
-                        <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
-                        <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
-                        <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
+                    <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" width="22" height="22">
+                        <path d="M10 7a6.5 6.5 0 0 1 0 10"/>
+                        <path d="M14 4a11 11 0 0 1 0 16"/>
+                        <path d="M18 1a15.5 15.5 0 0 1 0 22"/>
                     </svg>
                 </div>
                 <div class="gw-card-bottom-row">
