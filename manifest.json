@@ -3,8 +3,8 @@
   "short_name": "Cambi",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#262C33",
-  "theme_color": "#262C33",
+  "background_color": "#3B454E",
+  "theme_color": "#3B454E",
   "orientation": "portrait-primary",
   "icons": [
     {

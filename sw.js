@@ -1,4 +1,4 @@
-const CACHE_NAME = "cambi-v109";
+const CACHE_NAME = "cambi-v110";
 
 // Recursos esenciales que se guardan durante la instalación para arranque 100% offline
 const PRECACHE_URLS = [
