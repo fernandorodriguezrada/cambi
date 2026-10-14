@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v119",
+                version: "v120",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -2830,63 +2830,63 @@
             name: "Binance Card",
             brandText: "BINANCE",
             logo: "public/crypto/binance.svg",
-            themeClass: "card-theme-binance",
-            defaultNetwork: "visa"
+            themeClass: "gw-card-binance",
+            defaultNetwork: "mastercard"
         },
         wally: {
             name: "Wally Tech",
-            brandText: "Wally.",
+            brandText: "wally",
             logo: "",
-            themeClass: "card-theme-wally",
+            themeClass: "gw-card-wally",
             defaultNetwork: "mastercard"
         },
         zinli: {
             name: "Zinli",
             brandText: "zinli",
             logo: "",
-            themeClass: "card-theme-zinli",
+            themeClass: "gw-card-zinli",
             defaultNetwork: "visa"
         },
         bancamiga: {
             name: "Bancamiga",
             brandText: "BANCAMIGA",
             logo: "public/banks/0172.webp",
-            themeClass: "card-theme-bancamiga",
+            themeClass: "gw-card-bancamiga",
             defaultNetwork: "mastercard"
         },
         banesco: {
             name: "Banesco",
             brandText: "BANESCO",
             logo: "public/banks/0134.svg",
-            themeClass: "card-theme-banesco",
-            defaultNetwork: "mastercard"
+            themeClass: "gw-card-banesco",
+            defaultNetwork: "visa"
         },
         bdv: {
             name: "Banco de Venezuela",
             brandText: "BDV",
             logo: "public/banks/0102.svg",
-            themeClass: "card-theme-bdv",
+            themeClass: "gw-card-bdv",
             defaultNetwork: "mastercard"
         },
         mercantil: {
             name: "Banco Mercantil",
             brandText: "MERCANTIL",
             logo: "public/banks/0105.svg",
-            themeClass: "card-theme-mercantil",
+            themeClass: "gw-card-mercantil",
             defaultNetwork: "mastercard"
         },
         okx: {
             name: "OKX Card",
             brandText: "OKX",
             logo: "public/crypto/okx.svg",
-            themeClass: "card-theme-okx",
+            themeClass: "gw-card-okx",
             defaultNetwork: "mastercard"
         },
         custom: {
             name: "Personalizada",
             brandText: "MI TARJETA",
             logo: "",
-            themeClass: "card-theme-custom-obsidian",
+            themeClass: "gw-card-custom-obsidian",
             defaultNetwork: "visa"
         }
     };
@@ -2936,38 +2936,227 @@
         return clean;
     };
 
-    const getNetworkLogoHtml = (network) => {
+    const getGoogleWalletNetworkSvg = (network, variant = "light") => {
         if (network === "mastercard") {
-            return `<div class="wallet-network-logo" style="display:inline-flex; align-items:center;" title="Mastercard">
-                <svg width="34" height="22" viewBox="0 0 36 24" fill="none">
-                    <circle cx="13" cy="12" r="10" fill="#EB001B"/>
-                    <circle cx="23" cy="12" r="10" fill="#F79E1B" fill-opacity="0.92"/>
+            return `<div class="gw-network-mastercard" title="Mastercard">
+                <svg width="36" height="22" viewBox="0 0 36 22" fill="none">
+                    <circle cx="11" cy="11" r="11" fill="#EB001B"/>
+                    <circle cx="25" cy="11" r="11" fill="#F79E1B"/>
+                    <path d="M 18 2.52 A 11 11 0 0 1 18 19.48 A 11 11 0 0 1 18 2.52 Z" fill="#FF5F00"/>
                 </svg>
             </div>`;
         }
-        return `<span class="wallet-network-logo network-visa">VISA</span>`;
+        const visaColor = (variant === "dark") ? "#0B1528" : "#FFFFFF";
+        return `<div class="gw-network-visa" title="Visa" style="color: ${visaColor};">
+            <svg width="44" height="15" viewBox="0 0 54 18" fill="none">
+                <path d="M21.2 1.3L15.3 16.7H10.4L6.3 4.2C6.1 3.3 5.9 3 5.1 2.5C3.9 1.8 1.8 1.2 0 0.8L0.1 0.4H8.3C9.4 0.4 10.3 1.2 10.5 2.4L12.5 12.8L17.5 0.4H21.2V1.3ZM39.6 11.5C39.6 7.1 33.4 6.9 33.5 4.9C33.5 4.3 34.1 3.7 35.3 3.5C35.9 3.4 37.6 3.4 39.7 4.3L40.5 0.7C39.4 0.3 38 0 36.2 0C31.8 0 28.7 2.4 28.7 5.7C28.6 8.2 30.9 9.6 32.6 10.5C34.4 11.3 35 11.9 35 12.7C35 13.9 33.6 14.4 32.2 14.4C30 14.4 28.7 14.1 27.2 13.4L26.3 17.2C27.6 17.8 29.8 18.2 32.1 18.2C36.8 18.2 39.6 15.9 39.6 11.5ZM51.8 16.7H56L52.4 0.4H48.5C47.6 0.4 46.8 0.9 46.5 1.7L39.7 16.7H44.6L45.6 14H51.4L51.8 16.7ZM47 10.4L49.3 4.1L50.6 10.4H47ZM27.3 0.4L23.4 16.7H18.8L22.7 0.4H27.3Z" fill="currentColor"/>
+            </svg>
+        </div>`;
     };
+    window.getGoogleWalletNetworkSvg = getGoogleWalletNetworkSvg;
+    const getNetworkLogoHtml = getGoogleWalletNetworkSvg;
+    window.getNetworkLogoHtml = getNetworkLogoHtml;
 
-    const getCardBrandHtml = (issuer, label, customStyle) => {
-        const info = WALLET_ISSUERS_MAP[issuer] || WALLET_ISSUERS_MAP.custom;
+    const renderGoogleWalletCardArt = (card, isPreview = false) => {
+        const issuer = card.issuer || "binance";
+        const clean = (card.number || "").replace(/\D/g, "");
+        const last4 = clean.slice(-4) || "••••";
+        const first4 = clean.slice(0, 4) || (issuer === "bdv" ? "5401" : "••••");
+        const net = card.network || (clean.length > 0 ? detectCardNetwork(card.number) : (WALLET_ISSUERS_MAP[issuer]?.defaultNetwork || "visa"));
+        const previewIdAttr = isPreview ? 'id="wallet-preview-card"' : "";
+
+        if (issuer === "binance") {
+            return `
+                <div class="wallet-card-art gw-card-binance" ${previewIdAttr}>
+                    <div class="gw-card-top-row">
+                        <div class="gw-binance-brand">
+                            <svg class="gw-binance-logo" viewBox="0 0 24 24" fill="#F0B90B" width="22" height="22">
+                                <path d="M12 2L8.5 5.5l3.5 3.5 3.5-3.5L12 2zm-6.5 6.5L2 12l3.5 3.5 3.5-3.5-3.5-3.5zm13 0l-3.5 3.5 3.5 3.5 3.5-3.5-3.5-3.5zM12 8.9L9.4 11.5l2.6 2.6 2.6-2.6L12 8.9zM12 15l-3.5 3.5L12 22l3.5-3.5L12 15z"/>
+                            </svg>
+                            <span class="gw-binance-text">BINANCE</span>
+                        </div>
+                    </div>
+                    <div class="gw-card-bottom-row">
+                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, "light")}</div>
+                    </div>
+                </div>
+            `;
+        }
+
         if (issuer === "wally") {
-            return `<span class="wallet-card-brand-text" style="font-weight:900; font-size:1.15rem; letter-spacing: -0.5px;">Wally.</span>`;
+            return `
+                <div class="wallet-card-art gw-card-wally" ${previewIdAttr}>
+                    <div class="gw-card-top-row">
+                        <span class="gw-wally-brand">wally</span>
+                        <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20">
+                            <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
+                            <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
+                            <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
+                        </svg>
+                    </div>
+                    <div class="gw-wally-center">
+                        <svg class="gw-wally-w-svg" viewBox="0 0 140 85" fill="none">
+                            <defs>
+                                <linearGradient id="gwWallyGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FF9E00" stop-opacity="0.95"/>
+                                    <stop offset="100%" stop-color="#FF5400" stop-opacity="0.8"/>
+                                </linearGradient>
+                                <linearGradient id="gwWallyGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFB703" stop-opacity="0.9"/>
+                                    <stop offset="100%" stop-color="#FB8500" stop-opacity="0.85"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="25" y="10" width="18" height="65" rx="9" transform="rotate(-32 34 42)" fill="url(#gwWallyGrad1)"/>
+                            <rect x="58" y="10" width="18" height="65" rx="9" transform="rotate(-32 67 42)" fill="url(#gwWallyGrad2)" style="mix-blend-mode: screen;"/>
+                            <rect x="91" y="10" width="18" height="65" rx="9" transform="rotate(-32 100 42)" fill="url(#gwWallyGrad1)"/>
+                        </svg>
+                        <span class="gw-wally-prepaid">prepaid</span>
+                    </div>
+                    <div class="gw-card-bottom-row">
+                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, "light")}</div>
+                    </div>
+                </div>
+            `;
         }
+
+        if (issuer === "bdv") {
+            return `
+                <div class="wallet-card-art gw-card-bdv" ${previewIdAttr}>
+                    <div class="gw-bdv-top-section">
+                        <div class="gw-bdv-brand-row">
+                            <div class="gw-bdv-logo-group">
+                                <svg class="gw-bdv-flag" viewBox="0 0 32 28" fill="none" width="28" height="24">
+                                    <path d="M0 4L12 0L8 20L0 4Z" fill="#FFD100"/>
+                                    <path d="M12 0L20 8L16 28L8 20Z" fill="#006EB4"/>
+                                    <path d="M20 8L28 4L24 24L16 28Z" fill="#E5243B"/>
+                                </svg>
+                                <span class="gw-bdv-brand-name">BDV</span>
+                                <div class="gw-bdv-divider"></div>
+                                <div class="gw-bdv-bank-subtitle">
+                                    <span>Banco de</span>
+                                    <span>Venezuela</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gw-bdv-usd-badge">USD</div>
+                        <div class="gw-bdv-cascade-wrap">
+                            <svg class="gw-bdv-cascade-svg" viewBox="0 0 160 170" fill="none">
+                                <rect x="42" y="-12" width="46" height="74" rx="6" transform="rotate(-14 42 -12)" fill="#542878"/>
+                                <rect x="58" y="16" width="46" height="74" rx="6" transform="rotate(-14 58 16)" fill="#0069B4"/>
+                                <rect x="74" y="44" width="46" height="74" rx="6" transform="rotate(-14 74 44)" fill="#00A389"/>
+                                <rect x="52" y="78" width="46" height="74" rx="6" transform="rotate(-14 52 78)" fill="#FFC800"/>
+                                <rect x="30" y="106" width="46" height="74" rx="6" transform="rotate(-14 30 106)" fill="#E51A4C"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="gw-bdv-bottom-section">
+                        <div class="gw-bdv-card-number">${first4} **** **** ${last4}</div>
+                        <div class="gw-bdv-meta-row">
+                            <div class="gw-bdv-meta-col">
+                                <span class="gw-bdv-label">CVC</span>
+                                <span class="gw-bdv-val">***</span>
+                            </div>
+                            <div class="gw-bdv-meta-col">
+                                <span class="gw-bdv-label">VALID DATE</span>
+                                <span class="gw-bdv-val">**/**</span>
+                            </div>
+                            <div class="gw-bdv-network">
+                                ${getGoogleWalletNetworkSvg(net, "dark")}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (issuer === "banesco") {
+            return `
+                <div class="wallet-card-art gw-card-banesco" ${previewIdAttr}>
+                    <div class="gw-banesco-arcs-wrap">
+                        <svg viewBox="0 0 320 200" fill="none" class="gw-banesco-arcs-svg">
+                            <circle cx="95" cy="50" r="105" stroke="rgba(255, 255, 255, 0.22)" stroke-width="1.2"/>
+                            <circle cx="85" cy="140" r="85" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+                    <div class="gw-card-top-row" style="justify-content: flex-end;">
+                        <div class="gw-gold-chip">
+                            <svg width="40" height="30" viewBox="0 0 40 30" fill="none">
+                                <rect x="1" y="1" width="38" height="28" rx="5" fill="#DDB24A" stroke="#9A7723" stroke-width="1"/>
+                                <rect x="12" y="1" width="16" height="28" fill="none" stroke="#9A7723" stroke-width="0.8"/>
+                                <line x1="1" y1="10" x2="39" y2="10" stroke="#9A7723" stroke-width="0.8"/>
+                                <line x1="1" y1="20" x2="39" y2="20" stroke="#9A7723" stroke-width="0.8"/>
+                                <circle cx="20" cy="15" r="3.5" fill="none" stroke="#9A7723" stroke-width="0.8"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="gw-card-bottom-row">
+                        <div class="gw-banesco-bottom-left">
+                            <svg class="gw-banesco-trefoil" viewBox="0 0 28 26" width="28" height="26" fill="#FFFFFF">
+                                <circle cx="8" cy="7" r="5"/>
+                                <circle cx="8" cy="19" r="5"/>
+                                <circle cx="18" cy="13" r="5"/>
+                            </svg>
+                            <span class="gw-card-digits">•&bull;${last4}</span>
+                        </div>
+                        <div class="gw-card-network">
+                            ${getGoogleWalletNetworkSvg(net, "light")}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         if (issuer === "zinli") {
-            return `<span class="wallet-card-brand-text" style="font-weight:900; font-size:1.2rem; color:#0b1528;">zinli</span>`;
+            return `
+                <div class="wallet-card-art gw-card-zinli" ${previewIdAttr}>
+                    <div class="gw-card-top-row">
+                        <span class="gw-zinli-brand">zinli</span>
+                        <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20">
+                            <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
+                            <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
+                            <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
+                        </svg>
+                    </div>
+                    <div class="gw-card-bottom-row">
+                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, "dark")}</div>
+                    </div>
+                </div>
+            `;
         }
-        if (issuer === "custom") {
-            const txt = (label || "MI TARJETA").toUpperCase();
-            return `<span class="wallet-card-brand-text" style="font-weight:800; font-size:0.95rem;">${escapeText(txt)}</span>`;
-        }
-        if (info.logo) {
-            return `<div class="wallet-card-brand-box">
-                <img src="${info.logo}" alt="${escapeText(info.brandText)}" class="wallet-card-brand-logo">
-                <span class="wallet-card-brand-text">${escapeText(info.brandText)}</span>
-            </div>`;
-        }
-        return `<span class="wallet-card-brand-text">${escapeText(info.brandText)}</span>`;
+
+        // Generic Google Wallet card style (Bancamiga, Mercantil, OKX, Custom)
+        const info = WALLET_ISSUERS_MAP[issuer] || WALLET_ISSUERS_MAP.custom;
+        const themeClass = (issuer === "custom")
+            ? `gw-card-custom-${card.customStyle || "obsidian"}`
+            : (info.themeClass || "gw-card-bancamiga");
+        const brandHtml = (issuer === "custom")
+            ? `<span class="gw-brand-text">${escapeText((card.label || "MI TARJETA").toUpperCase())}</span>`
+            : (info.logo 
+                ? `<div class="gw-brand-box"><img src="${info.logo}" alt="${escapeText(info.brandText)}" class="gw-brand-logo"><span class="gw-brand-text">${escapeText(info.brandText)}</span></div>`
+                : `<span class="gw-brand-text">${escapeText(info.brandText)}</span>`);
+        const isLight = (issuer === "custom" && (card.customStyle === "sunset" || card.customStyle === "silver"));
+
+        return `
+            <div class="wallet-card-art ${themeClass}" ${previewIdAttr}>
+                <div class="gw-card-top-row">
+                    ${brandHtml}
+                    <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20">
+                        <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
+                        <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
+                        <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
+                    </svg>
+                </div>
+                <div class="gw-card-bottom-row">
+                    <div class="gw-card-digits">•&bull;${last4}</div>
+                    <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, isLight ? "dark" : "light")}</div>
+                </div>
+            </div>
+        `;
     };
+    window.renderGoogleWalletCardArt = renderGoogleWalletCardArt;
 
     const switchWalletSubTab = (subTab, remember = true) => {
         const btnCards = document.getElementById("subtab-btn-cards");
@@ -3195,20 +3384,14 @@
             const isNumRevealed = revealedCardNums.has(card.id);
             const isCvvRevealed = revealedCardCvvs.has(card.id);
 
-            const themeClass = card.issuer === "custom"
-                ? `card-theme-custom-${card.customStyle || "obsidian"}`
-                : (WALLET_ISSUERS_MAP[card.issuer]?.themeClass || "card-theme-binance");
-
-            const network = card.network || detectCardNetwork(card.number);
-            const networkHtml = getNetworkLogoHtml(network);
-            const brandHtml = getCardBrandHtml(card.issuer, card.label, card.customStyle);
-
             const cleanNum = (card.number || "").replace(/\D/g, "");
             const last4 = cleanNum.slice(-4) || "••••";
             const maskedCardNum = `•••• •••• •••• ${last4}`;
             const formattedFullNum = formatCardNumber(cleanNum);
             const displayedNum = isNumRevealed ? formattedFullNum : maskedCardNum;
             const displayedCvv = isCvvRevealed ? (card.cvv || "•••") : "•••";
+
+            const cardArtHtml = renderGoogleWalletCardArt(card, false);
 
             const cardWrapper = document.createElement("div");
             cardWrapper.className = `wallet-card-wrapper ${isExpanded ? "expanded" : ""}`;
@@ -3217,40 +3400,7 @@
             cardWrapper.onclick = (e) => handleWalletCardClick(card.id, e);
 
             cardWrapper.innerHTML = `
-                <div class="wallet-card-art ${themeClass}">
-                    <div class="wallet-card-top-row">
-                        ${brandHtml}
-                        <div class="wallet-card-tech-icons">
-                            <svg class="wallet-card-contactless" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
-                                <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
-                                <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div class="wallet-card-chip-row">
-                        <div class="wallet-card-chip"></div>
-                    </div>
-
-                    <div class="wallet-card-number-row">
-                        <span class="wallet-card-number-display">${displayedNum}</span>
-                    </div>
-
-                    <div class="wallet-card-bottom-row">
-                        <div class="wallet-card-meta-left">
-                            <span class="wallet-card-meta-label">TITULAR</span>
-                            <span class="wallet-card-meta-value">${escapeText(card.holder || "TITULAR")}</span>
-                        </div>
-                        <div class="wallet-card-meta-mid">
-                            <span class="wallet-card-meta-label">VENCE</span>
-                            <span class="wallet-card-meta-value">${escapeText(card.expiry || "MM/AA")}</span>
-                        </div>
-                        <div class="wallet-card-network-box">
-                            ${networkHtml}
-                        </div>
-                    </div>
-                </div>
+                ${cardArtHtml}
 
                 <div class="wallet-card-drawer">
                     <div class="wallet-card-drawer-info">
@@ -3281,6 +3431,17 @@
                                 <button type="button" class="wallet-drawer-icon-btn" onclick="copyCardCvv('${card.id}', event)" title="Copiar CVV">
                                     <span class="material-symbols-rounded">content_copy</span>
                                 </button>
+                            </div>
+                        </div>
+
+                        <div class="wallet-drawer-row">
+                            <div class="wallet-drawer-info-block">
+                                <span class="wallet-drawer-label">Vencimiento</span>
+                                <span class="wallet-drawer-value">${escapeText(card.expiry || '--/--')}</span>
+                            </div>
+                            <div class="wallet-drawer-info-block">
+                                <span class="wallet-drawer-label">Titular</span>
+                                <span class="wallet-drawer-value">${escapeText(card.holder || 'TITULAR')}</span>
                             </div>
                         </div>
 
@@ -3392,21 +3553,17 @@
     window.handleWalletIssuerChange = handleWalletIssuerChange;
 
     const updateWalletCardPreview = () => {
-        const previewCard = document.getElementById("wallet-preview-card");
+        const previewContainer = document.getElementById("wallet-modal-preview-container") || document.getElementById("wallet-preview-card")?.parentElement;
         const issuerSelect = document.getElementById("wallet-input-issuer");
         const customStyleInput = document.getElementById("wallet-input-custom-style");
         const labelInput = document.getElementById("wallet-input-label");
         const holderInput = document.getElementById("wallet-input-holder");
         const numberInput = document.getElementById("wallet-input-number");
         const expiryInput = document.getElementById("wallet-input-expiry");
-        const brandBox = document.getElementById("wallet-preview-brand-box");
-        const numDisplay = document.getElementById("wallet-preview-number");
-        const holderDisplay = document.getElementById("wallet-preview-holder");
-        const expiryDisplay = document.getElementById("wallet-preview-expiry");
-        const networkBox = document.getElementById("wallet-preview-network-box");
+        const cvvInput = document.getElementById("wallet-input-cvv");
         const detectIcon = document.getElementById("wallet-number-detect-icon");
 
-        if (!previewCard || !issuerSelect) return;
+        if (!previewContainer || !issuerSelect) return;
 
         const issuer = issuerSelect.value;
         const customStyle = customStyleInput ? customStyleInput.value : "obsidian";
@@ -3414,37 +3571,26 @@
         const holder = holderInput ? holderInput.value : "";
         const rawNum = numberInput ? numberInput.value.replace(/\D/g, "") : "";
         const expiry = expiryInput ? expiryInput.value : "";
+        const cvv = cvvInput ? cvvInput.value : "";
+        const network = (rawNum.length > 0) ? detectCardNetwork(rawNum) : (WALLET_ISSUERS_MAP[issuer]?.defaultNetwork || "visa");
 
-        previewCard.className = "wallet-card-art";
-        if (issuer === "custom") {
-            previewCard.classList.add(`card-theme-custom-${customStyle}`);
-        } else {
-            previewCard.classList.add(WALLET_ISSUERS_MAP[issuer]?.themeClass || "card-theme-binance");
-        }
-
-        if (brandBox) {
-            brandBox.innerHTML = getCardBrandHtml(issuer, label, customStyle);
-        }
-
-        if (numDisplay) {
-            numDisplay.textContent = (rawNum.length === 0) ? "•••• •••• •••• ••••" : formatCardNumber(rawNum);
-        }
-
-        if (holderDisplay) {
-            holderDisplay.textContent = (holder || "NOMBRE DEL TITULAR").toUpperCase();
-        }
-
-        if (expiryDisplay) {
-            expiryDisplay.textContent = expiry || "MM/AA";
-        }
-
-        const network = detectCardNetwork(rawNum);
-        if (networkBox) {
-            networkBox.innerHTML = getNetworkLogoHtml(network);
-        }
         if (detectIcon) {
             detectIcon.textContent = "credit_card";
         }
+
+        const previewCardData = {
+            id: "preview",
+            issuer: issuer,
+            customStyle: customStyle,
+            label: label,
+            holder: holder,
+            number: rawNum,
+            expiry: expiry,
+            cvv: cvv,
+            network: network
+        };
+
+        previewContainer.innerHTML = renderGoogleWalletCardArt(previewCardData, true);
     };
     window.updateWalletCardPreview = updateWalletCardPreview;
 

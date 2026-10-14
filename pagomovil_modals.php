@@ -291,46 +291,9 @@
             </button>
         </div>
         
-        <!-- Live Card Preview interactivo -->
-        <div class="wallet-modal-preview-wrap">
-            <div id="wallet-preview-card" class="wallet-card-art card-theme-binance">
-                <div class="wallet-card-top-row">
-                    <div class="wallet-card-brand-box" id="wallet-preview-brand-box">
-                        <img src="public/crypto/binance.svg" alt="Logo" class="wallet-card-brand-logo" id="wallet-preview-brand-logo">
-                        <span class="wallet-card-brand-text" id="wallet-preview-brand-text">BINANCE</span>
-                    </div>
-                    <div class="wallet-card-tech-icons">
-                        <svg class="wallet-card-contactless" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
-                            <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
-                            <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="wallet-card-chip-row">
-                    <div class="wallet-card-chip"></div>
-                </div>
-
-                <div class="wallet-card-number-row">
-                    <span id="wallet-preview-number" class="wallet-card-number-display">•••• •••• •••• ••••</span>
-                </div>
-
-                <div class="wallet-card-bottom-row">
-                    <div class="wallet-card-meta-left">
-                        <span class="wallet-card-meta-label">TITULAR</span>
-                        <span id="wallet-preview-holder" class="wallet-card-meta-value">NOMBRE DEL TITULAR</span>
-                    </div>
-                    <div class="wallet-card-meta-mid">
-                        <span class="wallet-card-meta-label">VENCE</span>
-                        <span id="wallet-preview-expiry" class="wallet-card-meta-value">MM/AA</span>
-                    </div>
-                    <div class="wallet-card-network-box" id="wallet-preview-network-box">
-                        <!-- Visa / Mastercard SVG icon -->
-                        <span class="wallet-network-logo network-visa" id="wallet-preview-network-logo">VISA</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Live Card Preview interactivo estilo Google Wallet -->
+        <div class="wallet-modal-preview-wrap" id="wallet-modal-preview-container">
+            <div id="wallet-preview-card" class="wallet-card-art gw-card-binance"></div>
         </div>
 
         <form id="wallet-card-form" onsubmit="saveWalletCard(event)">
