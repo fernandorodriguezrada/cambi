@@ -1370,22 +1370,28 @@
     if (btnExport) {
         btnExport.addEventListener("click", () => {
             const profile = getPmProfile();
-            if (!profile || !profile.banks || profile.banks.length === 0) {
-                showToast("No hay bancos guardados para exportar");
+            const walletCards = (typeof getWalletCards === "function") ? getWalletCards() : [];
+            const hasBanks = profile && profile.banks && profile.banks.length > 0;
+            const hasCards = walletCards && walletCards.length > 0;
+            if (!hasBanks && !hasCards) {
+                showToast("No hay bancos ni tarjetas guardadas para exportar");
                 return;
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v115",
+                version: "v116",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
+                walletCards: walletCards,
                 settings: {
                     darkMode: localStorage.getItem("darkMode"),
                     cambiAccentColor: localStorage.getItem("cambiAccentColor"),
                     defaultRateType: localStorage.getItem("defaultRateType"),
                     hapticFeedback: localStorage.getItem("hapticFeedback"),
                     startTab: localStorage.getItem("startTab"),
-                    pmCopyFormat: localStorage.getItem("pmCopyFormat")
+                    pmCopyFormat: localStorage.getItem("pmCopyFormat"),
+                    walletDeckMode: localStorage.getItem("walletDeckMode"),
+                    walletActiveSubTab: localStorage.getItem("walletActiveSubTab")
                 }
             };
             const jsonBlob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
@@ -1416,8 +1422,15 @@
             reader.onload = (event) => {
                 try {
                     const parsed = JSON.parse(event.target.result);
-                    if (parsed && parsed.pmProfile && parsed.pmProfile.phoneNum) {
-                        setPmProfile(parsed.pmProfile);
+                    const hasPm = parsed && parsed.pmProfile && parsed.pmProfile.phoneNum;
+                    const hasCards = parsed && parsed.walletCards && Array.isArray(parsed.walletCards);
+                    if (hasPm || hasCards) {
+                        if (hasPm) {
+                            setPmProfile(parsed.pmProfile);
+                        }
+                        if (hasCards) {
+                            saveWalletCards(parsed.walletCards);
+                        }
                         if (parsed.settings) {
                             if (parsed.settings.cambiAccentColor) {
                                 applyAccentColor(parsed.settings.cambiAccentColor);
@@ -1435,9 +1448,20 @@
                                 if (copyFormatSelect) copyFormatSelect.value = parsed.settings.pmCopyFormat;
                                 updateCopyPreview(parsed.settings.pmCopyFormat);
                             }
+                            if (parsed.settings.walletDeckMode) {
+                                localStorage.setItem("walletDeckMode", parsed.settings.walletDeckMode);
+                            }
+                            if (parsed.settings.walletActiveSubTab) {
+                                localStorage.setItem("walletActiveSubTab", parsed.settings.walletActiveSubTab);
+                            }
                         }
-                        renderPmView();
-                        showToast("¡Bancos y datos restaurados!");
+                        const curSubTab = localStorage.getItem("walletActiveSubTab") || "cards";
+                        if (typeof switchWalletSubTab === "function") {
+                            switchWalletSubTab(curSubTab, false);
+                        } else {
+                            renderPmView();
+                        }
+                        showToast("¡Bancos y billetera restaurados!");
                     } else {
                         alert("El archivo seleccionado no tiene una estructura de respaldo válida de Cambi.");
                     }
@@ -1802,7 +1826,8 @@
                     }
                 });
             });
-            renderPmView();
+            const savedSub = localStorage.getItem("walletActiveSubTab") || "cards";
+            switchWalletSubTab(savedSub, false);
         } else {
             const fab = document.getElementById("pm-fab-container");
             if (fab) fab.classList.remove("active");
@@ -2759,6 +2784,763 @@
     const initPmFabScroll = () => {};
     window.initPmFabScroll = initPmFabScroll;
 
+    // =======================================================
+    // MÓDULO DE BILLETERA (CARDS & PAGO MÓVIL SEGMENTED)
+    // =======================================================
+    const WALLET_STORAGE_KEY = "cambiWalletCards";
+    let expandedWalletCardId = null;
+    let cardToDeleteId = null;
+    const revealedCardNums = new Set();
+    const revealedCardCvvs = new Set();
+
+    const WALLET_ISSUERS_MAP = {
+        binance: {
+            name: "Binance Card",
+            brandText: "BINANCE",
+            logo: "public/crypto/binance.svg",
+            themeClass: "card-theme-binance",
+            defaultNetwork: "visa"
+        },
+        wally: {
+            name: "Wally Tech",
+            brandText: "Wally.",
+            logo: "",
+            themeClass: "card-theme-wally",
+            defaultNetwork: "mastercard"
+        },
+        zinli: {
+            name: "Zinli",
+            brandText: "zinli",
+            logo: "",
+            themeClass: "card-theme-zinli",
+            defaultNetwork: "visa"
+        },
+        bancamiga: {
+            name: "Bancamiga",
+            brandText: "BANCAMIGA",
+            logo: "public/banks/0172.webp",
+            themeClass: "card-theme-bancamiga",
+            defaultNetwork: "mastercard"
+        },
+        banesco: {
+            name: "Banesco",
+            brandText: "BANESCO",
+            logo: "public/banks/0134.svg",
+            themeClass: "card-theme-banesco",
+            defaultNetwork: "mastercard"
+        },
+        bdv: {
+            name: "Banco de Venezuela",
+            brandText: "BDV",
+            logo: "public/banks/0102.svg",
+            themeClass: "card-theme-bdv",
+            defaultNetwork: "mastercard"
+        },
+        mercantil: {
+            name: "Banco Mercantil",
+            brandText: "MERCANTIL",
+            logo: "public/banks/0105.svg",
+            themeClass: "card-theme-mercantil",
+            defaultNetwork: "mastercard"
+        },
+        okx: {
+            name: "OKX Card",
+            brandText: "OKX",
+            logo: "public/crypto/okx.svg",
+            themeClass: "card-theme-okx",
+            defaultNetwork: "mastercard"
+        },
+        custom: {
+            name: "Personalizada",
+            brandText: "MI TARJETA",
+            logo: "",
+            themeClass: "card-theme-custom-obsidian",
+            defaultNetwork: "visa"
+        }
+    };
+
+    const getWalletCards = () => {
+        try {
+            const raw = localStorage.getItem(WALLET_STORAGE_KEY);
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+            return [];
+        }
+    };
+    window.getWalletCards = getWalletCards;
+
+    const saveWalletCards = (cards) => {
+        localStorage.setItem(WALLET_STORAGE_KEY, JSON.stringify(cards));
+    };
+    window.saveWalletCards = saveWalletCards;
+
+    const escapeText = (str) => {
+        if (!str) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    };
+
+    const detectCardNetwork = (number) => {
+        const clean = (number || "").replace(/\D/g, "");
+        if (/^4/.test(clean)) return "visa";
+        if (/^(5[1-5]|2[2-7])/.test(clean)) return "mastercard";
+        return "visa";
+    };
+
+    const formatCardNumber = (value) => {
+        const clean = (value || "").replace(/\D/g, "").slice(0, 16);
+        return clean.replace(/(\d{4})(?=\d)/g, "$1 ");
+    };
+
+    const formatExpiry = (value) => {
+        const clean = (value || "").replace(/\D/g, "").slice(0, 4);
+        if (clean.length >= 3) {
+            return clean.slice(0, 2) + "/" + clean.slice(2);
+        }
+        return clean;
+    };
+
+    const getNetworkLogoHtml = (network) => {
+        if (network === "mastercard") {
+            return `<div class="wallet-network-logo" style="display:inline-flex; align-items:center;" title="Mastercard">
+                <svg width="34" height="22" viewBox="0 0 36 24" fill="none">
+                    <circle cx="13" cy="12" r="10" fill="#EB001B"/>
+                    <circle cx="23" cy="12" r="10" fill="#F79E1B" fill-opacity="0.92"/>
+                </svg>
+            </div>`;
+        }
+        return `<span class="wallet-network-logo network-visa">VISA</span>`;
+    };
+
+    const getCardBrandHtml = (issuer, label, customStyle) => {
+        const info = WALLET_ISSUERS_MAP[issuer] || WALLET_ISSUERS_MAP.custom;
+        if (issuer === "wally") {
+            return `<span class="wallet-card-brand-text" style="font-weight:900; font-size:1.15rem; letter-spacing: -0.5px;">Wally.</span>`;
+        }
+        if (issuer === "zinli") {
+            return `<span class="wallet-card-brand-text" style="font-weight:900; font-size:1.2rem; color:#0b1528;">zinli</span>`;
+        }
+        if (issuer === "custom") {
+            const txt = (label || "MI TARJETA").toUpperCase();
+            return `<span class="wallet-card-brand-text" style="font-weight:800; font-size:0.95rem;">${escapeText(txt)}</span>`;
+        }
+        if (info.logo) {
+            return `<div class="wallet-card-brand-box">
+                <img src="${info.logo}" alt="${escapeText(info.brandText)}" class="wallet-card-brand-logo">
+                <span class="wallet-card-brand-text">${escapeText(info.brandText)}</span>
+            </div>`;
+        }
+        return `<span class="wallet-card-brand-text">${escapeText(info.brandText)}</span>`;
+    };
+
+    const switchWalletSubTab = (subTab, remember = true) => {
+        const btnCards = document.getElementById("subtab-btn-cards");
+        const btnPm = document.getElementById("subtab-btn-pm");
+        const sectionCards = document.getElementById("wallet-cards-section");
+        const sectionPm = document.getElementById("wallet-pm-section");
+        const fabContainer = document.getElementById("pm-fab-container");
+        const fabBtn = document.getElementById("pm-add-bank-fab");
+
+        const activeSub = (subTab === "pagomovil") ? "pagomovil" : "cards";
+        if (remember) {
+            localStorage.setItem("walletActiveSubTab", activeSub);
+        }
+
+        if (btnCards) btnCards.classList.toggle("active", activeSub === "cards");
+        if (btnPm) btnPm.classList.toggle("active", activeSub === "pagomovil");
+
+        if (sectionCards) {
+            sectionCards.classList.toggle("active", activeSub === "cards");
+            sectionCards.style.display = (activeSub === "cards") ? "block" : "none";
+        }
+        if (sectionPm) {
+            sectionPm.classList.toggle("active", activeSub === "pagomovil");
+            sectionPm.style.display = (activeSub === "pagomovil") ? "block" : "none";
+        }
+
+        // Sincronizar visibilidad del FAB contextual
+        const activeNav = document.querySelector(".bottom-navigation .nav-item.active");
+        const isBilleteraTab = activeNav && activeNav.dataset.tab === "pagomovil";
+        if (fabContainer && fabBtn) {
+            if (isBilleteraTab) {
+                fabContainer.classList.add("active");
+                if (activeSub === "cards") {
+                    fabBtn.title = "Añadir tarjeta";
+                    fabBtn.setAttribute("aria-label", "Añadir tarjeta");
+                } else {
+                    fabBtn.title = "Añadir banco";
+                    fabBtn.setAttribute("aria-label", "Añadir banco");
+                }
+            }
+        }
+
+        if (activeSub === "pagomovil") {
+            renderPmView();
+        } else {
+            renderWalletCards();
+        }
+    };
+    window.switchWalletSubTab = switchWalletSubTab;
+
+    const handleWalletFabClick = () => {
+        const activeSub = localStorage.getItem("walletActiveSubTab") || "cards";
+        if (activeSub === "cards") {
+            openWalletCardModal();
+        } else {
+            const profile = getPmProfile();
+            if (profile && profile.banks && profile.banks.length > 0) {
+                openAddBankModal();
+            } else {
+                openPmModal("create");
+            }
+        }
+    };
+    window.handleWalletFabClick = handleWalletFabClick;
+
+    const toggleWalletDeckMode = () => {
+        const deck = document.getElementById("wallet-cards-deck");
+        const icon = document.getElementById("wallet-deck-toggle-icon");
+        if (!deck) return;
+        const isStacked = deck.classList.contains("mode-stacked");
+        if (isStacked) {
+            deck.classList.remove("mode-stacked");
+            deck.classList.add("mode-grid");
+            if (icon) icon.textContent = "view_agenda";
+            localStorage.setItem("walletDeckMode", "grid");
+        } else {
+            deck.classList.remove("mode-grid");
+            deck.classList.add("mode-stacked");
+            if (icon) icon.textContent = "layers";
+            localStorage.setItem("walletDeckMode", "stacked");
+        }
+    };
+    window.toggleWalletDeckMode = toggleWalletDeckMode;
+
+    const handleWalletCardClick = (cardId, event) => {
+        if (event && event.target.closest("button")) return;
+        if (expandedWalletCardId === cardId) {
+            expandedWalletCardId = null;
+        } else {
+            expandedWalletCardId = cardId;
+        }
+        renderWalletCards();
+    };
+    window.handleWalletCardClick = handleWalletCardClick;
+
+    const toggleCardNumberVisibility = (cardId, event) => {
+        if (event) event.stopPropagation();
+        if (revealedCardNums.has(cardId)) {
+            revealedCardNums.delete(cardId);
+        } else {
+            revealedCardNums.add(cardId);
+        }
+        renderWalletCards();
+    };
+    window.toggleCardNumberVisibility = toggleCardNumberVisibility;
+
+    const toggleCardCvvVisibility = (cardId, event) => {
+        if (event) event.stopPropagation();
+        if (revealedCardCvvs.has(cardId)) {
+            revealedCardCvvs.delete(cardId);
+        } else {
+            revealedCardCvvs.add(cardId);
+        }
+        renderWalletCards();
+    };
+    window.toggleCardCvvVisibility = toggleCardCvvVisibility;
+
+    const copyCardNumber = (cardId, event) => {
+        if (event) event.stopPropagation();
+        const cards = getWalletCards();
+        const card = cards.find(c => c.id === cardId);
+        if (!card) return;
+        const rawNum = (card.number || "").replace(/\D/g, "");
+        navigator.clipboard.writeText(rawNum).then(() => {
+            showToast("¡Número de tarjeta copiado!");
+        }).catch(() => {
+            showToast("No se pudo copiar el número");
+        });
+    };
+    window.copyCardNumber = copyCardNumber;
+
+    const copyCardCvv = (cardId, event) => {
+        if (event) event.stopPropagation();
+        const cards = getWalletCards();
+        const card = cards.find(c => c.id === cardId);
+        if (!card) return;
+        navigator.clipboard.writeText(card.cvv || "").then(() => {
+            showToast("¡CVV copiado!");
+        }).catch(() => {
+            showToast("No se pudo copiar el CVV");
+        });
+    };
+    window.copyCardCvv = copyCardCvv;
+
+    const copyFullCardDetails = (cardId, event) => {
+        if (event) event.stopPropagation();
+        const cards = getWalletCards();
+        const card = cards.find(c => c.id === cardId);
+        if (!card) return;
+        const text = `Tarjeta: ${card.label || "Billetera"}\nTitular: ${card.holder}\nNúmero: ${card.number}\nVencimiento: ${card.expiry}\nCVV: ${card.cvv}`;
+        navigator.clipboard.writeText(text).then(() => {
+            showToast("¡Todos los datos de la tarjeta copiados!");
+        }).catch(() => {
+            showToast("No se pudieron copiar los datos");
+        });
+    };
+    window.copyFullCardDetails = copyFullCardDetails;
+
+    const renderWalletCards = () => {
+        const cards = getWalletCards();
+        const deck = document.getElementById("wallet-cards-deck");
+        const emptyState = document.getElementById("wallet-cards-empty");
+        const countBadge = document.getElementById("wallet-cards-count-badge");
+
+        if (countBadge) countBadge.textContent = cards.length;
+        if (!deck || !emptyState) return;
+
+        // Sincronizar modo apilado vs cuadrícula
+        const savedMode = localStorage.getItem("walletDeckMode") || "stacked";
+        const icon = document.getElementById("wallet-deck-toggle-icon");
+        if (savedMode === "grid") {
+            deck.classList.remove("mode-stacked");
+            deck.classList.add("mode-grid");
+            if (icon) icon.textContent = "view_agenda";
+        } else {
+            deck.classList.remove("mode-grid");
+            deck.classList.add("mode-stacked");
+            if (icon) icon.textContent = "layers";
+        }
+
+        if (cards.length === 0) {
+            emptyState.style.display = "flex";
+            deck.style.display = "none";
+            deck.innerHTML = "";
+            return;
+        }
+
+        emptyState.style.display = "none";
+        deck.style.display = "flex";
+        deck.innerHTML = "";
+
+        cards.forEach((card, index) => {
+            const isExpanded = card.id === expandedWalletCardId;
+            const isNumRevealed = revealedCardNums.has(card.id);
+            const isCvvRevealed = revealedCardCvvs.has(card.id);
+
+            const themeClass = card.issuer === "custom"
+                ? `card-theme-custom-${card.customStyle || "obsidian"}`
+                : (WALLET_ISSUERS_MAP[card.issuer]?.themeClass || "card-theme-binance");
+
+            const network = card.network || detectCardNetwork(card.number);
+            const networkHtml = getNetworkLogoHtml(network);
+            const brandHtml = getCardBrandHtml(card.issuer, card.label, card.customStyle);
+
+            const cleanNum = (card.number || "").replace(/\D/g, "");
+            const last4 = cleanNum.slice(-4) || "••••";
+            const maskedCardNum = `•••• •••• •••• ${last4}`;
+            const formattedFullNum = formatCardNumber(cleanNum);
+            const displayedNum = isNumRevealed ? formattedFullNum : maskedCardNum;
+            const displayedCvv = isCvvRevealed ? (card.cvv || "•••") : "•••";
+
+            const cardWrapper = document.createElement("div");
+            cardWrapper.className = `wallet-card-wrapper ${isExpanded ? "expanded" : ""}`;
+            cardWrapper.setAttribute("data-card-id", card.id);
+            cardWrapper.style.zIndex = isExpanded ? "100" : (cards.length - index);
+            cardWrapper.onclick = (e) => handleWalletCardClick(card.id, e);
+
+            cardWrapper.innerHTML = `
+                <div class="wallet-card-art ${themeClass}">
+                    <div class="wallet-card-top-row">
+                        ${brandHtml}
+                        <div class="wallet-card-tech-icons">
+                            <svg class="wallet-card-contactless" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
+                                <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
+                                <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="wallet-card-chip-row">
+                        <div class="wallet-card-chip"></div>
+                    </div>
+
+                    <div class="wallet-card-number-row">
+                        <span class="wallet-card-number-display">${displayedNum}</span>
+                    </div>
+
+                    <div class="wallet-card-bottom-row">
+                        <div class="wallet-card-meta-left">
+                            <span class="wallet-card-meta-label">TITULAR</span>
+                            <span class="wallet-card-meta-value">${escapeText(card.holder || "TITULAR")}</span>
+                        </div>
+                        <div class="wallet-card-meta-mid">
+                            <span class="wallet-card-meta-label">VENCE</span>
+                            <span class="wallet-card-meta-value">${escapeText(card.expiry || "MM/AA")}</span>
+                        </div>
+                        <div class="wallet-card-network-box">
+                            ${networkHtml}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wallet-card-drawer">
+                    <div class="wallet-card-drawer-info">
+                        <div class="wallet-drawer-row">
+                            <div class="wallet-drawer-info-block">
+                                <span class="wallet-drawer-label">Número completo</span>
+                                <span class="wallet-drawer-value">${isNumRevealed ? formattedFullNum : maskedCardNum}</span>
+                            </div>
+                            <div class="wallet-drawer-icon-btns">
+                                <button type="button" class="wallet-drawer-icon-btn" onclick="toggleCardNumberVisibility('${card.id}', event)" title="${isNumRevealed ? 'Ocultar número' : 'Mostrar número'}">
+                                    <span class="material-symbols-rounded">${isNumRevealed ? 'visibility_off' : 'visibility'}</span>
+                                </button>
+                                <button type="button" class="wallet-drawer-icon-btn" onclick="copyCardNumber('${card.id}', event)" title="Copiar número">
+                                    <span class="material-symbols-rounded">content_copy</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="wallet-drawer-row">
+                            <div class="wallet-drawer-info-block">
+                                <span class="wallet-drawer-label">CVV / CVC</span>
+                                <span class="wallet-drawer-value">${displayedCvv}</span>
+                            </div>
+                            <div class="wallet-drawer-icon-btns">
+                                <button type="button" class="wallet-drawer-icon-btn" onclick="toggleCardCvvVisibility('${card.id}', event)" title="${isCvvRevealed ? 'Ocultar CVV' : 'Mostrar CVV'}">
+                                    <span class="material-symbols-rounded">${isCvvRevealed ? 'visibility_off' : 'visibility'}</span>
+                                </button>
+                                <button type="button" class="wallet-drawer-icon-btn" onclick="copyCardCvv('${card.id}', event)" title="Copiar CVV">
+                                    <span class="material-symbols-rounded">content_copy</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="wallet-drawer-row" style="padding-top: 2px;">
+                            <div class="wallet-drawer-info-block">
+                                <span class="wallet-drawer-label">Apodo / Etiqueta</span>
+                                <span style="font-size: 0.88rem; font-weight: 600; color: var(--md-sys-color-on-surface);">${escapeText(card.label || WALLET_ISSUERS_MAP[card.issuer]?.name || "Tarjeta")}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-card-drawer-actions">
+                        <button type="button" class="wallet-action-pill primary" onclick="copyFullCardDetails('${card.id}', event)">
+                            <span class="material-symbols-rounded" style="font-size: 18px;">assignment</span>
+                            <span>Copiar todo</span>
+                        </button>
+                        <button type="button" class="wallet-action-pill" onclick="openWalletCardModal('${card.id}', event)">
+                            <span class="material-symbols-rounded" style="font-size: 18px;">edit</span>
+                            <span>Editar</span>
+                        </button>
+                        <button type="button" class="wallet-action-pill danger" onclick="promptDeleteWalletCard('${card.id}', event)">
+                            <span class="material-symbols-rounded" style="font-size: 18px;">delete</span>
+                            <span>Eliminar</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            deck.appendChild(cardWrapper);
+        });
+    };
+    window.renderWalletCards = renderWalletCards;
+
+    const openWalletCardModal = (cardId = null, event = null) => {
+        if (event) event.stopPropagation();
+        const modal = document.getElementById("modal-wallet-card");
+        const titleEl = document.getElementById("wallet-card-modal-title");
+        const editIdInput = document.getElementById("wallet-card-edit-id");
+        const issuerSelect = document.getElementById("wallet-input-issuer");
+        const customStyleInput = document.getElementById("wallet-input-custom-style");
+        const labelInput = document.getElementById("wallet-input-label");
+        const holderInput = document.getElementById("wallet-input-holder");
+        const numberInput = document.getElementById("wallet-input-number");
+        const expiryInput = document.getElementById("wallet-input-expiry");
+        const cvvInput = document.getElementById("wallet-input-cvv");
+
+        if (cardId) {
+            const cards = getWalletCards();
+            const card = cards.find(c => c.id === cardId);
+            if (card) {
+                if (titleEl) titleEl.textContent = "Editar Tarjeta";
+                if (editIdInput) editIdInput.value = card.id;
+                if (issuerSelect) issuerSelect.value = card.issuer;
+                if (customStyleInput) customStyleInput.value = card.customStyle || "obsidian";
+                if (labelInput) labelInput.value = card.label || "";
+                if (holderInput) holderInput.value = card.holder || "";
+                if (numberInput) numberInput.value = formatCardNumber(card.number || "");
+                if (expiryInput) expiryInput.value = card.expiry || "";
+                if (cvvInput) cvvInput.value = card.cvv || "";
+            }
+        } else {
+            if (titleEl) titleEl.textContent = "Añadir Tarjeta a Billetera";
+            if (editIdInput) editIdInput.value = "";
+            if (issuerSelect) issuerSelect.value = "binance";
+            if (customStyleInput) customStyleInput.value = "obsidian";
+            if (labelInput) labelInput.value = "";
+
+            // Titular de Pago Móvil por defecto
+            const pmProfile = getPmProfile();
+            if (holderInput) holderInput.value = (pmProfile && pmProfile.holder) ? pmProfile.holder.toUpperCase() : "";
+            if (numberInput) numberInput.value = "";
+            if (expiryInput) expiryInput.value = "";
+            if (cvvInput) cvvInput.value = "";
+        }
+
+        handleWalletIssuerChange();
+        updateWalletCardPreview();
+
+        if (modal) modal.classList.add("active");
+    };
+    window.openWalletCardModal = openWalletCardModal;
+
+    const closeWalletCardModal = () => {
+        const modal = document.getElementById("modal-wallet-card");
+        if (modal) modal.classList.remove("active");
+    };
+    window.closeWalletCardModal = closeWalletCardModal;
+
+    const handleWalletIssuerChange = () => {
+        const issuerSelect = document.getElementById("wallet-input-issuer");
+        const paletteRow = document.getElementById("wallet-custom-palette-row");
+        const labelInput = document.getElementById("wallet-input-label");
+
+        if (!issuerSelect) return;
+        const issuer = issuerSelect.value;
+        if (paletteRow) {
+            paletteRow.style.display = (issuer === "custom") ? "block" : "none";
+        }
+
+        if (labelInput && !labelInput.value) {
+            const info = WALLET_ISSUERS_MAP[issuer];
+            if (info && issuer !== "custom") {
+                labelInput.value = info.name;
+            }
+        }
+
+        updateWalletCardPreview();
+    };
+    window.handleWalletIssuerChange = handleWalletIssuerChange;
+
+    const updateWalletCardPreview = () => {
+        const previewCard = document.getElementById("wallet-preview-card");
+        const issuerSelect = document.getElementById("wallet-input-issuer");
+        const customStyleInput = document.getElementById("wallet-input-custom-style");
+        const labelInput = document.getElementById("wallet-input-label");
+        const holderInput = document.getElementById("wallet-input-holder");
+        const numberInput = document.getElementById("wallet-input-number");
+        const expiryInput = document.getElementById("wallet-input-expiry");
+        const brandBox = document.getElementById("wallet-preview-brand-box");
+        const numDisplay = document.getElementById("wallet-preview-number");
+        const holderDisplay = document.getElementById("wallet-preview-holder");
+        const expiryDisplay = document.getElementById("wallet-preview-expiry");
+        const networkBox = document.getElementById("wallet-preview-network-box");
+        const detectIcon = document.getElementById("wallet-number-detect-icon");
+
+        if (!previewCard || !issuerSelect) return;
+
+        const issuer = issuerSelect.value;
+        const customStyle = customStyleInput ? customStyleInput.value : "obsidian";
+        const label = labelInput ? labelInput.value : "";
+        const holder = holderInput ? holderInput.value : "";
+        const rawNum = numberInput ? numberInput.value.replace(/\D/g, "") : "";
+        const expiry = expiryInput ? expiryInput.value : "";
+
+        previewCard.className = "wallet-card-art";
+        if (issuer === "custom") {
+            previewCard.classList.add(`card-theme-custom-${customStyle}`);
+        } else {
+            previewCard.classList.add(WALLET_ISSUERS_MAP[issuer]?.themeClass || "card-theme-binance");
+        }
+
+        if (brandBox) {
+            brandBox.innerHTML = getCardBrandHtml(issuer, label, customStyle);
+        }
+
+        if (numDisplay) {
+            numDisplay.textContent = (rawNum.length === 0) ? "•••• •••• •••• ••••" : formatCardNumber(rawNum);
+        }
+
+        if (holderDisplay) {
+            holderDisplay.textContent = (holder || "NOMBRE DEL TITULAR").toUpperCase();
+        }
+
+        if (expiryDisplay) {
+            expiryDisplay.textContent = expiry || "MM/AA";
+        }
+
+        const network = detectCardNetwork(rawNum);
+        if (networkBox) {
+            networkBox.innerHTML = getNetworkLogoHtml(network);
+        }
+        if (detectIcon) {
+            detectIcon.textContent = "credit_card";
+        }
+    };
+    window.updateWalletCardPreview = updateWalletCardPreview;
+
+    const saveWalletCard = (event) => {
+        event.preventDefault();
+        const editIdInput = document.getElementById("wallet-card-edit-id");
+        const issuerSelect = document.getElementById("wallet-input-issuer");
+        const customStyleInput = document.getElementById("wallet-input-custom-style");
+        const labelInput = document.getElementById("wallet-input-label");
+        const holderInput = document.getElementById("wallet-input-holder");
+        const numberInput = document.getElementById("wallet-input-number");
+        const expiryInput = document.getElementById("wallet-input-expiry");
+        const cvvInput = document.getElementById("wallet-input-cvv");
+
+        const rawNumber = (numberInput?.value || "").replace(/\D/g, "");
+        if (rawNumber.length < 13 || rawNumber.length > 19) {
+            alert("Por favor ingresa un número de tarjeta válido (13 a 19 dígitos).");
+            return;
+        }
+
+        const rawExpiry = (expiryInput?.value || "").trim();
+        if (!/^\d{2}\/\d{2}$/.test(rawExpiry)) {
+            alert("Por favor ingresa una fecha de vencimiento en formato MM/AA.");
+            return;
+        }
+
+        const rawCvv = (cvvInput?.value || "").trim();
+        if (rawCvv.length < 3 || rawCvv.length > 4) {
+            alert("Por favor ingresa un código de seguridad (CVV) de 3 o 4 dígitos.");
+            return;
+        }
+
+        const cards = getWalletCards();
+        const editId = editIdInput ? editIdInput.value : "";
+        const issuer = issuerSelect ? issuerSelect.value : "binance";
+        const network = detectCardNetwork(rawNumber);
+
+        const cardData = {
+            id: editId || ("card_" + Date.now()),
+            issuer: issuer,
+            customStyle: customStyleInput ? customStyleInput.value : "obsidian",
+            label: (labelInput?.value || "").trim() || WALLET_ISSUERS_MAP[issuer]?.name || "Tarjeta",
+            holder: (holderInput?.value || "").trim().toUpperCase(),
+            number: formatCardNumber(rawNumber),
+            expiry: rawExpiry,
+            cvv: rawCvv,
+            network: network,
+            updatedAt: Date.now()
+        };
+
+        if (editId) {
+            const idx = cards.findIndex(c => c.id === editId);
+            if (idx !== -1) {
+                cards[idx] = cardData;
+            } else {
+                cards.unshift(cardData);
+            }
+            showToast("¡Tarjeta actualizada con éxito!");
+        } else {
+            cards.unshift(cardData);
+            showToast("¡Tarjeta añadida a tu billetera!");
+        }
+
+        saveWalletCards(cards);
+        closeWalletCardModal();
+        expandedWalletCardId = cardData.id;
+        renderWalletCards();
+    };
+    window.saveWalletCard = saveWalletCard;
+
+    const promptDeleteWalletCard = (cardId, event) => {
+        if (event) event.stopPropagation();
+        cardToDeleteId = cardId;
+        const modal = document.getElementById("wallet-modal-confirm-delete");
+        const cards = getWalletCards();
+        const card = cards.find(c => c.id === cardId);
+        const descEl = document.getElementById("wallet-confirm-card-desc");
+        if (descEl && card) {
+            descEl.textContent = `¿Estás seguro de que deseas eliminar la tarjeta "${card.label}"?`;
+        }
+        if (modal) modal.classList.add("active");
+    };
+    window.promptDeleteWalletCard = promptDeleteWalletCard;
+
+    const closeWalletConfirmDeleteModal = () => {
+        const modal = document.getElementById("wallet-modal-confirm-delete");
+        if (modal) modal.classList.remove("active");
+        cardToDeleteId = null;
+    };
+    window.closeWalletConfirmDeleteModal = closeWalletConfirmDeleteModal;
+
+    const executeDeleteCurrentWalletCard = () => {
+        if (!cardToDeleteId) return;
+        let cards = getWalletCards();
+        cards = cards.filter(c => c.id !== cardToDeleteId);
+        saveWalletCards(cards);
+
+        revealedCardNums.delete(cardToDeleteId);
+        revealedCardCvvs.delete(cardToDeleteId);
+        if (expandedWalletCardId === cardToDeleteId) {
+            expandedWalletCardId = null;
+        }
+
+        closeWalletConfirmDeleteModal();
+        renderWalletCards();
+        showToast("Tarjeta eliminada de tu billetera");
+    };
+    window.executeDeleteCurrentWalletCard = executeDeleteCurrentWalletCard;
+
+    const initWalletModalInputFormatters = () => {
+        const numberInput = document.getElementById("wallet-input-number");
+        const expiryInput = document.getElementById("wallet-input-expiry");
+        const holderInput = document.getElementById("wallet-input-holder");
+        const labelInput = document.getElementById("wallet-input-label");
+
+        if (numberInput) {
+            numberInput.addEventListener("input", (e) => {
+                const formatted = formatCardNumber(e.target.value);
+                e.target.value = formatted;
+                updateWalletCardPreview();
+            });
+        }
+
+        if (expiryInput) {
+            expiryInput.addEventListener("input", (e) => {
+                const formatted = formatExpiry(e.target.value);
+                e.target.value = formatted;
+                updateWalletCardPreview();
+            });
+        }
+
+        if (holderInput) {
+            holderInput.addEventListener("input", (e) => {
+                e.target.value = e.target.value.toUpperCase();
+                updateWalletCardPreview();
+            });
+        }
+
+        if (labelInput) {
+            labelInput.addEventListener("input", () => {
+                updateWalletCardPreview();
+            });
+        }
+
+        document.querySelectorAll(".wallet-color-dot").forEach(dot => {
+            dot.addEventListener("click", () => {
+                document.querySelectorAll(".wallet-color-dot").forEach(d => d.classList.remove("active"));
+                dot.classList.add("active");
+                const styleInput = document.getElementById("wallet-input-custom-style");
+                if (styleInput) {
+                    styleInput.value = dot.dataset.style;
+                }
+                updateWalletCardPreview();
+            });
+        });
+    };
+    window.initWalletModalInputFormatters = initWalletModalInputFormatters;
+
+
     /**
      * Navegación por gestos: Deslizar hacia abajo (swipe down) para cerrar modales/bottom sheets.
      * Proporciona respuesta táctil fluida 1:1, soporte de inercia/velocidad y snap back.
@@ -3079,7 +3861,8 @@
 
             if (targetTabId === 'calculator' && inputTop) convert(inputTop);
             if (targetTabId === 'pagomovil') {
-                renderPmView();
+                const savedSub = localStorage.getItem('walletActiveSubTab') || 'cards';
+                switchWalletSubTab(savedSub, false);
             } else {
                 const fab = document.getElementById('pm-fab-container');
                 if (fab) fab.classList.remove('active');
@@ -3095,7 +3878,9 @@
 
     initCustomSelects();
     syncAllCustomSelects();
-    renderPmView();
+    initWalletModalInputFormatters();
+    const initialWalletSubTab = localStorage.getItem("walletActiveSubTab") || "cards";
+    switchWalletSubTab(initialWalletSubTab, false);
     initPmFabScroll();
     initModalSwipeToDismiss();
     initTabSwipeNavigation();
@@ -3144,6 +3929,8 @@
             if (typeof closePmDetailModal === 'function') closePmDetailModal();
             if (typeof closePmQR === 'function') closePmQR();
             if (typeof closePmConfirmDeleteModal === 'function') closePmConfirmDeleteModal();
+            if (typeof closeWalletCardModal === 'function') closeWalletCardModal();
+            if (typeof closeWalletConfirmDeleteModal === 'function') closeWalletConfirmDeleteModal();
         }
     });
 
