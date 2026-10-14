@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v116",
+                version: "v117",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,

@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Product+Sans:wght@400;700&family=Inter:wght@800;900&display=swap" rel="stylesheet">
+<link rel="preload" href="public/fonts/material-symbols-rounded.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 <script>
     (function() {
@@ -28,6 +29,32 @@
     })();
 </script>
 <style>
+    /* Material Symbols Rounded local offline font */
+    @font-face {
+        font-family: 'Material Symbols Rounded';
+        font-style: normal;
+        font-weight: 100 700;
+        src: url('public/fonts/material-symbols-rounded.woff2') format('woff2');
+        font-display: block;
+    }
+
+    .material-symbols-rounded {
+        font-family: 'Material Symbols Rounded', sans-serif !important;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+    }
+
     * {
         box-sizing: border-box;
         /* Elimina el recuadro azul que aparece al tocar elementos en móviles */

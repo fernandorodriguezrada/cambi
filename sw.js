@@ -1,4 +1,4 @@
-const CACHE_NAME = "cambi-v116";
+const CACHE_NAME = "cambi-v117";
 
 // Recursos esenciales que se guardan durante la instalación para arranque 100% offline
 const PRECACHE_URLS = [
@@ -41,6 +41,7 @@ const PRECACHE_URLS = [
   "public/banks/0175.webp",
   "public/banks/0177.webp",
   "public/banks/0191.webp",
+  "public/fonts/material-symbols-rounded.woff2",
 ];
 
 // Instalación: descargar y cachear la app shell completa
@@ -115,29 +116,33 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.match(req).then((cachedResponse) => {
         if (cachedResponse) return cachedResponse;
-        return fetch(req).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, responseClone));
-          }
-          return networkResponse;
-        });
+        return fetch(req)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const responseClone = networkResponse.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(req, responseClone));
+            }
+            return networkResponse;
+          })
+          .catch(() => caches.match("public/fonts/material-symbols-rounded.woff2"));
       }),
     );
     return;
   }
 
-  // 4. Recursos estáticos locales (logos, iconos, scripts, svg, webp): Cache First con fallback a Red
+  // 4. Recursos estáticos locales (logos, iconos, scripts, svg, webp, woff2): Cache First con fallback a Red
   event.respondWith(
     caches.match(req).then((cachedResponse) => {
       if (cachedResponse) return cachedResponse;
-      return fetch(req).then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200) {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, responseClone));
-        }
-        return networkResponse;
-      });
+      return fetch(req)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, responseClone));
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match(req));
     }),
   );
 });
