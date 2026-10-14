@@ -357,6 +357,20 @@
                 </div>
             </div>
 
+            <!-- Selector de Tecnología Contactless / Wireless -->
+            <div class="pm-form-group" style="background-color: var(--md-sys-color-surface-container-high); padding: 12px 14px; border-radius: 12px; margin-top: 4px;">
+                <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; margin: 0;">
+                    <span style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.92rem; color: var(--md-sys-color-on-surface);">
+                        <span class="material-symbols-rounded" style="font-size: 20px; color: var(--branding-color);">contactless</span>
+                        <span>Tecnología Contactless / Wireless</span>
+                    </span>
+                    <input type="checkbox" id="wallet-input-contactless" checked style="width: 20px; height: 20px; accent-color: var(--branding-color); cursor: pointer;" onchange="updateWalletCardPreview()">
+                </label>
+                <span style="font-size: 0.76rem; opacity: 0.72; margin-top: 4px; display: block; line-height: 1.3;">
+                    Desmárcalo si tu tarjeta es física sin NFC o virtual prepagada sin contactless.
+                </span>
+            </div>
+
             <div class="pm-modal-actions">
                 <button type="button" class="pm-btn-secondary" onclick="closeWalletCardModal()">Cancelar</button>
                 <button type="submit" class="pm-btn-primary" id="wallet-btn-save-card">Guardar Tarjeta</button>

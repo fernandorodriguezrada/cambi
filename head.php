@@ -4780,8 +4780,9 @@
         transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s ease;
     }
 
-    /* Base Google Wallet Card Rows & Typography */
+    /* Plantilla Canónica Google Wallet (4 cuadrantes universales) */
     .gw-card-top-row {
+        height: 28px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -4790,6 +4791,7 @@
     }
 
     .gw-card-bottom-row {
+        height: 26px;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
@@ -4797,65 +4799,88 @@
         position: relative;
     }
 
+    /* Cuadrante 1: Marca / Emisor (Top-Left) */
+    .gw-brand-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 26px;
+    }
+    .gw-brand-logo {
+        height: 22px;
+        max-width: 90px;
+        object-fit: contain;
+    }
+    .gw-brand-text {
+        font-family: var(--font-google-sans), -apple-system, sans-serif;
+        font-weight: 800;
+        font-size: 1.05rem;
+        letter-spacing: 0.5px;
+        line-height: 1;
+    }
+
+    /* Cuadrante 2: Wireless / Contactless (Top-Right) */
+    .gw-contactless-box {
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .gw-contactless-box.empty {
+        display: none;
+    }
+    .gw-contactless-icon {
+        width: 22px;
+        height: 22px;
+        opacity: 0.92;
+        color: #ffffff;
+    }
+
+    /* Cuadrante 3: Dígitos de tarjeta (Bottom-Left) */
     .gw-card-digits {
         font-family: var(--font-google-sans), -apple-system, sans-serif;
         font-size: 1.15rem;
         font-weight: 500;
         letter-spacing: 1.2px;
         color: #ffffff;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-    }
-
-    .gw-card-network {
+        text-shadow: 0 1px 3px rgba(0,0,0,0.35);
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        line-height: 1;
     }
 
+    /* Cuadrante 4: Franquicia / Red (Bottom-Right) */
+    .gw-network-box {
+        width: 38px;
+        height: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
     .gw-network-mastercard {
-        display: inline-flex;
-        align-items: center;
         filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
     }
-
     .gw-network-visa {
-        display: inline-flex;
-        align-items: center;
         color: #ffffff;
         filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
     }
 
-    .gw-contactless-icon {
-        opacity: 0.9;
-        color: #ffffff;
-    }
-
-    /* 1. BINANCE CARD (Google Wallet Exact) */
+    /* 1. BINANCE CARD */
     .gw-card-binance {
         background: #000000 !important;
         border: 1px solid rgba(255, 255, 255, 0.14) !important;
         color: #ffffff;
     }
-    .gw-binance-brand {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .gw-binance-text {
-        font-family: var(--font-google-sans);
-        font-weight: 800;
-        font-size: 1.05rem;
-        letter-spacing: 1.2px;
-        color: #F0B90B;
-    }
 
-    /* 2. WALLY TECH CARD (Google Wallet Exact) */
+    /* 2. WALLY TECH CARD */
     .gw-card-wally {
         background-color: #3F0099 !important;
         position: relative;
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        padding: 0 !important;
+        color: #ffffff;
     }
     .gw-wally-bg-img {
         position: absolute;
@@ -4865,18 +4890,6 @@
         object-fit: cover;
         pointer-events: none;
         display: block;
-    }
-    .gw-wally-digits {
-        position: absolute;
-        left: 5%;
-        bottom: 8.8%;
-        font-family: var(--font-google-sans), -apple-system, sans-serif;
-        font-size: 1.15rem;
-        font-weight: 500;
-        letter-spacing: 1.2px;
-        color: #ffffff;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-        z-index: 2;
     }
 
     /* 3. BANCO DE VENEZUELA (BDV) DÓLAR CARD (Google Wallet Exact) */

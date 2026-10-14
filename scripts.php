@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v121",
+                version: "v122",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -2938,7 +2938,7 @@
 
     const getGoogleWalletNetworkSvg = (network, variant = "light") => {
         if (network === "mastercard") {
-            return `<div class="gw-network-mastercard" title="Mastercard">
+            return `<div class="gw-network-box gw-network-mastercard" title="Mastercard">
                 <svg width="36" height="22" viewBox="0 0 36 22" fill="none">
                     <circle cx="11" cy="11" r="11" fill="#EB001B"/>
                     <circle cx="25" cy="11" r="11" fill="#F79E1B"/>
@@ -2947,8 +2947,8 @@
             </div>`;
         }
         const visaColor = (variant === "dark") ? "#0B1528" : "#FFFFFF";
-        return `<div class="gw-network-visa" title="Visa" style="color: ${visaColor};">
-            <svg width="44" height="15" viewBox="0 0 54 18" fill="none">
+        return `<div class="gw-network-box gw-network-visa" title="Visa" style="color: ${visaColor};">
+            <svg width="40" height="13" viewBox="0 0 54 18" fill="none">
                 <path d="M21.2 1.3L15.3 16.7H10.4L6.3 4.2C6.1 3.3 5.9 3 5.1 2.5C3.9 1.8 1.8 1.2 0 0.8L0.1 0.4H8.3C9.4 0.4 10.3 1.2 10.5 2.4L12.5 12.8L17.5 0.4H21.2V1.3ZM39.6 11.5C39.6 7.1 33.4 6.9 33.5 4.9C33.5 4.3 34.1 3.7 35.3 3.5C35.9 3.4 37.6 3.4 39.7 4.3L40.5 0.7C39.4 0.3 38 0 36.2 0C31.8 0 28.7 2.4 28.7 5.7C28.6 8.2 30.9 9.6 32.6 10.5C34.4 11.3 35 11.9 35 12.7C35 13.9 33.6 14.4 32.2 14.4C30 14.4 28.7 14.1 27.2 13.4L26.3 17.2C27.6 17.8 29.8 18.2 32.1 18.2C36.8 18.2 39.6 15.9 39.6 11.5ZM51.8 16.7H56L52.4 0.4H48.5C47.6 0.4 46.8 0.9 46.5 1.7L39.7 16.7H44.6L45.6 14H51.4L51.8 16.7ZM47 10.4L49.3 4.1L50.6 10.4H47ZM27.3 0.4L23.4 16.7H18.8L22.7 0.4H27.3Z" fill="currentColor"/>
             </svg>
         </div>`;
@@ -2957,28 +2957,45 @@
     const getNetworkLogoHtml = getGoogleWalletNetworkSvg;
     window.getNetworkLogoHtml = getNetworkLogoHtml;
 
+    const getGoogleWalletContactlessSvg = (hasContactless = true, variant = "light") => {
+        if (!hasContactless) {
+            return `<div class="gw-contactless-box empty"></div>`;
+        }
+        const color = (variant === "dark") ? "#0B1528" : "#FFFFFF";
+        return `<div class="gw-contactless-box" title="Contactless / Wireless" style="color: ${color};">
+            <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="22" height="22">
+                <path d="M9.5 6.5a7 7 0 0 1 0 11"/>
+                <path d="M13.5 3.5a11.5 11.5 0 0 1 0 17"/>
+                <path d="M17.5 0.5a16 16 0 0 1 0 23"/>
+            </svg>
+        </div>`;
+    };
+    window.getGoogleWalletContactlessSvg = getGoogleWalletContactlessSvg;
+
     const renderGoogleWalletCardArt = (card, isPreview = false) => {
         const issuer = card.issuer || "binance";
         const clean = (card.number || "").replace(/\D/g, "");
         const last4 = clean.slice(-4) || "••••";
         const first4 = clean.slice(0, 4) || (issuer === "bdv" ? "5401" : "••••");
         const net = card.network || (clean.length > 0 ? detectCardNetwork(card.number) : (WALLET_ISSUERS_MAP[issuer]?.defaultNetwork || "visa"));
+        const hasWireless = (card.hasContactless !== false);
         const previewIdAttr = isPreview ? 'id="wallet-preview-card"' : "";
 
         if (issuer === "binance") {
             return `
                 <div class="wallet-card-art gw-card-binance" ${previewIdAttr}>
                     <div class="gw-card-top-row">
-                        <div class="gw-binance-brand">
-                            <svg class="gw-binance-logo" viewBox="0 0 24 24" fill="#F0B90B" width="22" height="22">
+                        <div class="gw-brand-box">
+                            <svg class="gw-brand-logo" viewBox="0 0 24 24" fill="#F0B90B" width="22" height="22">
                                 <path d="M12 2L8.5 5.5l3.5 3.5 3.5-3.5L12 2zm-6.5 6.5L2 12l3.5 3.5 3.5-3.5-3.5-3.5zm13 0l-3.5 3.5 3.5 3.5 3.5-3.5-3.5-3.5zM12 8.9L9.4 11.5l2.6 2.6 2.6-2.6L12 8.9zM12 15l-3.5 3.5L12 22l3.5-3.5L12 15z"/>
                             </svg>
-                            <span class="gw-binance-text">BINANCE</span>
+                            <span class="gw-brand-text" style="color: #F0B90B; letter-spacing: 1.2px;">BINANCE</span>
                         </div>
+                        ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>
                     <div class="gw-card-bottom-row">
                         <div class="gw-card-digits">•&bull;${last4}</div>
-                        <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, "light")}</div>
+                        ${getGoogleWalletNetworkSvg(net, "light")}
                     </div>
                 </div>
             `;
@@ -2988,7 +3005,16 @@
             return `
                 <div class="wallet-card-art gw-card-wally" ${previewIdAttr}>
                     <img src="public/banks/wally_card_bg.webp" alt="Wally Card" class="gw-wally-bg-img">
-                    <span class="gw-wally-digits">•&bull;${last4}</span>
+                    <div class="gw-card-top-row">
+                        <div class="gw-brand-box">
+                            <span class="gw-brand-text" style="color: #FFFFFF; font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px;">wally</span>
+                        </div>
+                        ${getGoogleWalletContactlessSvg(hasWireless, "light")}
+                    </div>
+                    <div class="gw-card-bottom-row">
+                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        ${getGoogleWalletNetworkSvg(net, "light")}
+                    </div>
                 </div>
             `;
         }
@@ -2997,20 +3023,20 @@
             return `
                 <div class="wallet-card-art gw-card-bdv" ${previewIdAttr}>
                     <div class="gw-bdv-top-section">
-                        <div class="gw-bdv-brand-row">
-                            <div class="gw-bdv-logo-group">
-                                <svg class="gw-bdv-flag" viewBox="0 0 32 28" fill="none" width="28" height="24">
+                        <div class="gw-card-top-row">
+                            <div class="gw-brand-box">
+                                <svg class="gw-brand-logo" viewBox="0 0 32 28" fill="none" width="25" height="22">
                                     <path d="M0 4L12 0L8 20L0 4Z" fill="#FFD100"/>
                                     <path d="M12 0L20 8L16 28L8 20Z" fill="#006EB4"/>
                                     <path d="M20 8L28 4L24 24L16 28Z" fill="#E5243B"/>
                                 </svg>
-                                <span class="gw-bdv-brand-name">BDV</span>
-                                <div class="gw-bdv-divider"></div>
-                                <div class="gw-bdv-bank-subtitle">
-                                    <span>Banco de</span>
-                                    <span>Venezuela</span>
+                                <span class="gw-brand-text" style="color: #FFFFFF;">BDV</span>
+                                <div style="width: 1px; height: 18px; background: rgba(255,255,255,0.4); margin: 0 2px;"></div>
+                                <div style="display: flex; flex-direction: column; font-size: 0.62rem; font-weight: 600; line-height: 1.1; color: #FFFFFF;">
+                                    <span>Banco de</span><span>Venezuela</span>
                                 </div>
                             </div>
+                            ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                         </div>
                         <div class="gw-bdv-usd-badge">USD</div>
                         <div class="gw-bdv-cascade-wrap">
@@ -3024,19 +3050,19 @@
                         </div>
                     </div>
                     <div class="gw-bdv-bottom-section">
-                        <div class="gw-bdv-card-number">${first4} **** **** ${last4}</div>
-                        <div class="gw-bdv-meta-row">
-                            <div class="gw-bdv-meta-col">
-                                <span class="gw-bdv-label">CVC</span>
-                                <span class="gw-bdv-val">***</span>
+                        <div class="gw-card-bottom-row">
+                            <div class="gw-card-digits" style="color: #0A1E2D; text-shadow: none;">•&bull;${last4}</div>
+                            <div class="gw-bdv-meta-row" style="display: flex; gap: 14px; margin-bottom: 2px;">
+                                <div class="gw-bdv-meta-col">
+                                    <span class="gw-bdv-label">CVC</span>
+                                    <span class="gw-bdv-val">***</span>
+                                </div>
+                                <div class="gw-bdv-meta-col">
+                                    <span class="gw-bdv-label">VALID DATE</span>
+                                    <span class="gw-bdv-val">**/**</span>
+                                </div>
                             </div>
-                            <div class="gw-bdv-meta-col">
-                                <span class="gw-bdv-label">VALID DATE</span>
-                                <span class="gw-bdv-val">**/**</span>
-                            </div>
-                            <div class="gw-bdv-network">
-                                ${getGoogleWalletNetworkSvg(net, "dark")}
-                            </div>
+                            ${getGoogleWalletNetworkSvg(net, "dark")}
                         </div>
                     </div>
                 </div>
@@ -3052,7 +3078,18 @@
                             <circle cx="85" cy="140" r="85" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1.2"/>
                         </svg>
                     </div>
-                    <div class="gw-card-top-row" style="justify-content: flex-end;">
+                    <div class="gw-card-top-row">
+                        <div class="gw-brand-box">
+                            <svg class="gw-brand-logo" viewBox="0 0 28 26" width="22" height="20" fill="#FFFFFF">
+                                <circle cx="8" cy="7" r="5"/>
+                                <circle cx="8" cy="19" r="5"/>
+                                <circle cx="18" cy="13" r="5"/>
+                            </svg>
+                            <span class="gw-brand-text" style="color: #FFFFFF; letter-spacing: 0.8px;">BANESCO</span>
+                        </div>
+                        ${getGoogleWalletContactlessSvg(hasWireless, "light")}
+                    </div>
+                    <div style="position: absolute; right: 26px; top: 48px; z-index: 2;">
                         <div class="gw-gold-chip">
                             <svg width="40" height="30" viewBox="0 0 40 30" fill="none">
                                 <rect x="1" y="1" width="38" height="28" rx="5" fill="#DDB24A" stroke="#9A7723" stroke-width="1"/>
@@ -3064,17 +3101,8 @@
                         </div>
                     </div>
                     <div class="gw-card-bottom-row">
-                        <div class="gw-banesco-bottom-left">
-                            <svg class="gw-banesco-trefoil" viewBox="0 0 28 26" width="28" height="26" fill="#FFFFFF">
-                                <circle cx="8" cy="7" r="5"/>
-                                <circle cx="8" cy="19" r="5"/>
-                                <circle cx="18" cy="13" r="5"/>
-                            </svg>
-                            <span class="gw-card-digits">•&bull;${last4}</span>
-                        </div>
-                        <div class="gw-card-network">
-                            ${getGoogleWalletNetworkSvg(net, "light")}
-                        </div>
+                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        ${getGoogleWalletNetworkSvg(net, "light")}
                     </div>
                 </div>
             `;
@@ -3084,16 +3112,14 @@
             return `
                 <div class="wallet-card-art gw-card-zinli" ${previewIdAttr}>
                     <div class="gw-card-top-row">
-                        <span class="gw-zinli-brand">zinli</span>
-                        <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20">
-                            <path d="M8.5 16.5a5 5 0 0 1 0-7"/>
-                            <path d="M12 19a8.5 8.5 0 0 0 0-14"/>
-                            <path d="M15.5 21.5a12 12 0 0 0 0-21"/>
-                        </svg>
+                        <div class="gw-brand-box">
+                            <span class="gw-brand-text" style="color: #0B1528; font-size: 1.35rem; font-weight: 900; letter-spacing: -0.5px;">zinli</span>
+                        </div>
+                        ${getGoogleWalletContactlessSvg(hasWireless, "dark")}
                     </div>
                     <div class="gw-card-bottom-row">
-                        <div class="gw-card-digits">•&bull;${last4}</div>
-                        <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, "dark")}</div>
+                        <div class="gw-card-digits" style="color: #0B1528; text-shadow: none;">•&bull;${last4}</div>
+                        ${getGoogleWalletNetworkSvg(net, "dark")}
                     </div>
                 </div>
             `;
@@ -3105,25 +3131,21 @@
             ? `gw-card-custom-${card.customStyle || "obsidian"}`
             : (info.themeClass || "gw-card-bancamiga");
         const brandHtml = (issuer === "custom")
-            ? `<span class="gw-brand-text">${escapeText((card.label || "MI TARJETA").toUpperCase())}</span>`
+            ? `<div class="gw-brand-box"><span class="gw-brand-text">${escapeText((card.label || "MI TARJETA").toUpperCase())}</span></div>`
             : (info.logo 
                 ? `<div class="gw-brand-box"><img src="${info.logo}" alt="${escapeText(info.brandText)}" class="gw-brand-logo"><span class="gw-brand-text">${escapeText(info.brandText)}</span></div>`
-                : `<span class="gw-brand-text">${escapeText(info.brandText)}</span>`);
+                : `<div class="gw-brand-box"><span class="gw-brand-text">${escapeText(info.brandText)}</span></div>`);
         const isLight = (issuer === "custom" && (card.customStyle === "sunset" || card.customStyle === "silver"));
 
         return `
             <div class="wallet-card-art ${themeClass}" ${previewIdAttr}>
                 <div class="gw-card-top-row">
                     ${brandHtml}
-                    <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" width="22" height="22">
-                        <path d="M10 7a6.5 6.5 0 0 1 0 10"/>
-                        <path d="M14 4a11 11 0 0 1 0 16"/>
-                        <path d="M18 1a15.5 15.5 0 0 1 0 22"/>
-                    </svg>
+                    ${getGoogleWalletContactlessSvg(hasWireless, isLight ? "dark" : "light")}
                 </div>
                 <div class="gw-card-bottom-row">
-                    <div class="gw-card-digits">•&bull;${last4}</div>
-                    <div class="gw-card-network">${getGoogleWalletNetworkSvg(net, isLight ? "dark" : "light")}</div>
+                    <div class="gw-card-digits" ${isLight ? 'style="color: #121212; text-shadow: none;"' : ''}>•&bull;${last4}</div>
+                    ${getGoogleWalletNetworkSvg(net, isLight ? "dark" : "light")}
                 </div>
             </div>
         `;
@@ -3459,6 +3481,7 @@
         const numberInput = document.getElementById("wallet-input-number");
         const expiryInput = document.getElementById("wallet-input-expiry");
         const cvvInput = document.getElementById("wallet-input-cvv");
+        const contactlessInput = document.getElementById("wallet-input-contactless");
 
         if (cardId) {
             const cards = getWalletCards();
@@ -3473,6 +3496,7 @@
                 if (numberInput) numberInput.value = formatCardNumber(card.number || "");
                 if (expiryInput) expiryInput.value = card.expiry || "";
                 if (cvvInput) cvvInput.value = card.cvv || "";
+                if (contactlessInput) contactlessInput.checked = (card.hasContactless !== false);
             }
         } else {
             if (titleEl) titleEl.textContent = "Añadir Tarjeta a Billetera";
@@ -3487,6 +3511,7 @@
             if (numberInput) numberInput.value = "";
             if (expiryInput) expiryInput.value = "";
             if (cvvInput) cvvInput.value = "";
+            if (contactlessInput) contactlessInput.checked = true;
         }
 
         handleWalletIssuerChange();
@@ -3533,6 +3558,7 @@
         const numberInput = document.getElementById("wallet-input-number");
         const expiryInput = document.getElementById("wallet-input-expiry");
         const cvvInput = document.getElementById("wallet-input-cvv");
+        const contactlessInput = document.getElementById("wallet-input-contactless");
         const detectIcon = document.getElementById("wallet-number-detect-icon");
 
         if (!previewContainer || !issuerSelect) return;
@@ -3550,6 +3576,7 @@
             detectIcon.textContent = "credit_card";
         }
 
+        const hasContactless = contactlessInput ? contactlessInput.checked : true;
         const previewCardData = {
             id: "preview",
             issuer: issuer,
@@ -3559,7 +3586,8 @@
             number: rawNum,
             expiry: expiry,
             cvv: cvv,
-            network: network
+            network: network,
+            hasContactless: hasContactless
         };
 
         previewContainer.innerHTML = renderGoogleWalletCardArt(previewCardData, true);
@@ -3576,6 +3604,7 @@
         const numberInput = document.getElementById("wallet-input-number");
         const expiryInput = document.getElementById("wallet-input-expiry");
         const cvvInput = document.getElementById("wallet-input-cvv");
+        const contactlessInput = document.getElementById("wallet-input-contactless");
 
         const rawNumber = (numberInput?.value || "").replace(/\D/g, "");
         if (rawNumber.length < 13 || rawNumber.length > 19) {
@@ -3610,6 +3639,7 @@
             expiry: rawExpiry,
             cvv: rawCvv,
             network: network,
+            hasContactless: contactlessInput ? contactlessInput.checked : true,
             updatedAt: Date.now()
         };
 
