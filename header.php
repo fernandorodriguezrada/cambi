@@ -153,7 +153,7 @@
                     <div class="settings-row">
                         <div class="settings-row-text">
                             <span class="settings-title">Versión de Cambi</span>
-                            <span class="settings-subtitle" id="settings-version-label">v108</span>
+                            <span class="settings-subtitle" id="settings-version-label">v109</span>
                         </div>
                         <button type="button" class="settings-btn-action" id="btn-check-update" style="padding: 8px 14px;">
                             <span class="material-symbols-rounded">refresh</span> Actualizar

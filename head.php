@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Cambi - Tasa Oficial</title>
 <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
-<meta name="theme-color" content="#262C33">
+<meta name="theme-color" content="#3B454E">
 <link rel="apple-touch-icon" href="public/512.png">
 <link rel="icon" type="image/x-icon" href="public/logo.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,9 +14,12 @@
         try {
             var saved = localStorage.getItem('darkMode');
             var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (saved === 'enabled' || (saved !== 'disabled' && prefersDark)) {
+            var isDark = (saved === 'enabled' || (saved !== 'disabled' && prefersDark));
+            if (isDark) {
                 document.documentElement.classList.add('dark-mode');
             }
+            var metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) metaTheme.setAttribute('content', isDark ? '#3B454E' : '#F3EDF7');
             var savedAccent = localStorage.getItem('cambiAccentColor');
             if (savedAccent) {
                 document.documentElement.dataset.accent = savedAccent;
@@ -1460,7 +1463,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--md-sys-color-surface);
+        background-color: var(--md-sys-color-surface-container);
         display: flex;
         justify-content: center;
         align-items: center;
