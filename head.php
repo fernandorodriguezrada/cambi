@@ -337,20 +337,7 @@
         color: #ff6e6e;
     }
 
-    .network-status-btn.offline .status-icon {
-        animation: pulse-offline 2.2s infinite ease-in-out;
-    }
 
-    @keyframes pulse-offline {
-        0%, 100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-        50% {
-            opacity: 0.55;
-            transform: scale(0.94);
-        }
-    }
 
     .settings-btn {
         cursor: pointer;
