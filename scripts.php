@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v122",
+                version: "v123",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -2939,16 +2939,16 @@
     const getGoogleWalletNetworkSvg = (network, variant = "light") => {
         if (network === "mastercard") {
             return `<div class="gw-network-box gw-network-mastercard" title="Mastercard">
-                <svg width="36" height="22" viewBox="0 0 36 22" fill="none">
-                    <circle cx="11" cy="11" r="11" fill="#EB001B"/>
-                    <circle cx="25" cy="11" r="11" fill="#F79E1B"/>
-                    <path d="M 18 2.52 A 11 11 0 0 1 18 19.48 A 11 11 0 0 1 18 2.52 Z" fill="#FF5F00"/>
+                <svg width="58" height="36" viewBox="0 0 58 36" fill="none">
+                    <circle cx="18" cy="18" r="17" fill="#EB001B"/>
+                    <circle cx="40" cy="18" r="17" fill="#F79E1B"/>
+                    <path d="M 29 5.04 A 17 17 0 0 1 29 30.96 A 17 17 0 0 1 29 5.04 Z" fill="#FF5F00"/>
                 </svg>
             </div>`;
         }
         const visaColor = (variant === "dark") ? "#0B1528" : "#FFFFFF";
         return `<div class="gw-network-box gw-network-visa" title="Visa" style="color: ${visaColor};">
-            <svg width="40" height="13" viewBox="0 0 54 18" fill="none">
+            <svg width="56" height="19" viewBox="0 0 54 18" fill="none">
                 <path d="M21.2 1.3L15.3 16.7H10.4L6.3 4.2C6.1 3.3 5.9 3 5.1 2.5C3.9 1.8 1.8 1.2 0 0.8L0.1 0.4H8.3C9.4 0.4 10.3 1.2 10.5 2.4L12.5 12.8L17.5 0.4H21.2V1.3ZM39.6 11.5C39.6 7.1 33.4 6.9 33.5 4.9C33.5 4.3 34.1 3.7 35.3 3.5C35.9 3.4 37.6 3.4 39.7 4.3L40.5 0.7C39.4 0.3 38 0 36.2 0C31.8 0 28.7 2.4 28.7 5.7C28.6 8.2 30.9 9.6 32.6 10.5C34.4 11.3 35 11.9 35 12.7C35 13.9 33.6 14.4 32.2 14.4C30 14.4 28.7 14.1 27.2 13.4L26.3 17.2C27.6 17.8 29.8 18.2 32.1 18.2C36.8 18.2 39.6 15.9 39.6 11.5ZM51.8 16.7H56L52.4 0.4H48.5C47.6 0.4 46.8 0.9 46.5 1.7L39.7 16.7H44.6L45.6 14H51.4L51.8 16.7ZM47 10.4L49.3 4.1L50.6 10.4H47ZM27.3 0.4L23.4 16.7H18.8L22.7 0.4H27.3Z" fill="currentColor"/>
             </svg>
         </div>`;
@@ -2963,7 +2963,7 @@
         }
         const color = (variant === "dark") ? "#0B1528" : "#FFFFFF";
         return `<div class="gw-contactless-box" title="Contactless / Wireless" style="color: ${color};">
-            <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="22" height="22">
+            <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" width="26" height="26">
                 <path d="M9.5 6.5a7 7 0 0 1 0 11"/>
                 <path d="M13.5 3.5a11.5 11.5 0 0 1 0 17"/>
                 <path d="M17.5 0.5a16 16 0 0 1 0 23"/>
@@ -2986,10 +2986,10 @@
                 <div class="wallet-card-art gw-card-binance" ${previewIdAttr}>
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
-                            <svg class="gw-brand-logo" viewBox="0 0 24 24" fill="#F0B90B" width="22" height="22">
+                            <svg class="gw-brand-logo" viewBox="0 0 24 24" fill="#F0B90B" width="24" height="24">
                                 <path d="M12 2L8.5 5.5l3.5 3.5 3.5-3.5L12 2zm-6.5 6.5L2 12l3.5 3.5 3.5-3.5-3.5-3.5zm13 0l-3.5 3.5 3.5 3.5 3.5-3.5-3.5-3.5zM12 8.9L9.4 11.5l2.6 2.6 2.6-2.6L12 8.9zM12 15l-3.5 3.5L12 22l3.5-3.5L12 15z"/>
                             </svg>
-                            <span class="gw-brand-text" style="color: #F0B90B; letter-spacing: 1.2px;">BINANCE</span>
+                            <span class="gw-brand-text binance-brand">BINANCE</span>
                         </div>
                         ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>
@@ -3007,7 +3007,7 @@
                     <img src="public/banks/wally_card_bg.webp" alt="Wally Card" class="gw-wally-bg-img">
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
-                            <span class="gw-brand-text" style="color: #FFFFFF; font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px;">wally</span>
+                            <span class="gw-brand-text wally-brand" style="color: #FFFFFF;">wally</span>
                         </div>
                         ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>

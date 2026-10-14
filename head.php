@@ -4782,7 +4782,7 @@
 
     /* Plantilla Canónica Google Wallet (4 cuadrantes universales) */
     .gw-card-top-row {
-        height: 28px;
+        height: 34px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -4791,10 +4791,10 @@
     }
 
     .gw-card-bottom-row {
-        height: 26px;
+        height: 38px;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
         z-index: 3;
         position: relative;
     }
@@ -4803,26 +4803,37 @@
     .gw-brand-box {
         display: flex;
         align-items: center;
-        gap: 8px;
-        height: 26px;
+        gap: 10px;
+        height: 32px;
     }
     .gw-brand-logo {
-        height: 22px;
-        max-width: 90px;
+        height: 26px;
+        max-width: 100px;
         object-fit: contain;
     }
     .gw-brand-text {
         font-family: var(--font-google-sans), -apple-system, sans-serif;
         font-weight: 800;
-        font-size: 1.05rem;
+        font-size: 1.25rem;
         letter-spacing: 0.5px;
         line-height: 1;
+    }
+    .gw-brand-text.wally-brand {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.6px;
+    }
+    .gw-brand-text.binance-brand {
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: 1.4px;
+        color: #F0B90B;
     }
 
     /* Cuadrante 2: Wireless / Contactless (Top-Right) */
     .gw-contactless-box {
-        width: 26px;
-        height: 26px;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -4831,18 +4842,18 @@
         display: none;
     }
     .gw-contactless-icon {
-        width: 22px;
-        height: 22px;
-        opacity: 0.92;
+        width: 26px;
+        height: 26px;
+        opacity: 0.95;
         color: #ffffff;
     }
 
     /* Cuadrante 3: Dígitos de tarjeta (Bottom-Left) */
     .gw-card-digits {
         font-family: var(--font-google-sans), -apple-system, sans-serif;
-        font-size: 1.15rem;
-        font-weight: 500;
-        letter-spacing: 1.2px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
         color: #ffffff;
         text-shadow: 0 1px 3px rgba(0,0,0,0.35);
         display: flex;
@@ -4852,21 +4863,24 @@
 
     /* Cuadrante 4: Franquicia / Red (Bottom-Right) */
     .gw-network-box {
-        width: 38px;
-        height: 24px;
+        width: 62px;
+        height: 38px;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-end;
         flex-shrink: 0;
     }
     .gw-network-mastercard {
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        display: inline-flex;
+        align-items: center;
+        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));
     }
     .gw-network-visa {
+        display: inline-flex;
+        align-items: center;
         color: #ffffff;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));
     }
-
     /* 1. BINANCE CARD */
     .gw-card-binance {
         background: #000000 !important;
