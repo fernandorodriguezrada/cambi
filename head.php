@@ -1627,39 +1627,38 @@
         width: 100% !important;
         max-width: 440px !important;
         margin: 0 auto;
-        height: auto;
         min-height: 100%;
         flex: 1;
         padding-top: 0;
         padding-left: 14px;
         padding-right: 14px;
-        padding-bottom: 76px;
+        padding-bottom: 24px;
         box-sizing: border-box;
     }
 
     .pm-view {
         width: 100%;
-        height: 100%;
         flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1);
         box-sizing: border-box;
     }
 
-    /* Onboarding / Tour Card que abarca toda la pantalla disponible (sin fondo) */
+    /* Onboarding / Tour Card centrado verticalmente */
     .pm-tour-card {
         background-color: transparent;
         border-radius: 0;
-        padding: 16px 4px 8px;
+        padding: 4px 4px 16px;
         width: 100%;
-        height: 100%;
-        flex: 1;
+        max-width: 380px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
         align-items: center;
+        justify-content: center;
+        margin: auto 0;
         box-shadow: none;
         border: none;
         box-sizing: border-box;
@@ -1667,7 +1666,6 @@
 
     .pm-carousel-wrapper {
         width: 100%;
-        flex: 1;
         display: flex;
         align-items: center;
         overflow: hidden;
@@ -1678,19 +1676,17 @@
         display: flex;
         transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
         width: 100%;
-        height: 100%;
         align-items: center;
     }
 
     .pm-slide {
         min-width: 100%;
-        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 8px 12px;
+        padding: 4px 12px;
         box-sizing: border-box;
     }
 
@@ -4646,6 +4642,9 @@
 
     .wallet-subview {
         width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
         animation: fadeInSubView 0.25s cubic-bezier(0.2, 0, 0, 1);
     }
 

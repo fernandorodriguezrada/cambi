@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v117",
+                version: "v118",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -1878,12 +1878,13 @@
        LÓGICA PAGO MÓVIL (LOCAL-FIRST)
        ========================================= */
     let currentPmSlide = 0;
+    let currentWalletSlide = 0;
     let pmModalMode = "create";
 
     const goToPmSlide = (index) => {
         currentPmSlide = index;
         const carousel = document.getElementById("pm-carousel");
-        const dots = document.querySelectorAll(".pm-dot");
+        const dots = document.querySelectorAll("#pm-indicators .pm-dot");
         if (carousel) {
             carousel.style.transform = `translateX(-${index * 100}%)`;
         }
@@ -1892,6 +1893,19 @@
         });
     };
     window.goToPmSlide = goToPmSlide;
+
+    const goToWalletSlide = (index) => {
+        currentWalletSlide = index;
+        const carousel = document.getElementById("wallet-carousel");
+        const dots = document.querySelectorAll("#wallet-indicators .pm-dot");
+        if (carousel) {
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+        }
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle("active", idx === index);
+        });
+    };
+    window.goToWalletSlide = goToWalletSlide;
 
 // showToast se encuentra definida de forma global más arriba
 
@@ -2762,7 +2776,7 @@
     };
     window.handleImportBankQR = handleImportBankQR;
 
-    // Inicializar carrusel touch swipe
+    // Inicializar carrusel touch swipe Pago Móvil
     const carouselEl = document.getElementById("pm-carousel");
     if (carouselEl) {
         let touchStartX = 0;
@@ -2776,6 +2790,24 @@
                 goToPmSlide(currentPmSlide + 1);
             } else if (touchEndX - touchStartX > 45 && currentPmSlide > 0) {
                 goToPmSlide(currentPmSlide - 1);
+            }
+        }, { passive: true });
+    }
+
+    // Inicializar carrusel touch swipe Tarjetas
+    const walletCarouselEl = document.getElementById("wallet-carousel");
+    if (walletCarouselEl) {
+        let touchStartX = 0;
+        let touchEndX = 0;
+        walletCarouselEl.addEventListener("touchstart", (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        walletCarouselEl.addEventListener("touchend", (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 45 && currentWalletSlide < 2) {
+                goToWalletSlide(currentWalletSlide + 1);
+            } else if (touchEndX - touchStartX > 45 && currentWalletSlide > 0) {
+                goToWalletSlide(currentWalletSlide - 1);
             }
         }, { passive: true });
     }
@@ -2967,11 +2999,22 @@
         const isBilleteraTab = activeNav && activeNav.dataset.tab === "pagomovil";
         if (fabContainer && fabBtn) {
             if (isBilleteraTab) {
-                fabContainer.classList.add("active");
                 if (activeSub === "cards") {
+                    const cards = getWalletCards();
+                    if (cards.length > 0) {
+                        fabContainer.classList.add("active");
+                    } else {
+                        fabContainer.classList.remove("active");
+                    }
                     fabBtn.title = "Añadir tarjeta";
                     fabBtn.setAttribute("aria-label", "Añadir tarjeta");
                 } else {
+                    const profile = getPmProfile();
+                    if (profile && profile.banks && profile.banks.length > 0) {
+                        fabContainer.classList.add("active");
+                    } else {
+                        fabContainer.classList.remove("active");
+                    }
                     fabBtn.title = "Añadir banco";
                     fabBtn.setAttribute("aria-label", "Añadir banco");
                 }
@@ -3097,33 +3140,53 @@
     const renderWalletCards = () => {
         const cards = getWalletCards();
         const deck = document.getElementById("wallet-cards-deck");
-        const emptyState = document.getElementById("wallet-cards-empty");
+        const onboardingView = document.getElementById("wallet-cards-onboarding");
+        const activeView = document.getElementById("wallet-cards-active-view");
         const countBadge = document.getElementById("wallet-cards-count-badge");
+        const fabContainer = document.getElementById("pm-fab-container");
 
         if (countBadge) countBadge.textContent = cards.length;
-        if (!deck || !emptyState) return;
 
         // Sincronizar modo apilado vs cuadrícula
         const savedMode = localStorage.getItem("walletDeckMode") || "stacked";
         const icon = document.getElementById("wallet-deck-toggle-icon");
-        if (savedMode === "grid") {
-            deck.classList.remove("mode-stacked");
-            deck.classList.add("mode-grid");
-            if (icon) icon.textContent = "view_agenda";
-        } else {
-            deck.classList.remove("mode-grid");
-            deck.classList.add("mode-stacked");
-            if (icon) icon.textContent = "layers";
+        if (deck) {
+            if (savedMode === "grid") {
+                deck.classList.remove("mode-stacked");
+                deck.classList.add("mode-grid");
+                if (icon) icon.textContent = "view_agenda";
+            } else {
+                deck.classList.remove("mode-grid");
+                deck.classList.add("mode-stacked");
+                if (icon) icon.textContent = "layers";
+            }
         }
 
         if (cards.length === 0) {
-            emptyState.style.display = "flex";
-            deck.style.display = "none";
-            deck.innerHTML = "";
+            if (onboardingView) onboardingView.style.display = "flex";
+            if (activeView) activeView.style.display = "none";
+            if (deck) deck.innerHTML = "";
+            const activeNav = document.querySelector(".bottom-navigation .nav-item.active");
+            const isBilleteraTab = activeNav && activeNav.dataset.tab === "pagomovil";
+            const activeSub = localStorage.getItem("walletActiveSubTab") || "cards";
+            if (fabContainer && isBilleteraTab && activeSub === "cards") {
+                fabContainer.classList.remove("active");
+            }
+            goToWalletSlide(0);
             return;
         }
 
-        emptyState.style.display = "none";
+        if (onboardingView) onboardingView.style.display = "none";
+        if (activeView) activeView.style.display = "block";
+        if (fabContainer) {
+            const activeNav = document.querySelector(".bottom-navigation .nav-item.active");
+            const isBilleteraTab = activeNav && activeNav.dataset.tab === "pagomovil";
+            const activeSub = localStorage.getItem("walletActiveSubTab") || "cards";
+            if (isBilleteraTab && activeSub === "cards") {
+                fabContainer.classList.add("active");
+            }
+        }
+        if (!deck) return;
         deck.style.display = "flex";
         deck.innerHTML = "";
 
@@ -3731,9 +3794,11 @@
             // Evitar bordes externos (gestos del sistema operativo para navegación atrás/adelante)
             if (initialX < 18 || initialX > screenW - 18) return;
 
-            // Evitar conflicto con carrusel de bienvenida en pago móvil
+            // Evitar conflicto con carruseles de bienvenida
             const carousel = document.getElementById('pm-carousel');
             if (carousel && carousel.contains(e.target)) return;
+            const walletCarousel = document.getElementById('wallet-carousel');
+            if (walletCarousel && walletCarousel.contains(e.target)) return;
 
             // Evitar conflicto con menú contextual
             if (document.querySelector('.calc-context-menu.active')) return;
