@@ -1350,7 +1350,10 @@
 
     /* Pestaña Pago Móvil: aprovecha toda la altura disponible y permite desplazamiento natural */
     #pagomovil-tab-content {
-        padding-top: 14px;
+        padding-top: 12px;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+        display: flex;
+        flex-direction: column;
     }
 
     /* Pestaña Historial (pantalla superpuesta independiente) */
@@ -1627,18 +1630,17 @@
         width: 100% !important;
         max-width: 440px !important;
         margin: 0 auto;
+        height: 100%;
         min-height: 100%;
-        flex: 1;
-        padding-top: 0;
-        padding-left: 14px;
-        padding-right: 14px;
-        padding-bottom: 24px;
+        flex: 1 1 auto;
+        padding: 0 14px;
         box-sizing: border-box;
     }
 
     .pm-view {
         width: 100%;
-        flex: 1;
+        flex: 1 1 auto;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -1651,14 +1653,14 @@
     .pm-tour-card {
         background-color: transparent;
         border-radius: 0;
-        padding: 4px 4px 16px;
+        padding: 0 4px;
         width: 100%;
         max-width: 380px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: auto 0;
+        margin: auto;
         box-shadow: none;
         border: none;
         box-sizing: border-box;
@@ -4587,7 +4589,8 @@
         display: flex;
         justify-content: center;
         width: 100%;
-        margin: 4px 0 16px 0;
+        margin: 0 0 12px 0;
+        flex-shrink: 0;
     }
 
     .wallet-subnav-track {
@@ -4642,7 +4645,8 @@
 
     .wallet-subview {
         width: 100%;
-        flex: 1;
+        flex: 1 1 auto;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         animation: fadeInSubView 0.25s cubic-bezier(0.2, 0, 0, 1);

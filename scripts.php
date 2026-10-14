@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v118",
+                version: "v119",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -2987,11 +2987,11 @@
 
         if (sectionCards) {
             sectionCards.classList.toggle("active", activeSub === "cards");
-            sectionCards.style.display = (activeSub === "cards") ? "block" : "none";
+            sectionCards.style.display = (activeSub === "cards") ? "flex" : "none";
         }
         if (sectionPm) {
             sectionPm.classList.toggle("active", activeSub === "pagomovil");
-            sectionPm.style.display = (activeSub === "pagomovil") ? "block" : "none";
+            sectionPm.style.display = (activeSub === "pagomovil") ? "flex" : "none";
         }
 
         // Sincronizar visibilidad del FAB contextual
