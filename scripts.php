@@ -236,10 +236,12 @@
 
     window.addEventListener("online", () => {
         updateNetworkStatus();
-        showToast("Conectado a internet");
-        if (typeof fetchRate === "function") {
-            fetchRate();
-        }
+        showToast("Conexión restablecida");
+        setTimeout(() => {
+            if (typeof fetchRate === "function" && navigator.onLine) {
+                fetchRate();
+            }
+        }, 500);
     });
 
     window.addEventListener("offline", () => {
@@ -250,7 +252,7 @@
     const netStatusBtn = document.getElementById("network-status-btn");
     if (netStatusBtn) {
         netStatusBtn.addEventListener("click", () => {
-            showToast(navigator.onLine ? "Conectado a internet" : "Modo sin conexión");
+            showToast(navigator.onLine ? "Conexión restablecida" : "Modo sin conexión");
         });
     }
 
@@ -797,7 +799,13 @@
                 if (rateEurDisplay) rateEurDisplay.innerText = "Error de Red";
             } else {
                 if (typeof showToast === "function") {
-                    showToast(navigator.onLine ? "Servidor sin conexión saliente. Mostrando última tasa." : "Modo sin conexión");
+                    if (!navigator.onLine) {
+                        showToast("Modo sin conexión");
+                    } else if (forceRefresh) {
+                        showToast("Error al actualizar tasa");
+                    } else {
+                        showToast("Conexión restablecida");
+                    }
                 }
             }
         } finally {
@@ -1379,7 +1387,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v106",
+                version: "v107",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
