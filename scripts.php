@@ -222,13 +222,9 @@
 
         if (isOnline) {
             btn.classList.remove("offline");
-            btn.title = "Conectado a internet";
-            btn.setAttribute("aria-label", "Conectado a internet");
             icon.innerText = "cloud";
         } else {
             btn.classList.add("offline");
-            btn.title = "Modo sin conexión";
-            btn.setAttribute("aria-label", "Modo sin conexión");
             icon.innerText = "cloud_off";
         }
     }
@@ -248,13 +244,6 @@
         updateNetworkStatus();
         showToast("Modo sin conexión");
     });
-
-    const netStatusBtn = document.getElementById("network-status-btn");
-    if (netStatusBtn) {
-        netStatusBtn.addEventListener("click", () => {
-            showToast(navigator.onLine ? "Conexión restablecida" : "Modo sin conexión");
-        });
-    }
 
     // Inicializar estado inmediatamente
     updateNetworkStatus();
@@ -1387,7 +1376,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v107",
+                version: "v108",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {

@@ -295,22 +295,14 @@
         outline: none;
         padding: 4px;
         margin: 0;
-        cursor: pointer;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
         color: var(--branding-color);
-        transition: color var(--transition-speed), opacity var(--transition-speed), transform 0.15s ease;
+        transition: color var(--transition-speed), opacity var(--transition-speed);
         -webkit-tap-highlight-color: transparent;
-    }
-
-    .network-status-btn:hover {
-        opacity: 0.85;
-    }
-
-    .network-status-btn:active {
-        transform: scale(0.9);
+        user-select: none;
+        pointer-events: none;
     }
 
     .network-status-btn .status-icon {
@@ -3544,17 +3536,26 @@
         color: #ffffff;
         padding: 12px 20px;
         border-radius: 24px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
         font-size: 0.9rem;
         font-weight: 600;
+        white-space: nowrap;
+        width: max-content;
+        max-width: calc(100vw - 32px);
+        box-sizing: border-box;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
         z-index: 10000 !important;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1), transform 0.25s cubic-bezier(0.2, 0, 0, 1);
         will-change: transform, opacity;
+    }
+
+    #pm-toast-msg {
+        white-space: nowrap;
     }
 
     .pm-toast.active {
