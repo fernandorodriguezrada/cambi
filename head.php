@@ -3433,14 +3433,21 @@
     }
     .pm-bank-item-added-badge {
         font-size: 0.74rem;
-        font-weight: 600;
-        color: var(--md-sys-color-outline);
+        font-weight: 700;
+        color: var(--cambi-magic-mint-on-surface);
         background: var(--md-sys-color-surface-container-highest);
         padding: 3px 8px;
         border-radius: 12px;
         display: inline-flex;
         align-items: center;
         gap: 4px;
+    }
+    body.dark-mode .pm-bank-item-added-badge {
+        color: var(--cambi-magic-mint);
+        background: rgba(163, 241, 203, 0.14);
+    }
+    .pm-bank-item-added-badge .material-symbols-rounded {
+        color: inherit;
     }
     .pm-bank-search-empty {
         padding: 24px 12px;
