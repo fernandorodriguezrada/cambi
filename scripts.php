@@ -567,7 +567,7 @@
 
             pressTimer = setTimeout(() => {
                 isLongPress = true;
-                if (navigator.vibrate) navigator.vibrate(40);
+                triggerHaptic(45);
                 showCalcContextMenu(targetType, startX, startY, rowEl);
             }, 450);
         };
@@ -1300,13 +1300,22 @@
     }
 
     // 4. Vibración Háptica
+    const triggerHaptic = (duration = 20) => {
+        if (localStorage.getItem("hapticFeedback") === "disabled") return;
+        if (!navigator.vibrate) return;
+        try {
+            navigator.vibrate(duration);
+        } catch(e) {}
+    };
+    window.triggerHaptic = triggerHaptic;
+
     const hapticToggle = document.getElementById("haptic-toggle");
     if (hapticToggle) {
         hapticToggle.checked = localStorage.getItem("hapticFeedback") !== "disabled";
         hapticToggle.addEventListener("change", () => {
             const isEnabled = hapticToggle.checked;
             localStorage.setItem("hapticFeedback", isEnabled ? "enabled" : "disabled");
-            if (isEnabled && navigator.vibrate) navigator.vibrate(12);
+            if (isEnabled) triggerHaptic(30);
         });
     }
 
@@ -1376,7 +1385,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v129",
+                version: "v130",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -1597,12 +1606,12 @@
 
     // Lógica del Teclado Numérico
     document.querySelectorAll('.keypad-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Respuesta háptica opcional
-            if (localStorage.getItem("hapticFeedback") !== "disabled" && navigator.vibrate) {
-                try { navigator.vibrate(10); } catch(e) {}
-            }
+        // Disparo háptico en pointerdown / touchstart directo para activación física inmediata en Chrome Android
+        btn.addEventListener('pointerdown', () => {
+            triggerHaptic(20);
+        }, { passive: true });
 
+        btn.addEventListener('click', () => {
             if (!inputTop) return;
             const key = btn.dataset.key;
             if (!key || key === 'swap') return;
@@ -1812,6 +1821,9 @@
     window.switchTab = switchTab;
 
     if (swapBtn) {
+        swapBtn.addEventListener('pointerdown', () => {
+            triggerHaptic(25);
+        }, { passive: true });
         swapBtn.onclick = () => {
             isResultPendingClear = false;
             isInitialDefault = false;
