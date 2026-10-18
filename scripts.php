@@ -567,7 +567,7 @@
 
             pressTimer = setTimeout(() => {
                 isLongPress = true;
-                triggerHaptic(45);
+                triggerHaptic([50, 40, 50]);
                 showCalcContextMenu(targetType, startX, startY, rowEl);
             }, 450);
         };
@@ -1300,11 +1300,11 @@
     }
 
     // 4. Vibración Háptica
-    const triggerHaptic = (duration = 20) => {
+    const triggerHaptic = (pattern = 45) => {
         if (localStorage.getItem("hapticFeedback") === "disabled") return;
         if (!navigator.vibrate) return;
         try {
-            navigator.vibrate(duration);
+            navigator.vibrate(pattern);
         } catch(e) {}
     };
     window.triggerHaptic = triggerHaptic;
@@ -1315,7 +1315,7 @@
         hapticToggle.addEventListener("change", () => {
             const isEnabled = hapticToggle.checked;
             localStorage.setItem("hapticFeedback", isEnabled ? "enabled" : "disabled");
-            if (isEnabled) triggerHaptic(30);
+            if (isEnabled) triggerHaptic(50);
         });
     }
 
@@ -1385,7 +1385,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v130",
+                version: "v131",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -1608,7 +1608,7 @@
     document.querySelectorAll('.keypad-btn').forEach(btn => {
         // Disparo háptico en pointerdown / touchstart directo para activación física inmediata en Chrome Android
         btn.addEventListener('pointerdown', () => {
-            triggerHaptic(20);
+            triggerHaptic(45);
         }, { passive: true });
 
         btn.addEventListener('click', () => {
@@ -1822,7 +1822,7 @@
 
     if (swapBtn) {
         swapBtn.addEventListener('pointerdown', () => {
-            triggerHaptic(25);
+            triggerHaptic(50);
         }, { passive: true });
         swapBtn.onclick = () => {
             isResultPendingClear = false;
