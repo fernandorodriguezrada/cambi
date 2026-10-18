@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v124",
+                version: "v125",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -2984,6 +2984,11 @@
         if (issuer === "binance") {
             return `
                 <div class="wallet-card-art gw-card-binance" ${previewIdAttr}>
+                    <svg class="gw-binance-diamond-bg" viewBox="0 0 100 100" fill="#FFFFFF">
+                        <path d="M50 5L95 50L50 95L5 50Z"/>
+                        <path d="M50 20L80 50L50 80L20 50Z" fill="#000000"/>
+                        <path d="M50 30L70 50L50 70L30 50Z"/>
+                    </svg>
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
                             <svg class="gw-brand-logo" viewBox="0 0 24 24" fill="#F0B90B" width="24" height="24">
@@ -2994,7 +2999,7 @@
                         ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>
                     <div class="gw-card-bottom-row">
-                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        <div class="gw-card-digits">&#8226;&bull;${last4}</div>
                         ${getGoogleWalletNetworkSvg(net, "light")}
                     </div>
                 </div>
@@ -3130,6 +3135,62 @@
                     <div class="gw-card-bottom-row">
                         <div class="gw-card-digits">&#8226;&bull;${last4}</div>
                         ${getGoogleWalletNetworkSvg(net, "light")}
+                    </div>
+                </div>
+            `;
+        }
+
+        if (issuer === "mercantil") {
+            return `
+                <div class="wallet-card-art gw-card-mercantil" ${previewIdAttr}>
+                    <svg class="gw-mercantil-arcs" viewBox="0 0 200 200" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1">
+                        <circle cx="100" cy="200" r="120"/>
+                        <circle cx="100" cy="200" r="90"/>
+                        <circle cx="100" cy="200" r="60"/>
+                    </svg>
+                    <div class="gw-card-top-row">
+                        <div class="gw-brand-box">
+                            <span class="gw-mercantil-brand-text">Mercantil</span>
+                            <span class="gw-mercantil-arrow">
+                                <svg width="20" height="16" viewBox="0 0 20 16" fill="#FFFFFF">
+                                    <path d="M2 4L8 8L2 12Z"/>
+                                    <path d="M10 4L16 8L10 12Z"/>
+                                </svg>
+                            </span>
+                        </div>
+                        ${getGoogleWalletContactlessSvg(hasWireless, "light")}
+                    </div>
+                    <div class="gw-card-bottom-row">
+                        <div class="gw-card-digits">&#8226;&bull;${last4}</div>
+                        ${getGoogleWalletNetworkSvg(net, "light")}
+                    </div>
+                </div>
+            `;
+        }
+
+        if (issuer === "okx") {
+            return `
+                <div class="wallet-card-art gw-card-okx" ${previewIdAttr}>
+                    <div class="gw-okx-texture"></div>
+                    <div class="gw-card-top-row">
+                        <div class="gw-brand-box">
+                            <svg class="gw-brand-logo" viewBox="0 0 60 20" fill="#FFFFFF" width="48" height="16">
+                                <rect x="0" y="0" width="8" height="8" rx="1.5"/>
+                                <rect x="12" y="0" width="8" height="8" rx="1.5"/>
+                                <rect x="0" y="12" width="8" height="8" rx="1.5"/>
+                                <rect x="12" y="12" width="8" height="8" rx="1.5"/>
+                                <path d="M30 0L36 10L30 20L24 10Z"/>
+                                <path d="M44 10L50 0L56 10L50 20Z"/>
+                            </svg>
+                        </div>
+                        ${getGoogleWalletContactlessSvg(hasWireless, "light")}
+                    </div>
+                    <div class="gw-card-bottom-row">
+                        <div class="gw-card-digits">&#8226;&bull;${last4}</div>
+                        <div class="gw-okx-visa-plat">
+                            ${getGoogleWalletNetworkSvg(net, "light")}
+                            <span class="gw-plat-label">Platinum</span>
+                        </div>
                     </div>
                 </div>
             `;

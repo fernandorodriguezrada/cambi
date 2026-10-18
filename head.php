@@ -4827,7 +4827,7 @@
         font-size: 1.15rem;
         font-weight: 800;
         letter-spacing: 1.4px;
-        color: #F0B90B;
+        color: #FFFFFF;
     }
 
     /* Cuadrante 2: Wireless / Contactless (Top-Right) */
@@ -4886,6 +4886,22 @@
         background: #000000 !important;
         border: 1px solid rgba(255, 255, 255, 0.14) !important;
         color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+    .gw-binance-diamond-bg {
+        position: absolute;
+        right: 15%;
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        width: 45%;
+        height: 70%;
+        opacity: 0.08;
+        pointer-events: none;
+        z-index: 1;
+    }
+    .gw-brand-text.binance-brand {
+        color: #FFFFFF !important;
     }
 
     /* 2. WALLY TECH CARD */
@@ -5092,12 +5108,67 @@
         border: 1px solid rgba(0, 198, 255, 0.3) !important;
     }
     .gw-card-mercantil {
-        background: linear-gradient(135deg, #002F6C 0%, #001B40 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        background: linear-gradient(160deg, #0D3259 0%, #0A2240 60%, #091D38 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+    }
+    .gw-mercantil-arcs {
+        position: absolute;
+        bottom: 10%;
+        left: 5%;
+        width: 50%;
+        height: 60%;
+        z-index: 1;
+        opacity: 0.12;
+        pointer-events: none;
+    }
+    .gw-mercantil-brand-text {
+        font-family: var(--font-google-sans), serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #FFFFFF;
+        letter-spacing: 0.3px;
+        line-height: 1;
+    }
+    .gw-mercantil-arrow {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 4px;
     }
     .gw-card-okx {
         background: #111111 !important;
-        border: 1px solid rgba(255, 255, 255, 0.22) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+    }
+    .gw-okx-texture {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        opacity: 0.15;
+        pointer-events: none;
+        background-image: 
+            repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 4px, transparent 4px, transparent 8px),
+            repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 4px, transparent 4px, transparent 8px);
+        background-size: 8px 8px;
+        mask-image: radial-gradient(ellipse 80% 90% at 70% 40%, black 30%, transparent 80%);
+        -webkit-mask-image: radial-gradient(ellipse 80% 90% at 70% 40%, black 30%, transparent 80%);
+    }
+    .gw-okx-visa-plat {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1px;
+    }
+    .gw-okx-visa-plat .gw-plat-label {
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        color: rgba(255,255,255,0.8);
+        text-transform: uppercase;
     }
     .gw-card-custom-obsidian { background: linear-gradient(135deg, #232526 0%, #414345 100%) !important; }
     .gw-card-custom-sunset { background: linear-gradient(135deg, #FA709A 0%, #FEE140 100%) !important; color: #1a1a1a !important; }
