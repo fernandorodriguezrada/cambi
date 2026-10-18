@@ -280,128 +280,6 @@
     </div>
 </div>
 
-<!-- 6. MODAL PARA AÑADIR / EDITAR TARJETA DE BILLETERA -->
-<div id="modal-wallet-card" class="pm-modal-overlay" onclick="if(event.target===this) closeWalletCardModal()">
-    <div class="pm-modal-sheet wallet-card-modal-sheet">
-        <div class="pm-modal-handle"></div>
-        <div class="pm-modal-header">
-            <h3 id="wallet-card-modal-title">Añadir Tarjeta a Billetera</h3>
-            <button type="button" class="pm-modal-close" onclick="closeWalletCardModal()">
-                <span class="material-symbols-rounded">close</span>
-            </button>
-        </div>
-        
-        <!-- Live Card Preview interactivo estilo Google Wallet -->
-        <div class="wallet-modal-preview-wrap" id="wallet-modal-preview-container">
-            <div id="wallet-preview-card" class="wallet-card-art gw-card-binance"></div>
-        </div>
-
-        <form id="wallet-card-form" onsubmit="saveWalletCard(event)">
-            <input type="hidden" id="wallet-card-edit-id" value="">
-
-            <div class="pm-form-group">
-                <label for="wallet-input-issuer">Emisor / Plantilla de Tarjeta</label>
-                <select id="wallet-input-issuer" class="pm-styled-select" onchange="handleWalletIssuerChange()">
-                    <option value="binance">Binance Card (Cripto)</option>
-                    <option value="wally">Wally Tech (Prepago Digital)</option>
-                    <option value="zinli">Zinli (Billetera Digital)</option>
-                    <option value="bancamiga">Bancamiga (Mastercard / Débito Internacional)</option>
-                    <option value="banesco">Banesco (Débito / Crédito)</option>
-                    <option value="bdv">Banco de Venezuela (Débito Internacional / Débito)</option>
-                    <option value="mercantil">Banco Mercantil (Visa / Mastercard)</option>
-                    <option value="okx">OKX Card (Cripto)</option>
-                    <option value="custom">Tarjeta Personalizada (Elige tu color)</option>
-                </select>
-            </div>
-
-            <!-- Selector de paleta para Tarjeta Personalizada -->
-            <div id="wallet-custom-palette-row" class="pm-form-group" style="display: none;">
-                <label>Estilo de Color</label>
-                <div class="wallet-palette-picker" id="wallet-palette-picker">
-                    <button type="button" class="wallet-color-dot active" data-style="obsidian" title="Obsidian" style="--c1: #232526; --c2: #414345;"></button>
-                    <button type="button" class="wallet-color-dot" data-style="sunset" title="Sunset" style="--c1: #FA709A; --c2: #FEE140;"></button>
-                    <button type="button" class="wallet-color-dot" data-style="cosmic" title="Cosmic" style="--c1: #654EA3; --c2: #EAAFC8;"></button>
-                    <button type="button" class="wallet-color-dot" data-style="ocean" title="Ocean" style="--c1: #2E3192; --c2: #1BFFFF;"></button>
-                    <button type="button" class="wallet-color-dot" data-style="emerald" title="Emerald" style="--c1: #11998E; --c2: #38EF7D;"></button>
-                    <button type="button" class="wallet-color-dot" data-style="silver" title="Titanium" style="--c1: #E0E0E0; --c2: #757575;"></button>
-                </div>
-                <input type="hidden" id="wallet-input-custom-style" value="obsidian">
-            </div>
-
-            <div class="pm-form-group">
-                <label for="wallet-input-label">Etiqueta o Apodo</label>
-                <input type="text" id="wallet-input-label" placeholder="Ej: Mi Binance Principal" required maxlength="30">
-            </div>
-
-            <div class="pm-form-group">
-                <label for="wallet-input-holder">Nombre en la Tarjeta</label>
-                <input type="text" id="wallet-input-holder" placeholder="Ej: FERNANDO RODRIGUEZ" required maxlength="32" autocomplete="cc-name" style="text-transform: uppercase;">
-            </div>
-
-            <div class="pm-form-group">
-                <label for="wallet-input-number">Número de Tarjeta</label>
-                <div class="wallet-input-with-icon">
-                    <input type="tel" id="wallet-input-number" placeholder="4000 1234 5678 9010" required maxlength="19" inputmode="numeric" autocomplete="cc-number">
-                    <span class="material-symbols-rounded wallet-input-icon" id="wallet-number-detect-icon">credit_card</span>
-                </div>
-            </div>
-
-            <div class="pm-form-row">
-                <div class="pm-form-group" style="flex: 1;">
-                    <label for="wallet-input-expiry">Vencimiento</label>
-                    <input type="tel" id="wallet-input-expiry" placeholder="MM/AA" required maxlength="5" inputmode="numeric" autocomplete="cc-exp">
-                </div>
-                <div class="pm-form-group" style="flex: 1;">
-                    <label for="wallet-input-cvv">CVV / CVC</label>
-                    <input type="password" id="wallet-input-cvv" placeholder="•••" required maxlength="4" inputmode="numeric" autocomplete="cc-csc">
-                </div>
-            </div>
-
-            <!-- Selector de Tecnología Contactless / Wireless -->
-            <div class="pm-form-group" style="background-color: var(--md-sys-color-surface-container-high); padding: 12px 14px; border-radius: 12px; margin-top: 4px;">
-                <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; margin: 0;">
-                    <span style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.92rem; color: var(--md-sys-color-on-surface);">
-                        <span class="material-symbols-rounded" style="font-size: 20px; color: var(--branding-color);">contactless</span>
-                        <span>Tecnología Contactless / Wireless</span>
-                    </span>
-                    <input type="checkbox" id="wallet-input-contactless" checked style="width: 20px; height: 20px; accent-color: var(--branding-color); cursor: pointer;" onchange="updateWalletCardPreview()">
-                </label>
-                <span style="font-size: 0.76rem; opacity: 0.72; margin-top: 4px; display: block; line-height: 1.3;">
-                    Desmárcalo si tu tarjeta es física sin NFC o virtual prepagada sin contactless.
-                </span>
-            </div>
-
-            <div class="pm-modal-actions">
-                <button type="button" class="pm-btn-secondary" onclick="closeWalletCardModal()">Cancelar</button>
-                <button type="submit" class="pm-btn-primary" id="wallet-btn-save-card">Guardar Tarjeta</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 7. MODAL DE CONFIRMACIÓN PARA ELIMINAR TARJETA -->
-<div id="wallet-modal-confirm-delete" class="pm-modal-overlay pm-modal-overlay-confirm" onclick="if(event.target===this) closeWalletConfirmDeleteModal()">
-    <div class="pm-modal-sheet pm-modal-confirm-sheet">
-        <div class="pm-modal-handle"></div>
-        <div class="pm-confirm-icon-box">
-            <span class="material-symbols-rounded">delete</span>
-        </div>
-        <h3 class="pm-confirm-title">¿Eliminar esta tarjeta?</h3>
-        <p id="wallet-confirm-card-desc" class="pm-confirm-desc">
-            ¿Estás seguro de que deseas eliminar esta tarjeta de tu billetera?
-        </p>
-        <div class="pm-confirm-actions">
-            <button type="button" class="pm-btn-secondary pm-btn-cancel-delete" onclick="closeWalletConfirmDeleteModal()">
-                Cancelar
-            </button>
-            <button type="button" class="pm-btn-destructive" onclick="executeDeleteCurrentWalletCard()">
-                <span class="material-symbols-rounded">delete</span>
-                <span>Eliminar</span>
-            </button>
-        </div>
-    </div>
-</div>
-
 <!-- TOAST NOTIFICACIÓN -->
 <div id="pm-toast" class="pm-toast">
     <span class="material-symbols-rounded">check_circle</span>
@@ -410,7 +288,7 @@
 
 <!-- FAB MATERIAL 3: AÑADIR BANCO -->
 <div id="pm-fab-container" class="pm-fab-container">
-    <button type="button" id="pm-add-bank-fab" class="pm-fab-main" onclick="handleWalletFabClick()" title="Añadir a billetera" aria-label="Añadir a billetera">
+    <button type="button" id="pm-add-bank-fab" class="pm-fab-main" onclick="openAddBankModal()" title="Añadir nuevo banco" aria-label="Añadir nuevo banco">
         <span class="material-symbols-rounded">add</span>
     </button>
 </div>

@@ -12,8 +12,8 @@
             <span>Tasas & Conversor</span>
         </button>
         <button type="button" class="desktop-nav-item" data-tab="pagomovil">
-            <span class="material-symbols-rounded">account_balance_wallet</span>
-            <span>Billetera</span>
+            <span class="material-symbols-rounded">qr_code_2</span>
+            <span>Pago Móvil</span>
         </button>
     </nav>
 
@@ -91,9 +91,9 @@
                 </div>
             </div>
 
-            <!-- Grupo 3: Billetera & Pago Móvil -->
+            <!-- Grupo 3: Pago Móvil -->
             <div class="settings-group">
-                <div class="settings-group-title">Billetera</div>
+                <div class="settings-group-title">Pago Móvil</div>
                 <div class="settings-card">
                     <div class="settings-row">
                         <div class="settings-row-text">
@@ -103,14 +103,14 @@
                         <select id="settings-start-tab" class="settings-select">
                             <option value="rates">Tasas de Cambio</option>
                             <option value="calculator">Calculadora</option>
-                            <option value="pagomovil">Billetera</option>
+                            <option value="pagomovil">Pago Móvil</option>
                         </select>
                     </div>
                     <div class="settings-divider"></div>
                     <div class="settings-row flex-column" style="gap: 10px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                             <div class="settings-row-text">
-                                <span class="settings-title">Formato de Copiado (Pago Móvil)</span>
+                                <span class="settings-title">Formato de Copiado</span>
                                 <span class="settings-subtitle">Estructura del texto al copiar</span>
                             </div>
                             <select id="settings-copy-format" class="settings-select">
@@ -131,7 +131,7 @@
                     <div class="settings-row flex-column" style="gap: 10px;">
                         <div class="settings-row-text" style="width: 100%;">
                             <span class="settings-title">Copia de Seguridad</span>
-                            <span class="settings-subtitle">Respalda o restaura tus tarjetas y bancos guardados</span>
+                            <span class="settings-subtitle">Respalda o restaura tus bancos guardados</span>
                         </div>
                         <div style="display: flex; gap: 10px; width: 100%;">
                             <button type="button" class="settings-btn-action" id="btn-export-backup" style="flex: 1;">
@@ -153,7 +153,7 @@
                     <div class="settings-row">
                         <div class="settings-row-text">
                             <span class="settings-title">Versión de Cambi</span>
-                            <span class="settings-subtitle" id="settings-version-label">v126</span>
+                            <span class="settings-subtitle" id="settings-version-label">v127</span>
                         </div>
                         <button type="button" class="settings-btn-action" id="btn-check-update" style="padding: 8px 14px;">
                             <span class="material-symbols-rounded">refresh</span> Actualizar

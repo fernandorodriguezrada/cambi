@@ -1,4 +1,4 @@
-const CACHE_NAME = "cambi-v126";
+const CACHE_NAME = "cambi-v127";
 
 // Recursos esenciales que se guardan durante la instalación para arranque 100% offline
 const PRECACHE_URLS = [
@@ -41,12 +41,6 @@ const PRECACHE_URLS = [
   "public/banks/0175.webp",
   "public/banks/0177.webp",
   "public/banks/0191.webp",
-  "public/banks/wally_card_bg.webp",
-  "public/banks/zinli_card_bg.webp",
-  "public/banks/zinli_logo.png",
-  "public/banks/okx_card_bg.webp",
-  "public/banks/okx_logo.png",
-  "public/banks/mercantil_white.svg",
   "public/fonts/material-symbols-rounded.woff2",
 ];
 
