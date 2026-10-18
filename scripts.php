@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v125",
+                version: "v126",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -2878,9 +2878,9 @@
         okx: {
             name: "OKX Card",
             brandText: "OKX",
-            logo: "public/crypto/okx.svg",
+            logo: "public/banks/okx_logo.png",
             themeClass: "gw-card-okx",
-            defaultNetwork: "mastercard"
+            defaultNetwork: "visa"
         },
         custom: {
             name: "Personalizada",
@@ -2961,7 +2961,7 @@
         if (!hasContactless) {
             return `<div class="gw-contactless-box empty"></div>`;
         }
-        const color = (variant === "dark") ? "#0B1528" : "#FFFFFF";
+        const color = (variant === "dark") ? "#0B1528" : ((variant === "teal") ? "#2ED8A3" : "#FFFFFF");
         return `<div class="gw-contactless-box" title="Contactless / Wireless" style="color: ${color};">
             <svg class="gw-contactless-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" width="26" height="26">
                 <path d="M9.5 6.5a7 7 0 0 1 0 11"/>
@@ -2984,11 +2984,18 @@
         if (issuer === "binance") {
             return `
                 <div class="wallet-card-art gw-card-binance" ${previewIdAttr}>
-                    <svg class="gw-binance-diamond-bg" viewBox="0 0 100 100" fill="#FFFFFF">
-                        <path d="M50 5L95 50L50 95L5 50Z"/>
-                        <path d="M50 20L80 50L50 80L20 50Z" fill="#000000"/>
-                        <path d="M50 30L70 50L50 70L30 50Z"/>
-                    </svg>
+                    <div class="gw-binance-watermark">
+                        <div class="gw-binance-watermark-inner"></div>
+                    </div>
+                    <div class="gw-binance-chip">
+                        <svg width="38" height="28" viewBox="0 0 38 28" fill="none">
+                            <rect x="1" y="1" width="36" height="26" rx="4" fill="#C8CDD3" stroke="#8A939E" stroke-width="1"/>
+                            <rect x="11" y="1" width="16" height="26" fill="none" stroke="#8A939E" stroke-width="0.8"/>
+                            <line x1="1" y1="9.5" x2="37" y2="9.5" stroke="#8A939E" stroke-width="0.8"/>
+                            <line x1="1" y1="18.5" x2="37" y2="18.5" stroke="#8A939E" stroke-width="0.8"/>
+                            <circle cx="19" cy="14" r="3" fill="none" stroke="#8A939E" stroke-width="0.8"/>
+                        </svg>
+                    </div>
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
                             <svg class="gw-brand-logo" viewBox="0 0 24 24" fill="#F0B90B" width="24" height="24">
@@ -3017,7 +3024,7 @@
                         ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>
                     <div class="gw-card-bottom-row">
-                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        <div class="gw-card-digits">&#8226;&bull;${last4}</div>
                         ${getGoogleWalletNetworkSvg(net, "light")}
                     </div>
                 </div>
@@ -3056,7 +3063,7 @@
                     </div>
                     <div class="gw-bdv-bottom-section">
                         <div class="gw-card-bottom-row">
-                            <div class="gw-card-digits" style="color: #0A1E2D; text-shadow: none;">•&bull;${last4}</div>
+                            <div class="gw-card-digits" style="color: #0A1E2D; text-shadow: none;">&#8226;&bull;${last4}</div>
                             <div class="gw-bdv-meta-row" style="display: flex; gap: 14px; margin-bottom: 2px;">
                                 <div class="gw-bdv-meta-col">
                                     <span class="gw-bdv-label">CVC</span>
@@ -3106,7 +3113,7 @@
                         </div>
                     </div>
                     <div class="gw-card-bottom-row">
-                        <div class="gw-card-digits">•&bull;${last4}</div>
+                        <div class="gw-card-digits">&#8226;&bull;${last4}</div>
                         ${getGoogleWalletNetworkSvg(net, "light")}
                     </div>
                 </div>
@@ -3116,21 +3123,12 @@
         if (issuer === "zinli") {
             return `
                 <div class="wallet-card-art gw-card-zinli" ${previewIdAttr}>
-                    <svg class="gw-zinli-snowflake" viewBox="0 0 120 120" fill="currentColor" style="color: #7020A0;">
-                        <g transform="translate(60,60)">
-                            <rect x="-5" y="-55" width="10" height="110" rx="5"/>
-                            <rect x="-5" y="-55" width="10" height="110" rx="5" transform="rotate(60)"/>
-                            <rect x="-5" y="-55" width="10" height="110" rx="5" transform="rotate(120)"/>
-                            <circle cx="0" cy="-40" r="10"/><circle cx="0" cy="40" r="10"/>
-                            <circle cx="34.6" cy="-20" r="10"/><circle cx="-34.6" cy="20" r="10"/>
-                            <circle cx="34.6" cy="20" r="10"/><circle cx="-34.6" cy="-20" r="10"/>
-                        </g>
-                    </svg>
+                    <img src="public/banks/zinli_card_bg.webp" alt="Zinli Card" class="gw-zinli-bg-img">
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
-                            <span class="gw-brand-text gw-zinli-brand">zinli</span>
+                            <img src="public/banks/zinli_logo.png" alt="Zinli" class="gw-zinli-logo-img">
                         </div>
-                        ${getGoogleWalletContactlessSvg(hasWireless, "light")}
+                        ${getGoogleWalletContactlessSvg(hasWireless, "teal")}
                     </div>
                     <div class="gw-card-bottom-row">
                         <div class="gw-card-digits">&#8226;&bull;${last4}</div>
@@ -3143,26 +3141,34 @@
         if (issuer === "mercantil") {
             return `
                 <div class="wallet-card-art gw-card-mercantil" ${previewIdAttr}>
-                    <svg class="gw-mercantil-arcs" viewBox="0 0 200 200" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1">
-                        <circle cx="100" cy="200" r="120"/>
-                        <circle cx="100" cy="200" r="90"/>
-                        <circle cx="100" cy="200" r="60"/>
-                    </svg>
+                    <div class="gw-mercantil-chip">
+                        <svg width="38" height="28" viewBox="0 0 38 28" fill="none">
+                            <rect x="1" y="1" width="36" height="26" rx="4" fill="#C8CDD3" stroke="#8A939E" stroke-width="1"/>
+                            <rect x="11" y="1" width="16" height="26" fill="none" stroke="#8A939E" stroke-width="0.8"/>
+                            <line x1="1" y1="9.5" x2="37" y2="9.5" stroke="#8A939E" stroke-width="0.8"/>
+                            <line x1="1" y1="18.5" x2="37" y2="18.5" stroke="#8A939E" stroke-width="0.8"/>
+                            <circle cx="19" cy="14" r="3" fill="none" stroke="#8A939E" stroke-width="0.8"/>
+                        </svg>
+                    </div>
+                    <div class="gw-mercantil-arcs-wrap">
+                        <svg viewBox="0 0 160 160" fill="none" class="gw-mercantil-arcs-svg">
+                            <circle cx="20" cy="140" r="130" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.2"/>
+                            <circle cx="20" cy="140" r="95" stroke="rgba(255, 255, 255, 0.20)" stroke-width="1.2"/>
+                            <circle cx="20" cy="140" r="60" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.2"/>
+                        </svg>
+                    </div>
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
-                            <span class="gw-mercantil-brand-text">Mercantil</span>
-                            <span class="gw-mercantil-arrow">
-                                <svg width="20" height="16" viewBox="0 0 20 16" fill="#FFFFFF">
-                                    <path d="M2 4L8 8L2 12Z"/>
-                                    <path d="M10 4L16 8L10 12Z"/>
-                                </svg>
-                            </span>
+                            <img src="public/banks/mercantil_white.svg" alt="Mercantil" class="gw-mercantil-logo-img">
                         </div>
                         ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>
                     <div class="gw-card-bottom-row">
                         <div class="gw-card-digits">&#8226;&bull;${last4}</div>
-                        ${getGoogleWalletNetworkSvg(net, "light")}
+                        <div class="gw-mercantil-debito-col">
+                            <span class="gw-mercantil-debito-label">débito</span>
+                            ${getGoogleWalletNetworkSvg(net, "light")}
+                        </div>
                     </div>
                 </div>
             `;
@@ -3171,25 +3177,18 @@
         if (issuer === "okx") {
             return `
                 <div class="wallet-card-art gw-card-okx" ${previewIdAttr}>
-                    <div class="gw-okx-texture"></div>
+                    <img src="public/banks/okx_card_bg.webp" alt="OKX Card" class="gw-okx-bg-img">
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
-                            <svg class="gw-brand-logo" viewBox="0 0 60 20" fill="#FFFFFF" width="48" height="16">
-                                <rect x="0" y="0" width="8" height="8" rx="1.5"/>
-                                <rect x="12" y="0" width="8" height="8" rx="1.5"/>
-                                <rect x="0" y="12" width="8" height="8" rx="1.5"/>
-                                <rect x="12" y="12" width="8" height="8" rx="1.5"/>
-                                <path d="M30 0L36 10L30 20L24 10Z"/>
-                                <path d="M44 10L50 0L56 10L50 20Z"/>
-                            </svg>
+                            <img src="public/banks/okx_logo.png" alt="OKX" class="gw-okx-logo-img">
                         </div>
                         ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>
                     <div class="gw-card-bottom-row">
                         <div class="gw-card-digits">&#8226;&bull;${last4}</div>
-                        <div class="gw-okx-visa-plat">
+                        <div class="gw-okx-visa-wrap">
                             ${getGoogleWalletNetworkSvg(net, "light")}
-                            <span class="gw-plat-label">Platinum</span>
+                            <span class="gw-okx-platinum-text">Platinum</span>
                         </div>
                     </div>
                 </div>

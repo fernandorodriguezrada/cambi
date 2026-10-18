@@ -4883,25 +4883,40 @@
     }
     /* 1. BINANCE CARD */
     .gw-card-binance {
-        background: #000000 !important;
-        border: 1px solid rgba(255, 255, 255, 0.14) !important;
-        color: #ffffff;
+        background: #111111 !important;
         position: relative;
         overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        color: #ffffff;
     }
-    .gw-binance-diamond-bg {
+    .gw-binance-chip {
         position: absolute;
-        right: 15%;
-        top: 50%;
+        left: 24px;
+        top: 48px;
+        z-index: 2;
+    }
+    .gw-binance-watermark {
+        position: absolute;
+        right: 18%;
+        top: 48%;
         transform: translateY(-50%) rotate(45deg);
-        width: 45%;
-        height: 70%;
-        opacity: 0.08;
+        width: 130px;
+        height: 130px;
+        border: 14px solid rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.02);
         pointer-events: none;
         z-index: 1;
     }
+    .gw-binance-watermark-inner {
+        position: absolute;
+        inset: 20px;
+        border: 10px solid rgba(255, 255, 255, 0.04);
+    }
     .gw-brand-text.binance-brand {
-        color: #FFFFFF !important;
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: 1.4px;
+        color: #F0B90B !important;
     }
 
     /* 2. WALLY TECH CARD */
@@ -4922,139 +4937,102 @@
         display: block;
     }
 
-    /* 3. BANCO DE VENEZUELA (BDV) DÓLAR CARD (Google Wallet Exact) */
+    /* 3. BANCO DE VENEZUELA (BDV) DÓLAR CARD */
     .gw-card-bdv {
-        background: #002744 !important;
-        padding: 0 !important;
+        background: #0A1E2D !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        position: relative;
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        border: 1px solid rgba(255, 255, 255, 0.14) !important;
     }
     .gw-bdv-top-section {
-        height: 48%;
-        background: #002744;
-        padding: 14px 18px 0 18px;
-        box-sizing: border-box;
+        background: linear-gradient(180deg, #071723 0%, #0C2335 100%);
+        height: 58%;
+        padding: 18px 22px 10px 22px;
         position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        overflow: hidden;
+        z-index: 1;
     }
-    .gw-bdv-brand-row {
+    .gw-bdv-bottom-section {
+        background: #FFFFFF;
+        height: 42%;
+        padding: 8px 22px 14px 22px;
+        position: relative;
         display: flex;
         align-items: center;
         z-index: 2;
     }
-    .gw-bdv-logo-group {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .gw-bdv-flag {
-        flex-shrink: 0;
-    }
-    .gw-bdv-brand-name {
-        font-family: var(--font-google-sans);
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #ffffff;
-        letter-spacing: 0.5px;
-    }
-    .gw-bdv-divider {
-        width: 1px;
-        height: 20px;
-        background: rgba(255, 255, 255, 0.35);
-        margin: 0 3px;
-    }
-    .gw-bdv-bank-subtitle {
-        display: flex;
-        flex-direction: column;
-        font-family: var(--font-google-sans);
-        font-size: 0.68rem;
-        font-weight: 600;
-        line-height: 1.15;
-        color: #ffffff;
+    .gw-bdv-bottom-section .gw-card-bottom-row {
+        width: 100%;
+        margin: 0;
     }
     .gw-bdv-usd-badge {
-        font-family: var(--font-google-sans);
+        position: absolute;
+        left: 22px;
+        bottom: 8px;
+        color: #FFD100;
         font-weight: 800;
-        font-size: 1.12rem;
-        color: #ffffff;
-        margin-top: 4px;
-        margin-bottom: 6px;
+        font-size: 0.95rem;
         letter-spacing: 0.5px;
         z-index: 2;
     }
     .gw-bdv-cascade-wrap {
         position: absolute;
-        top: -14px;
-        right: 14px;
-        width: 135px;
-        height: 185px;
+        right: 18px;
+        top: -10px;
+        width: 160px;
+        height: 170px;
         pointer-events: none;
+        opacity: 0.95;
         z-index: 1;
     }
     .gw-bdv-cascade-svg {
         width: 100%;
         height: 100%;
     }
-    .gw-bdv-bottom-section {
-        height: 52%;
-        background: #EEF1F5;
-        padding: 10px 18px 12px 18px;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: relative;
-        z-index: 2;
-    }
-    .gw-bdv-card-number {
-        font-family: "Courier New", Courier, monospace, var(--font-google-sans);
-        font-size: 1.05rem;
-        font-weight: 800;
-        color: #0A1E2D;
-        letter-spacing: 1.5px;
-        white-space: nowrap;
-    }
     .gw-bdv-meta-row {
         display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
     }
     .gw-bdv-meta-col {
         display: flex;
         flex-direction: column;
-        gap: 1px;
+        line-height: 1;
     }
     .gw-bdv-label {
-        font-family: var(--font-google-sans);
-        font-size: 0.64rem;
+        font-size: 0.52rem;
         font-weight: 700;
         color: #0A1E2D;
+        opacity: 0.65;
         letter-spacing: 0.5px;
+        margin-bottom: 2px;
     }
     .gw-bdv-val {
-        font-family: "Courier New", Courier, monospace;
-        font-size: 0.85rem;
-        font-weight: 800;
+        font-size: 0.72rem;
+        font-weight: 700;
         color: #0A1E2D;
         letter-spacing: 1px;
     }
 
-    /* 4. BANESCO CARD (Google Wallet Exact) */
+    /* 4. BANESCO CARD */
     .gw-card-banesco {
-        background: #0C5A3E !important;
-        border: 1px solid rgba(255, 255, 255, 0.14) !important;
-        color: #ffffff;
+        background: linear-gradient(135deg, #005B38 0%, #007A4D 60%, #00935C 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.16) !important;
         position: relative;
         overflow: hidden;
+        color: #ffffff;
     }
     .gw-banesco-arcs-wrap {
         position: absolute;
-        inset: 0;
+        left: 10px;
+        top: -20px;
+        width: 320px;
+        height: 200px;
         pointer-events: none;
+        z-index: 1;
+        opacity: 0.65;
     }
     .gw-banesco-arcs-svg {
         width: 100%;
@@ -5063,113 +5041,125 @@
     .gw-gold-chip {
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
-    .gw-banesco-bottom-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
     .gw-banesco-trefoil {
         filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
     }
 
-    /* 5. ZINLI CARD */
+    /* 5. ZINLI CARD (Foto Real) */
     .gw-card-zinli {
-        background: #8B2FC9 !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        color: #FFFFFF !important;
+        background-color: #7B34A8 !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
         position: relative;
         overflow: hidden;
+        color: #FFFFFF !important;
     }
-    .gw-card-zinli .gw-card-digits { color: #FFFFFF !important; text-shadow: 0 1px 3px rgba(0,0,0,0.3) !important; }
+    .gw-zinli-bg-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+        display: block;
+    }
+    .gw-zinli-logo-img {
+        height: 20px;
+        object-fit: contain;
+        display: block;
+    }
+    .gw-card-zinli .gw-card-digits { color: #FFFFFF !important; text-shadow: 0 1px 3px rgba(0,0,0,0.4) !important; }
     .gw-card-zinli .gw-network-visa { color: #FFFFFF !important; }
     .gw-card-zinli .gw-contactless-icon { color: #2ED8A3 !important; }
-    .gw-zinli-brand {
-        font-family: var(--font-google-sans);
-        font-weight: 900;
-        font-size: 1.6rem;
-        letter-spacing: -0.5px;
-        color: #2ED8A3;
-    }
-    .gw-zinli-snowflake {
-        position: absolute;
-        left: 8%;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 55%;
-        height: 80%;
-        z-index: 1;
-        opacity: 0.25;
-        pointer-events: none;
-    }
 
-    /* 6. BANCAMIGA, MERCANTIL, OKX, CUSTOM */
+    /* 6. BANCAMIGA CARD */
     .gw-card-bancamiga {
         background: linear-gradient(135deg, #0A192F 0%, #172A45 70%, #00C6FF 100%) !important;
         border: 1px solid rgba(0, 198, 255, 0.3) !important;
     }
+
+    /* 7. BANCO MERCANTIL (Foto Real) */
     .gw-card-mercantil {
-        background: linear-gradient(160deg, #0D3259 0%, #0A2240 60%, #091D38 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background: linear-gradient(150deg, #0A2E50 0%, #001B36 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
         position: relative;
         overflow: hidden;
         color: #ffffff;
     }
-    .gw-mercantil-arcs {
+    .gw-mercantil-chip {
         position: absolute;
-        bottom: 10%;
-        left: 5%;
-        width: 50%;
-        height: 60%;
-        z-index: 1;
-        opacity: 0.12;
+        left: 24px;
+        top: 48px;
+        z-index: 2;
+    }
+    .gw-mercantil-logo-img {
+        height: 24px;
+        max-width: 130px;
+        object-fit: contain;
+        display: block;
+    }
+    .gw-mercantil-arcs-wrap {
+        position: absolute;
+        bottom: -20px;
+        left: -20px;
+        width: 150px;
+        height: 150px;
         pointer-events: none;
+        z-index: 1;
+        opacity: 0.25;
     }
-    .gw-mercantil-brand-text {
-        font-family: var(--font-google-sans), serif;
-        font-weight: 700;
-        font-size: 1.5rem;
-        color: #FFFFFF;
-        letter-spacing: 0.3px;
+    .gw-mercantil-debito-col {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+    }
+    .gw-mercantil-debito-label {
+        font-size: 0.68rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.5px;
         line-height: 1;
+        margin-bottom: 2px;
     }
-    .gw-mercantil-arrow {
-        display: inline-flex;
-        align-items: center;
-        margin-left: 4px;
-    }
+
+    /* 8. OKX CARD (Foto Real) */
     .gw-card-okx {
-        background: #111111 !important;
+        background-color: #121212 !important;
         border: 1px solid rgba(255, 255, 255, 0.18) !important;
         position: relative;
         overflow: hidden;
         color: #ffffff;
     }
-    .gw-okx-texture {
+    .gw-okx-bg-img {
         position: absolute;
         inset: 0;
-        z-index: 1;
-        opacity: 0.15;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         pointer-events: none;
-        background-image: 
-            repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 4px, transparent 4px, transparent 8px),
-            repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 4px, transparent 4px, transparent 8px);
-        background-size: 8px 8px;
-        mask-image: radial-gradient(ellipse 80% 90% at 70% 40%, black 30%, transparent 80%);
-        -webkit-mask-image: radial-gradient(ellipse 80% 90% at 70% 40%, black 30%, transparent 80%);
+        display: block;
     }
-    .gw-okx-visa-plat {
+    .gw-okx-logo-img {
+        height: 18px;
+        object-fit: contain;
+        display: block;
+    }
+    .gw-okx-visa-wrap {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 1px;
+        gap: 2px;
     }
-    .gw-okx-visa-plat .gw-plat-label {
-        font-size: 0.6rem;
+    .gw-okx-platinum-text {
+        font-size: 0.62rem;
         font-weight: 600;
-        letter-spacing: 1.5px;
-        color: rgba(255,255,255,0.8);
+        letter-spacing: 1.2px;
+        color: rgba(255, 255, 255, 0.85);
         text-transform: uppercase;
+        line-height: 1;
     }
+
+    /* 9. TARJETAS PERSONALIZADAS */
     .gw-card-custom-obsidian { background: linear-gradient(135deg, #232526 0%, #414345 100%) !important; }
     .gw-card-custom-sunset { background: linear-gradient(135deg, #FA709A 0%, #FEE140 100%) !important; color: #1a1a1a !important; }
     .gw-card-custom-sunset .gw-card-digits { color: #1a1a1a !important; text-shadow: none !important; }
