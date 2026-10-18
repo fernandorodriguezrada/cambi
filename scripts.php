@@ -1376,7 +1376,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v127",
+                version: "v128",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {
@@ -2793,6 +2793,15 @@
                 initialScrollTop = sheet.scrollTop;
 
                 const target = e.target;
+
+                // Si el toque se realiza dentro de la zona visible de la lista de bancos o en el buscador/inputs,
+                // no debe responder el swipe de cierre para permitir el scroll natural libre (arriba y abajo)
+                if (target && target.closest('.pm-bank-search-list, #pm-bank-search-results, .pm-bank-search-bar, input, select, textarea')) {
+                    canSwipe = false;
+                    isDragging = false;
+                    return;
+                }
+
                 const sheetRect = sheet.getBoundingClientRect();
                 isHandleOrHeaderTouch = (handle && handle.contains(target)) ||
                                         (header && header.contains(target)) ||
@@ -2809,6 +2818,12 @@
 
             const onTouchMove = (e) => {
                 if (!canSwipe || !overlay.classList.contains('active')) return;
+                const target = e.target;
+                if (target && target.closest('.pm-bank-search-list, #pm-bank-search-results')) {
+                    canSwipe = false;
+                    isDragging = false;
+                    return;
+                }
                 const point = e.touches ? e.touches[0] : e;
 
                 const deltaY = point.clientY - startY;

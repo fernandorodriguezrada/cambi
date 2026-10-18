@@ -3346,6 +3346,9 @@
         flex-direction: column;
         gap: 4px;
         padding-right: 4px;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
     }
     .pm-bank-search-list::-webkit-scrollbar {
         width: 6px;
