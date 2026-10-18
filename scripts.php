@@ -1379,7 +1379,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v123",
+                version: "v124",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 walletCards: walletCards,
@@ -3111,15 +3111,25 @@
         if (issuer === "zinli") {
             return `
                 <div class="wallet-card-art gw-card-zinli" ${previewIdAttr}>
+                    <svg class="gw-zinli-snowflake" viewBox="0 0 120 120" fill="currentColor" style="color: #7020A0;">
+                        <g transform="translate(60,60)">
+                            <rect x="-5" y="-55" width="10" height="110" rx="5"/>
+                            <rect x="-5" y="-55" width="10" height="110" rx="5" transform="rotate(60)"/>
+                            <rect x="-5" y="-55" width="10" height="110" rx="5" transform="rotate(120)"/>
+                            <circle cx="0" cy="-40" r="10"/><circle cx="0" cy="40" r="10"/>
+                            <circle cx="34.6" cy="-20" r="10"/><circle cx="-34.6" cy="20" r="10"/>
+                            <circle cx="34.6" cy="20" r="10"/><circle cx="-34.6" cy="-20" r="10"/>
+                        </g>
+                    </svg>
                     <div class="gw-card-top-row">
                         <div class="gw-brand-box">
-                            <span class="gw-brand-text" style="color: #0B1528; font-size: 1.35rem; font-weight: 900; letter-spacing: -0.5px;">zinli</span>
+                            <span class="gw-brand-text gw-zinli-brand">zinli</span>
                         </div>
-                        ${getGoogleWalletContactlessSvg(hasWireless, "dark")}
+                        ${getGoogleWalletContactlessSvg(hasWireless, "light")}
                     </div>
                     <div class="gw-card-bottom-row">
-                        <div class="gw-card-digits" style="color: #0B1528; text-shadow: none;">•&bull;${last4}</div>
-                        ${getGoogleWalletNetworkSvg(net, "dark")}
+                        <div class="gw-card-digits">&#8226;&bull;${last4}</div>
+                        ${getGoogleWalletNetworkSvg(net, "light")}
                     </div>
                 </div>
             `;

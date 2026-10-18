@@ -5058,19 +5058,32 @@
 
     /* 5. ZINLI CARD */
     .gw-card-zinli {
-        background: linear-gradient(135deg, #00FF87 0%, #60EFFF 100%) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        color: #0B1528 !important;
+        background: #8B2FC9 !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        color: #FFFFFF !important;
+        position: relative;
+        overflow: hidden;
     }
-    .gw-card-zinli .gw-card-digits { color: #0B1528 !important; text-shadow: none !important; }
-    .gw-card-zinli .gw-network-visa { color: #0B1528 !important; filter: none !important; }
-    .gw-card-zinli .gw-contactless-icon { color: #0B1528 !important; }
+    .gw-card-zinli .gw-card-digits { color: #FFFFFF !important; text-shadow: 0 1px 3px rgba(0,0,0,0.3) !important; }
+    .gw-card-zinli .gw-network-visa { color: #FFFFFF !important; }
+    .gw-card-zinli .gw-contactless-icon { color: #2ED8A3 !important; }
     .gw-zinli-brand {
         font-family: var(--font-google-sans);
         font-weight: 900;
-        font-size: 1.35rem;
+        font-size: 1.6rem;
         letter-spacing: -0.5px;
-        color: #0B1528;
+        color: #2ED8A3;
+    }
+    .gw-zinli-snowflake {
+        position: absolute;
+        left: 8%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 55%;
+        height: 80%;
+        z-index: 1;
+        opacity: 0.25;
+        pointer-events: none;
     }
 
     /* 6. BANCAMIGA, MERCANTIL, OKX, CUSTOM */
