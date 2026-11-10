@@ -103,10 +103,10 @@
      * - Coma como separador decimal.
      */
     const formatRAE = (number, minDecimals = 2) => {
-        return new Intl.NumberFormat('es-ES', {
+        return new Intl.NumberFormat('es-VE', {
             minimumFractionDigits: minDecimals,
             maximumFractionDigits: 2
-        }).format(number).replace(/\./g, ' ');
+        }).format(number);
     };
 
     /**
@@ -114,8 +114,11 @@
      */
     const cleanValue = (val) => {
         if (!val) return 0;
-        let cleaned = val.replace(/\s/g, '').replace(',', '.');
-        return parseFloat(cleaned) || 0;
+        let str = String(val).replace(/\s/g, '');
+        if (str.includes(',')) {
+            str = str.replace(/\./g, '').replace(',', '.');
+        }
+        return parseFloat(str) || 0;
     };
 
     /**
@@ -971,7 +974,11 @@
         let hasOperation = false;
         try {
             // Limpiamos espacios, comas y convertimos la 'x' en '*' para que JS pueda calcular
-            let expression = triggeringInput.value.replace(/\s/g, '').replace(/,/g, '.').replace(/x/gi, '*').replace(/[+\-*\/]$/, '');
+            let expression = triggeringInput.value.replace(/\s/g, '');
+            if (expression.includes(',')) {
+                expression = expression.replace(/\./g, '').replace(/,/g, '.');
+            }
+            expression = expression.replace(/x/gi, '*').replace(/[+\-*\/]$/, '');
             hasOperation = /[+\-*\/]/.test(expression);
             numericVal = expression ? Function('"use strict";return (' + expression + ')')() : 0;
         } catch (e) { numericVal = 0; }
@@ -1385,7 +1392,7 @@
             }
             const backupData = {
                 appName: "Cambi",
-                version: "v131",
+                version: "v132",
                 exportedAt: new Date().toISOString(),
                 pmProfile: profile,
                 settings: {

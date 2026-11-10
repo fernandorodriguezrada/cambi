@@ -51,12 +51,21 @@ if (!function_exists('getDirectBCV')) {
 
         $data = [];
 
+        $cleanRate = function($str) {
+            $s = trim($str);
+            if (strpos($s, ',') !== false) {
+                $s = str_replace('.', '', $s);
+                $s = str_replace(',', '.', $s);
+            }
+            return (float)$s;
+        };
+
         if (preg_match('/id="dolar".*?<strong[^>]*>\s*([\d.,]+)\s*<\/strong>/is', $html, $usd)) {
-            $data['usd'] = (float) str_replace(',', '.', trim($usd[1]));
+            $data['usd'] = $cleanRate($usd[1]);
         }
 
         if (preg_match('/id="euro".*?<strong[^>]*>\s*([\d.,]+)\s*<\/strong>/is', $html, $eur)) {
-            $data['eur'] = (float) str_replace(',', '.', trim($eur[1]));
+            $data['eur'] = $cleanRate($eur[1]);
         }
 
         if (isset($data['usd'])) {
